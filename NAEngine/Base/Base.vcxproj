@@ -144,12 +144,17 @@
   <ItemGroup>
     <ClCompile Include="Debug\Debug.cpp" />
     <ClCompile Include="Debug\Log.cpp" />
+    <ClCompile Include="Memory\Memory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug\Debug.h" />
     <ClInclude Include="Debug\Log.h" />
-    <ClInclude Include="Util.h" />
+    <ClInclude Include="Memory\Memory.h" />
+    <ClInclude Include="Util\Util.h" />
     <ClInclude Include="OS\NAWindows.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Util\Util.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
