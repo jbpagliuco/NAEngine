@@ -73,11 +73,13 @@
     <OutDir>$(ProjectDir)\..\Output\$(Platform)\$(Configuration)\</OutDir>
     <LibraryPath>$(SolutionDir)\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <TargetName>NA$(ProjectName)</TargetName>
+    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(ProjectDir)\..\Output\$(Platform)\$(Configuration)\</OutDir>
     <LibraryPath>$(SolutionDir)\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <TargetName>NA$(ProjectName)</TargetName>
+    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)\Output\$(Platform)\$(Configuration)\</OutDir>
@@ -140,15 +142,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Base.cpp" />
-    <ClCompile Include="Debug.cpp" />
-    <ClCompile Include="Log.cpp" />
+    <ClCompile Include="Debug\Debug.cpp" />
+    <ClCompile Include="Debug\Log.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Debug.h" />
-    <ClInclude Include="Log.h" />
+    <ClInclude Include="Debug\Debug.h" />
+    <ClInclude Include="Debug\Log.h" />
     <ClInclude Include="Util.h" />
-    <ClInclude Include="Windows.h" />
+    <ClInclude Include="OS\NAWindows.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

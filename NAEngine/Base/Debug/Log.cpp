@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string>
 
-#include "Windows.h"
+#include "OS/NAWindows.h"
 #include "Util.h"
 
 namespace na
