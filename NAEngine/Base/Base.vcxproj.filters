@@ -30,6 +30,9 @@
     <ClInclude Include="Util\Util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="File\File.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debug\Debug.cpp">
@@ -41,9 +44,15 @@
     <ClCompile Include="Memory\Memory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="File\File.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Util\Util.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="File\File.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>
