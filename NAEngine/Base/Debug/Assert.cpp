@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 #include "Log.h"
-#include "OS/NAWindows.h"
+#include "OS/OSWin32.h"
 
 #define ASSERT_LOG_FILTER "Asserts"
 

@@ -149,6 +149,8 @@
     <ClCompile Include="Debug\Log.cpp" />
     <ClCompile Include="File\File.cpp" />
     <ClCompile Include="Memory\Memory.cpp" />
+    <ClCompile Include="OS\OS.cpp" />
+    <ClCompile Include="OS\OSWin32.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseSystem.h" />
@@ -156,8 +158,9 @@
     <ClInclude Include="Debug\Log.h" />
     <ClInclude Include="File\File.h" />
     <ClInclude Include="Memory\Memory.h" />
+    <ClInclude Include="OS\OS.h" />
     <ClInclude Include="Util\Util.h" />
-    <ClInclude Include="OS\NAWindows.h" />
+    <ClInclude Include="OS\OSWin32.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="File\File.inl" />
