@@ -7,7 +7,7 @@
 
 namespace na
 {
-	LRESULT CALLBACK Win32WndProc(HWND, UINT, WPARAM, LPARAM);
+	HWND CreateWindowWin32(int x, int y, int w, int h, const wchar_t *title);
 }
 
 #endif

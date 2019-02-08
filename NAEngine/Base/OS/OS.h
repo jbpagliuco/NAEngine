@@ -9,7 +9,6 @@ namespace na
 {
 #if defined(_NA_WIN32)
 	typedef HWND WindowHandle;
-	extern HWND MainWindowHandle;
 #endif
 	
 	WindowHandle CreateAndShowWindow(int x, int y, int w, int h, const wchar_t *title);
