@@ -8,23 +8,25 @@
 
 namespace na
 {
-	bool PrintAssertMessage(const char *assert);
-	bool PrintAssertMessage(const char *assert, const char *format, ...);
+	bool PrintAssertMessage(const char *assert, const char *file, int line);
+	bool PrintAssertMessage(const char *assert, const char *file, int line, const char *format, ...);
 
-	void PrintErrorMessage(const char *assert);
-	void PrintErrorMessage(const char *assert, const char *format, ...);
+	void PrintErrorMessage(const char *assert, const char *file, int line);
+	void PrintErrorMessage(const char *assert, const char *file, int ilne, const char *format, ...);
 }
+
+#define NA_PRINT_ASSERT_MESSAGE(cond, ...) na::PrintAssertMessage(#cond, __FILE__, __LINE__, __VA_ARGS__)
 
 #define NA_ASSERT(cond, ...)											\
 	if (!(cond)) {														\
-		if (na::PrintAssertMessage(#cond, __VA_ARGS__)) {				\
+		if (NA_PRINT_ASSERT_MESSAGE(cond, __VA_ARGS__)) {				\
 			DEBUG_BREAK();												\
 		}																\
 	}																	
 
 #define NA_ASSERT_RETURN(cond, ...)        	    						\
 	if (!(cond)) {														\
-		if (na::PrintAssertMessage(#cond, __VA_ARGS__)) {				\
+		if (NA_PRINT_ASSERT_MESSAGE(cond, __VA_ARGS__)) {				\
 			DEBUG_BREAK();												\
 		}																\
 		return; 														\
@@ -32,7 +34,7 @@ namespace na
 
 #define NA_ASSERT_RETURN_VALUE(cond, rv, ...)							\
 	if (!(cond)) {														\
-		if (na::PrintAssertMessage(#cond, __VA_ARGS__)) {				\
+		if (NA_PRINT_ASSERT_MESSAGE(cond, __VA_ARGS__)) {				\
 			DEBUG_BREAK();												\
 		}																\
 		return rv;														\
@@ -40,7 +42,7 @@ namespace na
 
 #define NA_ASSERT_CONTINUE(cond, ...)									\
 	if (!(cond)) {														\
-		if (na::PrintAssertMessage(#cond, __VA_ARGS__)) {				\
+		if (NA_PRINT_ASSERT_MESSAGE(cond, __VA_ARGS__)) {				\
 			DEBUG_BREAK();												\
 		}																\
 		continue;														\
@@ -48,7 +50,7 @@ namespace na
 
 #define NA_FATAL_ERROR(cond, ...)										\
 	if (!(cond)) {														\
-		na::PrintErrorMessage(#cond, __VA_ARGS__);						\
+		na::PrintErrorMessage(#cond, __FILE__, __LINE__, __VA_ARGS__);	\
 		exit(EXIT_FAILURE);												\
 	}																	
 

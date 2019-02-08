@@ -6,7 +6,7 @@ namespace na
 {
 	bool BaseSystemInit()
 	{
-		return true;
+		return false;
 	}
 
 	void BaseSystemShutdown()

@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-#include "Debug/Debug.h"
+#include "Debug/Assert.h"
 
 namespace na
 {

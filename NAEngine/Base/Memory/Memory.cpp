@@ -1,6 +1,6 @@
 #include "Memory.h"
 
-#include "Debug/Debug.h"
+#include "Debug/Assert.h"
 #include "Debug/Log.h"
 
 #define MEMORY_LOG_FILTER "Memory"

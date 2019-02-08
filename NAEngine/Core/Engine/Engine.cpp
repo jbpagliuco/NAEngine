@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "Base/BaseSystem.h"
+#include "Base/Debug/Assert.h"
 #include "Base/Debug/Log.h"
 
 #include "Core/Core.h"
@@ -52,9 +53,9 @@ namespace na
 		for (auto &sys : SystemRegistry)
 		{
 			LogInfo(CORE_LOG_FILTER, "Initializing %s", sys.mSystemName);
-			if (sys.mSystemInit != nullptr && sys.mSystemInit() == false) {
-				LogError(CORE_LOG_FILTER, "System initialized failed.");
-				return false;
+			if (sys.mSystemInit != nullptr) {
+				bool ret = sys.mSystemInit();
+				NA_ASSERT_RETURN_VALUE(ret, false, "Failed to initialize system '%s'.", sys.mSystemName);
 			}
 		}
 		LogInfo(CORE_LOG_FILTER, "System initialization complete.");
