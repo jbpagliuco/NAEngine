@@ -99,6 +99,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_NA_DEBUG;_NA_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -109,6 +110,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_NA_DEBUG;_NA_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -142,12 +144,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BaseSystem.cpp" />
     <ClCompile Include="Debug\Debug.cpp" />
     <ClCompile Include="Debug\Log.cpp" />
     <ClCompile Include="File\File.cpp" />
     <ClCompile Include="Memory\Memory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseSystem.h" />
     <ClInclude Include="Debug\Debug.h" />
     <ClInclude Include="Debug\Log.h" />
     <ClInclude Include="File\File.h" />

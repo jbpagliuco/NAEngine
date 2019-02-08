@@ -26,11 +26,11 @@ static size_t TotalBytesAllocatedExtra = 0;
 
 namespace na
 {
-	void ShutdownMemorySystem()
+	void MemorySystemShutdown()
 	{
 #if defined(NA_TRACK_MEMORY)
 		for (auto &alloc : MemoryAllocations) {
-			LogError(MEMORY_LOG_FILTER, "Allocation of '%zu' bytes from '%s Line %d' was never freed", alloc.second.size, alloc.second.filename, alloc.second.line);
+			LogError(MEMORY_LOG_FILTER, "Allocation of '%zu' bytes from '%s line %d' was never freed.", alloc.second.size, alloc.second.filename, alloc.second.line);
 		}
 		NA_ASSERT_RETURN(MemoryAllocations.size() == 0, "Memory was leaked. Check logs.");
 

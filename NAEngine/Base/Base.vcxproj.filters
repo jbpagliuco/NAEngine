@@ -33,6 +33,9 @@
     <ClInclude Include="File\File.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BaseSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debug\Debug.cpp">
@@ -45,6 +48,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="File\File.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

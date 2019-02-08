@@ -27,7 +27,7 @@
 
 namespace na
 {
-	void ShutdownMemorySystem();
+	void MemorySystemShutdown();
 
 	// Allocates memory on the heap.
 	// @param sizeInBytes - The number of bytes to allocate.

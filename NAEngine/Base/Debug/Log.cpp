@@ -77,4 +77,10 @@ namespace na
 		LogErrorV(filter, format, args);
 		va_end(args);
 	}
+
+	void LogLineBreak()
+	{
+		printf("\r\n");
+		OutputDebugString(L"\r\n");
+	}
 }

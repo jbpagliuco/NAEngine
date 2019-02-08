@@ -8,4 +8,6 @@ namespace na
 	void LogInfoV(const char *filter, const char *format, va_list args);
 	void LogError(const char *filter, const char *format, ...);
 	void LogErrorV(const char *filter, const char *format, va_list args);
+
+	void LogLineBreak();
 }
