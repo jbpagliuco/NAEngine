@@ -7,31 +7,36 @@
 
 namespace na
 {
-	class File
+	struct File
 	{
 	public:
-		File(const char *filename, int mode = std::ios::in);
+		File(const char *filename, int mode);
 		virtual ~File();
 
-		bool PeekChar(char *s);
-
-		bool ReadChar(char *s);
-		bool ReadLine(char *s, size_t n);
-		bool ReadBytes(void *buffer, size_t n);
+		operator bool()const;
 
 		const char* GetFileExt()const;
 
-	private:
+		template <typename T>
+		bool Read(T &out);
+		bool ReadBytes(char *buf, size_t n);
+		
+		template <typename T>
+		bool Write(const T &val);
+		bool WriteBytes(const char *buf, size_t n);
+
+	public:
 		char mFilename[MAX_FILEPATH_SIZE];
-		std::ifstream mFile;
+		std::fstream mFile;
 	};
-
-	template <size_t N>
-	void OpenFileDialog(char(&buffer)[N], const char *defaultPath = "");
-
 
 	const char* GetFileExt(const char *filename);
 	bool IsAbsoluteFilePath(const char *path);
+
+#if defined(_NA_TOOLS)
+	template <size_t N>
+	void OpenFileDialog(char(&buffer)[N], const char *defaultPath = "");
+#endif
 }
 
 #include "File.inl"

@@ -1,4 +1,19 @@
-#if defined(_NA_WIN32)
+namespace na
+{
+	template <typename T>
+	bool File::Read(T &out)
+	{
+		return ReadBytes((char*)&out, sizeof(T));
+	}
+
+	template <typename T>
+	bool File::Write(const T &val)
+	{
+		return WriteBytes(reinterpret_cast<char*>((void*)&val), sizeof(T));
+	}
+}
+
+#if defined(_NA_TOOLS) && defined(_NA_WIN32)
 
 #include "OS/NAWindows.h"
 #include <shobjidl.h>
@@ -44,4 +59,4 @@ namespace na
 	}
 }
 
-#endif // defined(_NA_WIN32)
+#endif // defined(NA_TOOLS) && defined(_NA_WIN32)

@@ -10,11 +10,17 @@ namespace na
 	{
 		strncpy_s(mFilename, filename, MAX_FILEPATH_LENGTH);
 
-		mode = (~std::ios::out) & mode;
-		mode |= std::ios::in;
-
 		mFile.open(filename, mode);
-		NA_ASSERT(mFile.is_open(), "File '%s' not found", filename);
+		
+		// If the file is readable, make sure we can open it.
+		if ((mode & std::ios::in) != 0) {
+			NA_ASSERT(mFile.is_open(), "Unable to open file '%s'", filename);
+		}
+	}
+
+	File::operator bool()const
+	{
+		return !mFile.eof();
 	}
 
 	File::~File()
@@ -22,47 +28,20 @@ namespace na
 		mFile.close();
 	}
 
-	bool File::PeekChar(char *s)
-	{
-		if (mFile.eof()) {
-			return false;
-		}
-
-		*s = mFile.peek();
-		return true;
-	}
-
-	bool File::ReadChar(char *s)
-	{
-		if (mFile.eof()) {
-			return false;
-		}
-
-		*s = mFile.get();
-		return true;
-	}
-
-	bool File::ReadLine(char *s, size_t n)
-	{
-		std::string lineData;
-		if (std::getline(mFile, lineData)) {
-			strncpy_s(s, n - 1, lineData.c_str(), _TRUNCATE);
-			return true;
-		}
-
-		return false;
-	}
-
-	bool File::ReadBytes(void *buffer, size_t n)
-	{
-		return !!mFile.read((char*)buffer, n);
-	}
-
 	const char* File::GetFileExt()const
 	{
 		return na::GetFileExt(mFilename);
 	}
 
+	bool File::ReadBytes(char *buf, size_t n)
+	{
+		return !!mFile.read(buf, n);
+	}
+
+	bool File::WriteBytes(const char *buf, size_t n)
+	{
+		return !!mFile.write(buf, n);
+	}
 
 
 	const char* GetFileExt(const char *filename)
