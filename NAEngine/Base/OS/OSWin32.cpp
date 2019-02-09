@@ -54,7 +54,7 @@ namespace na
 			title,
 			WS_OVERLAPPEDWINDOW,
 
-			x, y,
+			(x == -1) ? CW_USEDEFAULT : x, (y == -1) ? CW_USEDEFAULT : y,
 			w, h,
 
 			NULL,

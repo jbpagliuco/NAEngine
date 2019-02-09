@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdint.h>
+#include <stdlib.h>
 
 #if defined(_NA_DEBUG)
 

@@ -7,9 +7,6 @@ namespace na
 {
 	bool BaseSystemInit()
 	{
-		// TODO: Move into renderer code
-		CreateAndShowWindow(100, 100, 800, 600, L"NA Game LUL");
-
 		return true;
 	}
 
