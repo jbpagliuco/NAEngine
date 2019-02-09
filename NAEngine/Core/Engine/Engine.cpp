@@ -5,6 +5,7 @@
 #include "Base/BaseSystem.h"
 #include "Base/Debug/Assert.h"
 #include "Base/Debug/Log.h"
+#include "Renderer/RenderingSystem.h"
 
 #include "Core/Core.h"
 
@@ -41,6 +42,15 @@ namespace na
 			reg.mSystemName = "Base System";
 			reg.mSystemInit = BaseSystemInit;
 			reg.mSystemShutdown = BaseSystemShutdown;
+			SystemRegistry.push_back(reg);
+		}
+
+		{
+			SystemRegistration reg;
+			reg.mSystemName = "Rendering System";
+			reg.mSystemInit = RenderingSystemInit;
+			reg.mSystemShutdown = RenderingSystemShutdown;
+			reg.mDoFrame = RenderingSystemDoFrame;
 			SystemRegistry.push_back(reg);
 		}
 	}
