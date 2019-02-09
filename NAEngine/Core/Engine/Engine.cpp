@@ -79,8 +79,8 @@ namespace na
 	{
 		LogLineBreak();
 		LogInfo(CORE_LOG_FILTER, "=============================================");
-		for (auto &sys : SystemRegistry)
-		{
+		for (auto it = SystemRegistry.rbegin(); it != SystemRegistry.rend(); ++it) {
+			auto &sys = *it;
 			LogInfo(CORE_LOG_FILTER, "Shutting down %s", sys.mSystemName);
 
 			if (sys.mSystemShutdown != nullptr) {

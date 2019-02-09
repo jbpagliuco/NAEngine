@@ -6,6 +6,24 @@ namespace na
 {
 	static LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
+		switch (msg) {
+		case WM_KEYDOWN:
+		{
+			if (wparam == VK_ESCAPE) {
+				PostQuitMessage(0);
+			}
+
+			break;
+		}
+
+		case WM_DESTROY:
+		case WM_CLOSE:
+		{
+			PostQuitMessage(0);
+			break;
+		}
+		};
+
 		return DefWindowProc(hwnd, msg, wparam, lparam);
 	}
 

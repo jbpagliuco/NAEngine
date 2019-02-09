@@ -28,18 +28,11 @@ int main(int argc, char *argv[])
 			break;
 		}
 
-		// TODO: Remove once the main window is in.
-		if (GetAsyncKeyState(VK_ESCAPE)) {
-			break;
-		}
-
 		na::DoFrame();
 	}
 
 	// Shutdown
 	na::ShutdownEngine();
-
-	system("pause");
 
 	// Success!
 	return 0;
