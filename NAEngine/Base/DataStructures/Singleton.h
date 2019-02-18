@@ -10,13 +10,13 @@ namespace na
 		{
 			if (msInst == nullptr)
 			{
-				msInst = this;
+				msInst = new T();
 			}
 
 			return msInst;
 		}
 
 	private:
-		T *msInst = nullptr;
+		static T *msInst;
 	};
 }
