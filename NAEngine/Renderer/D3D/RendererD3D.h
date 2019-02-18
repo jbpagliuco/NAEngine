@@ -27,6 +27,7 @@ namespace na
 
 		ID3D11Device* GetDevice();
 		ID3D11DeviceContext* GetContext();
+		IDXGISwapChain* GetSwapChain();
 
 	private:
 		bool InitDevice(const RendererInitParams &params);

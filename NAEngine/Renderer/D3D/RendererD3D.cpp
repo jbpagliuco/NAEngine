@@ -23,6 +23,10 @@ namespace na
 
 	void RendererD3D::Shutdown()
 	{
+		if (mSwapChain) {
+			mSwapChain->SetFullscreenState(false, nullptr);
+		}
+
 		NA_SAFE_RELEASE(mSwapChain);
 		NA_SAFE_RELEASE(mContext);
 		NA_SAFE_RELEASE(mDevice);
@@ -30,12 +34,11 @@ namespace na
 
 	void RendererD3D::BeginRender()
 	{
-
 	}
 
 	void RendererD3D::EndRender()
 	{
-
+		mSwapChain->Present(0, 0);
 	}
 
 	ID3D11Device* RendererD3D::GetDevice()
@@ -48,11 +51,16 @@ namespace na
 		return mContext;
 	}
 
+	IDXGISwapChain* RendererD3D::GetSwapChain()
+	{
+		return mSwapChain;
+	}
+
 
 	bool RendererD3D::InitDevice(const RendererInitParams &params)
 	{
 		DXGI_SWAP_CHAIN_DESC swapChainDesc{};
-		swapChainDesc.BufferCount = 1;
+		swapChainDesc.BufferCount = 2;
 		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		swapChainDesc.BufferDesc.Width = params.mWidth;
 		swapChainDesc.BufferDesc.Height = params.mHeight;

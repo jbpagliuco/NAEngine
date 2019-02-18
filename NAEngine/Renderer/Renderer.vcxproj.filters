@@ -21,15 +21,18 @@
     <ClCompile Include="D3D\RendererD3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Resources\RenderTargetD3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\ForwardRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RenderingSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RenderDefs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scene\Scene.h">
@@ -42,6 +45,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="D3D\RendererD3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\RenderTarget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SceneRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\ForwardRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

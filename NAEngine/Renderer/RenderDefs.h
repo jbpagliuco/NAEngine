@@ -10,5 +10,6 @@
 #define NA_Renderer RendererD3D::Get()
 #define NA_RDevice NA_Renderer->GetDevice()
 #define NA_RContext NA_Renderer->GetContext()
+#define NA_RSwapChain NA_Renderer->GetSwapChain()
 
 #define NA_SAFE_RELEASE(x) if (x != nullptr) { x->Release(); x = nullptr; }

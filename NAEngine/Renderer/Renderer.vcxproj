@@ -150,14 +150,18 @@
   <ItemGroup>
     <ClCompile Include="D3D\RendererD3D.cpp" />
     <ClCompile Include="RenderingSystem.cpp" />
+    <ClCompile Include="Resources\RenderTargetD3D.cpp" />
+    <ClCompile Include="Scene\ForwardRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3D\RendererD3D.h" />
     <ClInclude Include="RenderDefs.h" />
     <ClInclude Include="RenderingSystem.h" />
+    <ClInclude Include="Resources\RenderTarget.h" />
+    <ClInclude Include="Scene\ForwardRenderer.h" />
     <ClInclude Include="Scene\Renderable.h" />
     <ClInclude Include="Scene\Scene.h" />
-    <ClInclude Include="SceneRenderer.h" />
+    <ClInclude Include="Scene\SceneRenderer.h" />
     <ClInclude Include="Scene\SceneEntity.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
