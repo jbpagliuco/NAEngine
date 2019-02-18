@@ -4,7 +4,7 @@
 
 namespace na
 {
-	class Renderable : public SceneEntity
+	class RenderableInstance : public SceneEntity
 	{
 	public:
 		virtual void Render() = 0;

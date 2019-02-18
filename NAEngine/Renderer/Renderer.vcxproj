@@ -152,6 +152,7 @@
     <ClCompile Include="RenderingSystem.cpp" />
     <ClCompile Include="Resources\RenderTargetD3D.cpp" />
     <ClCompile Include="Scene\ForwardRenderer.cpp" />
+    <ClCompile Include="Scene\SceneEntity.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3D\RendererD3D.h" />
@@ -159,7 +160,7 @@
     <ClInclude Include="RenderingSystem.h" />
     <ClInclude Include="Resources\RenderTarget.h" />
     <ClInclude Include="Scene\ForwardRenderer.h" />
-    <ClInclude Include="Scene\Renderable.h" />
+    <ClInclude Include="Scene\RenderableInstance.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\SceneRenderer.h" />
     <ClInclude Include="Scene\SceneEntity.h" />
