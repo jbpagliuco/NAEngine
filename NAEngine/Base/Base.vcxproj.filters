@@ -39,6 +39,9 @@
     <ClInclude Include="OS\OSWin32.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DataStructures\Singleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debug\Log.cpp">

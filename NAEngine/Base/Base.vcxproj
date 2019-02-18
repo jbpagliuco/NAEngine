@@ -154,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseSystem.h" />
+    <ClInclude Include="DataStructures\Singleton.h" />
     <ClInclude Include="Debug\Assert.h" />
     <ClInclude Include="Debug\Log.h" />
     <ClInclude Include="File\File.h" />

@@ -2,7 +2,7 @@
 
 namespace na
 {
-	class D3DRenderer
+	class SceneEntity
 	{
 
 	};

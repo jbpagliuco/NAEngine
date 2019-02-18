@@ -26,7 +26,19 @@
     <ClInclude Include="RenderDefs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D3D\Renderer.h">
+    <ClInclude Include="SceneRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SceneEntity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Renderable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D\RendererD3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

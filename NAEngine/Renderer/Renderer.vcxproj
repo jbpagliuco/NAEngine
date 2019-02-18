@@ -151,9 +151,13 @@
     <ClCompile Include="RenderingSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D3D\Renderer.h" />
+    <ClInclude Include="D3D\RendererD3D.h" />
     <ClInclude Include="RenderDefs.h" />
     <ClInclude Include="RenderingSystem.h" />
+    <ClInclude Include="Scene\Renderable.h" />
+    <ClInclude Include="Scene\Scene.h" />
+    <ClInclude Include="SceneRenderer.h" />
+    <ClInclude Include="Scene\SceneEntity.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
