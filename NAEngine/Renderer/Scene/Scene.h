@@ -1,12 +1,21 @@
 #pragma once
 
+#include <vector>
+
 namespace na
 {
-	class Renderable;
+	class RenderableInstance;
 
 	class Scene
 	{
 	public:
-		void AddRenderable(Renderable *r);
+		static Scene *GetInstance();
+
+		void AddRenderable(RenderableInstance *r);
+
+		const std::vector<RenderableInstance*>& GetRenderables()const;
+
+	private:
+		std::vector<RenderableInstance*> mRenderables;
 	};
 }

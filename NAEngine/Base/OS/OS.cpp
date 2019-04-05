@@ -8,7 +8,9 @@
 
 namespace na
 {
-	WindowHandle CreateAndShowWindow(int x, int y, int w, int h, const wchar_t *title)
+	Window INVALID_WINDOW = { 0, 0, 0, 0, NULL };
+
+	Window CreateAndShowWindow(int x, int y, int w, int h, const wchar_t *title)
 	{
 #if defined(_NA_WIN32)
 		return CreateWindowWin32(x, y, w, h, title);

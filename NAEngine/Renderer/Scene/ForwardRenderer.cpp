@@ -1,5 +1,8 @@
 #include "ForwardRenderer.h"
 
+#include "Scene.h"
+#include "Renderables/RenderableInstance.h"
+
 namespace na
 {
 	bool ForwardRenderer::Initialize()
@@ -18,7 +21,7 @@ namespace na
 	{
 		mRT.Bind();
 
-		const float clearColor[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+		const float clearColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
 		mRT.Clear(clearColor);
 	}
 
@@ -29,6 +32,8 @@ namespace na
 
 	void ForwardRenderer::RenderScene(Scene *scene)
 	{
-
+		for (auto &r : scene->GetRenderables()) {
+			r->Render();
+		}
 	}
 }

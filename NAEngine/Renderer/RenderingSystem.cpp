@@ -3,7 +3,7 @@
 #include "Base/Debug/Assert.h"
 #include "Base/OS/OS.h"
 
-#include "RenderDefs.h"
+#include "RendererD3D.h"
 #include "Scene/Scene.h"
 #include "Scene/ForwardRenderer.h"
 
@@ -20,9 +20,9 @@ namespace na
 		RendererInitParams p;
 		p.mWidth = width;
 		p.mHeight = height;
-		p.mWindowHandle = CreateAndShowWindow(-1, -1, 800, 600, L"NA Game LUL");
+		p.mWindow = CreateAndShowWindow(-1, -1, 800, 600, L"NA Game LUL");
 
-		NA_FATAL_ERROR(p.mWindowHandle != nullptr, "Failed to create main window.");
+		NA_FATAL_ERROR(p.mWindow != INVALID_WINDOW, "Failed to create main window.");
 		
 		bool success = NA_Renderer->Initialize(p);
 		NA_FATAL_ERROR(success, "Failed to initialize renderer.");
@@ -44,7 +44,7 @@ namespace na
 		NA_Renderer->BeginRender();
 
 		FRenderer.BeginRender();
-		FRenderer.RenderScene(&MainScene);
+		FRenderer.RenderScene(Scene::GetInstance());
 		FRenderer.EndRender();
 
 		NA_Renderer->EndRender();

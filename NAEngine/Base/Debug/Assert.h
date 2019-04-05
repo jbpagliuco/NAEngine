@@ -54,6 +54,8 @@ namespace na
 		exit(EXIT_FAILURE);												\
 	}																	
 
+#define NA_COMPILE_TIME_ASSERT(cond, msg) static_assert(cond, msg)
+
 #else
 
 #define NA_ASSERT(...)

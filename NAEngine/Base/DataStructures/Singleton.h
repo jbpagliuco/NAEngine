@@ -6,17 +6,17 @@ namespace na
 	class Singleton
 	{
 	public:
+		Singleton()
+		{
+			msInst = static_cast<T*>(this);
+		}
+
 		static T* Get()
 		{
-			if (msInst == nullptr)
-			{
-				msInst = new T();
-			}
-
 			return msInst;
 		}
 
-	private:
+	protected:
 		static T *msInst;
 	};
 }

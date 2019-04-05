@@ -5,9 +5,11 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+#include "OS.h"
+
 namespace na
 {
-	HWND CreateWindowWin32(int x, int y, int w, int h, const wchar_t *title);
+	Window CreateWindowWin32(int x, int y, int w, int h, const wchar_t *title);
 }
 
 #endif

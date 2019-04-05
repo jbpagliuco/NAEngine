@@ -12,12 +12,13 @@
 #define LOW_U64(u)		(0x00000000FFFFFFFF & u)
 #define HIGH_U64(u)		((0xFFFFFFFF00000000 & u) >> 32)
 
-#define STATIC_ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
+#define STATIC_ARRAY_SIZE(x) ((sizeof(x)/sizeof(0[x])) / ((size_t)(!(sizeof(x) % sizeof(0[x])))))
 
 // Will execute once for the entire program
 #define EXECUTE_ONCE()																		\
 	static bool COMBINE(_execute_once, __LINE__) = true;									\
 	if (COMBINE(_execute_once, __LINE__) && !(COMBINE(_execute_once, __LINE__) = false))		
+
 
 namespace na
 {

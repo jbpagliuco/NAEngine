@@ -1,7 +1,7 @@
 #pragma once
 
 #include "SceneRenderer.h"
-#include "Renderer/Resources/RenderTarget.h"
+#include "Renderer/RenderTarget.h"
 
 namespace na
 {

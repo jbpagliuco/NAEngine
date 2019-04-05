@@ -1,5 +1,7 @@
 #include "RendererD3D.h"
 
+#if defined(NA_D3D11)
+
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
@@ -12,10 +14,15 @@
 
 namespace na
 {
-	RendererD3D* RendererD3D::msInst = nullptr;
+	Renderer* Renderer::msInst = nullptr;
+	static RendererD3D _RendererInstance;
 
 	bool RendererD3D::Initialize(const RendererInitParams &params)
 	{
+		if (!Renderer::Initialize(params)) {
+			return false;
+		}
+
 		NA_FATAL_ERROR(InitDevice(params), "Failed to initialize Direct3D device.");
 
 		return true;
@@ -23,6 +30,8 @@ namespace na
 
 	void RendererD3D::Shutdown()
 	{
+		Renderer::Shutdown();
+
 		if (mSwapChain) {
 			mSwapChain->SetFullscreenState(false, nullptr);
 		}
@@ -34,6 +43,7 @@ namespace na
 
 	void RendererD3D::BeginRender()
 	{
+		Renderer::BeginRender();
 	}
 
 	void RendererD3D::EndRender()
@@ -69,11 +79,11 @@ namespace na
 		swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
 		swapChainDesc.SampleDesc.Count = 1;
 		swapChainDesc.SampleDesc.Quality = 0;
-		swapChainDesc.OutputWindow = params.mWindowHandle;
+		swapChainDesc.OutputWindow = params.mWindow.handle;
 		swapChainDesc.Windowed = true;
 		swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 		swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_CENTERED;
-		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 		swapChainDesc.Flags = 0;
 
 		const D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE_HARDWARE;
@@ -92,3 +102,5 @@ namespace na
 		return true;
 	}
 }
+
+#endif

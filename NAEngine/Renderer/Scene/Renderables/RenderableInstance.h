@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SceneEntity.h"
+#include "../SceneEntity.h"
 
 namespace na
 {

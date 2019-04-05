@@ -19,4 +19,8 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="data\red_vs.hlsl" />
+    <FxCompile Include="data\red_ps.hlsl" />
+  </ItemGroup>
 </Project>

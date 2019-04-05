@@ -27,7 +27,7 @@ namespace na
 		return DefWindowProc(hwnd, msg, wparam, lparam);
 	}
 
-	HWND CreateWindowWin32(int x, int y, int w, int h, const wchar_t *title)
+	Window CreateWindowWin32(int x, int y, int w, int h, const wchar_t *title)
 	{
 		HINSTANCE appInst = GetModuleHandle(NULL);
 
@@ -45,7 +45,7 @@ namespace na
 		wc.lpszClassName = title;
 		wc.style = CS_HREDRAW | CS_VREDRAW;
 
-		NA_ASSERT_RETURN_VALUE(RegisterClassEx(&wc), NULL, "Failed to register window class '%ls'. Error Code: %d", title, GetLastError());
+		NA_ASSERT_RETURN_VALUE(RegisterClassEx(&wc), INVALID_WINDOW, "Failed to register window class '%ls'. Error Code: %d", title, GetLastError());
 
 		// 2. Create the window
 		HWND hwnd = CreateWindowEx(
@@ -63,13 +63,13 @@ namespace na
 			NULL
 		);
 
-		NA_ASSERT_RETURN_VALUE(hwnd != NULL, NULL, "Failed to create window '%ls'. Error Code: %d", title, GetLastError());
+		NA_ASSERT_RETURN_VALUE(hwnd != NULL, INVALID_WINDOW, "Failed to create window '%ls'. Error Code: %d", title, GetLastError());
 
 		// 3. Show the window
 		ShowWindow(hwnd, SW_SHOW);
 		UpdateWindow(hwnd);
 
 		// Success!
-		return hwnd;
+		return { x, y, w, h, hwnd };
 	}
 }

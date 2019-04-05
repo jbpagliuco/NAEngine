@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -148,22 +148,49 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="D3D\RendererD3D.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RendererD3D.cpp" />
     <ClCompile Include="RenderingSystem.cpp" />
-    <ClCompile Include="Resources\RenderTargetD3D.cpp" />
+    <ClCompile Include="IndexBuffer.cpp" />
+    <ClCompile Include="InputLayout.cpp" />
+    <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="Scene\Camera.cpp" />
+    <ClCompile Include="Scene\Scene.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="StateData.cpp" />
+    <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="Scene\ForwardRenderer.cpp" />
+    <ClCompile Include="Scene\Renderables\MeshInstance.cpp" />
     <ClCompile Include="Scene\SceneEntity.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D3D\RendererD3D.h" />
+    <ClInclude Include="Rect.h" />
+    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="RenderDefs.h" />
+    <ClInclude Include="RendererD3D.h" />
     <ClInclude Include="RenderingSystem.h" />
-    <ClInclude Include="Resources\RenderTarget.h" />
+    <ClInclude Include="Buffer.h" />
+    <ClInclude Include="IndexBuffer.h" />
+    <ClInclude Include="InputLayout.h" />
+    <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="Scene\Camera.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="StateData.h" />
+    <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="Scene\ForwardRenderer.h" />
-    <ClInclude Include="Scene\RenderableInstance.h" />
+    <ClInclude Include="Scene\Renderables\MeshInstance.h" />
+    <ClInclude Include="Scene\Renderables\RenderableInstance.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\SceneRenderer.h" />
     <ClInclude Include="Scene\SceneEntity.h" />
+    <ClInclude Include="Formats.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,22 +1,23 @@
 #pragma once
 
-#include "Base/DataStructures/Singleton.h"
-#include "Base/OS/OS.h"
+#include "Renderer/Renderer.h"
+
+#if defined(NA_D3D11)
 
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 struct IDXGISwapChain;
 
+#if defined(NA_D3D11)
+#define NA_Renderer ((na::RendererD3D*)na::RendererD3D::Get())
+#define NA_RDevice NA_Renderer->GetDevice()
+#define NA_RContext NA_Renderer->GetContext()
+#define NA_RSwapChain NA_Renderer->GetSwapChain()
+#endif
+
 namespace na
 {
-	struct RendererInitParams
-	{
-		WindowHandle mWindowHandle;
-		int mWidth;
-		int mHeight;
-	};
-
-	class RendererD3D : public Singleton<RendererD3D>
+	class RendererD3D : public Renderer
 	{
 	public:
 		bool Initialize(const RendererInitParams &params);
@@ -37,3 +38,5 @@ namespace na
 		IDXGISwapChain* mSwapChain;
 	};
 }
+
+#endif
