@@ -12,7 +12,7 @@ namespace na
 	{
 	public:
 		void AddGameObject(GameObject *obj);
-
+		
 	private:
 		std::vector<GameObject*> mObjects;
 	};

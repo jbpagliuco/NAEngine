@@ -4,6 +4,8 @@ namespace na
 {
 	class GameObject;
 
+	extern float Frametime;
+
 	class GameComponent
 	{
 	public:
@@ -15,11 +17,13 @@ namespace na
 		virtual void Activate();
 		virtual void Deactivate();
 		
-		virtual void UpdateEarly(float deltaTime);
-		virtual void Update(float deltaTime);
-		virtual void UpdateLate(float deltaTime);
+		virtual void UpdateEarly();
+		virtual void Update();
+		virtual void UpdateLate();
 
 	private:
 		GameObject *mOwner;
 	};
+
+	void GameComponentDoFrame();
 }

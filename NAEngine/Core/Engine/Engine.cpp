@@ -1,5 +1,6 @@
 #include "Engine.h"
 
+#include <chrono>
 #include <vector>
 
 #include "Base/BaseSystem.h"
@@ -8,9 +9,12 @@
 #include "Renderer/RenderingSystem.h"
 
 #include "Core/Core.h"
+#include "Core/Objects/GameComponent.h"
 
 namespace na
 {
+	float Frametime = 0.0f;
+
 	struct SystemRegistration
 	{
 		typedef bool(*InitFunc)();
@@ -53,6 +57,13 @@ namespace na
 			reg.mDoFrame = RenderingSystemDoFrame;
 			SystemRegistry.push_back(reg);
 		}
+
+		{
+			SystemRegistration reg;
+			reg.mSystemName = "Component System";
+			reg.mDoFrame = GameComponentDoFrame;
+			SystemRegistry.push_back(reg);
+		}
 	}
 
 	bool InitializeEngine()
@@ -93,11 +104,16 @@ namespace na
 
 	void DoFrame()
 	{
+		auto start = std::chrono::high_resolution_clock::now();
+
 		for (auto &sys : SystemRegistry)
 		{
 			if (sys.mDoFrame != nullptr) {
 				sys.mDoFrame();
 			}
 		}
+
+		auto diff = std::chrono::high_resolution_clock::now() - start;
+		Frametime = std::chrono::duration_cast<std::chrono::duration<float>>(diff).count();
 	}
 }
