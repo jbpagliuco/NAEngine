@@ -12,12 +12,16 @@
 #include "Renderer/Shader.h"
 #include "Renderer/Scene/Renderables/MeshInstance.h"
 
+#include "Core/Components/TestComponent.h"
+
 int main(int argc, char *argv[])
 {
 	// Initialize
 	if (na::InitializeEngine() == false) {
 		return EXIT_FAILURE;
 	}
+
+	na::TestComponent *comp = (na::TestComponent*)na::CreateComponentFromType("TestComponent");
 
 	na::Scene *scene = na::Scene::GetInstance();
 
@@ -84,6 +88,7 @@ int main(int argc, char *argv[])
 	mat.Shutdown();
 	mesh.Shutdown();
 
+	NA_FREE(comp);
 
 	// Shutdown
 	na::ShutdownEngine();

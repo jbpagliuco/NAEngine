@@ -9,7 +9,7 @@
 #include "Renderer/RenderingSystem.h"
 
 #include "Core/Core.h"
-#include "Core/Objects/GameComponent.h"
+#include "Core/Components/GameComponent.h"
 
 namespace na
 {

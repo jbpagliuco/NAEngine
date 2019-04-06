@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Base/Memory/Memory.h"
+
 namespace na
 {
 	class GameObject;
@@ -25,5 +27,15 @@ namespace na
 		GameObject *mOwner;
 	};
 
+	// System Do Frame
 	void GameComponentDoFrame();
+
+	GameComponent* CreateComponentFromType(const char *type);
+
+	template <typename T>
+	GameComponent* InstantiateGameComponent()
+	{
+		void *mem = NA_ALLOC(sizeof(T));
+		return new (mem) T();
+	}
 }

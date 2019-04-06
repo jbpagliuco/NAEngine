@@ -14,7 +14,7 @@
 
 namespace na
 {
-	NA_CREATE_SINGLETON_INSTANCE(Renderer);
+	NA_CREATE_SINGLETON_INSTANCE_SUB(Renderer, RendererD3D);
 
 	bool RendererD3D::Initialize(const RendererInitParams &params)
 	{

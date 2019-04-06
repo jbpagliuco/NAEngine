@@ -1,6 +1,7 @@
 #pragma once
 
-#define NA_CREATE_SINGLETON_INSTANCE(T) T* T::msInst = nullptr
+#define NA_CREATE_SINGLETON_INSTANCE(T) T* T::msInst = nullptr; static T _T_Inst
+#define NA_CREATE_SINGLETON_INSTANCE_SUB(T, SubT) T* T::msInst = nullptr; static SubT _SubT_Inst
 
 namespace na
 {
