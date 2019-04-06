@@ -15,7 +15,7 @@ namespace na
 		void SetOwner(GameObject *owner);
 		GameObject* GetOwner()const;
 
-		virtual void Deserialize(const DeserializationParameterMap &params);
+		virtual void Deserialize(DeserializationParameterMap &params);
 
 		virtual void Activate();
 		virtual void Deactivate();

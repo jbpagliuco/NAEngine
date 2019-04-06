@@ -4,7 +4,9 @@
     <gameobject>
         <name>TestObject</name>
         <components>
-            <component type="TestComponent" />
+			<component type="TestComponent">
+				<int>5</int>
+			</component>
         </components>
     </gameobject>
 </root>

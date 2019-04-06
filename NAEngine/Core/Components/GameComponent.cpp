@@ -30,7 +30,7 @@ namespace na
 		return mOwner;
 	}
 
-	void GameComponent::Deserialize(const DeserializationParameterMap &params)
+	void GameComponent::Deserialize(DeserializationParameterMap &params)
 	{
 	}
 
