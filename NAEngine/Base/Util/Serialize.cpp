@@ -12,41 +12,52 @@
 
 namespace na
 {
-	DeserializationParameter INVALID_DESERIALIZATION_PARAMETER = { "" };
+	// Lol what is this
+	DeserializationParameterMap INVALID_DESERIALIZATION_PARAMETER = { "~*INVALID*~" };
 
-	DeserializationParameter& DeserializationParameter::operator[](const char *childName)
+	DeserializationParameterMap& DeserializationParameterMap::operator[](const char *childName)
 	{
-		NA_ASSERT(childrenMap.find(childName) != childrenMap.end());
+		NA_ASSERT_RETURN_VALUE(childrenMap.find(childName) != childrenMap.end(), INVALID_DESERIALIZATION_PARAMETER, "Failed to find value '%s' in parameter map", childName);
 
 		return childrenMap[childName];
 	}
 
-	DeserializationParameter& DeserializationParameter::operator[](int index)
+	DeserializationParameterMap& DeserializationParameterMap::operator[](int index)
 	{
-		NA_ASSERT((size_t)index < childrenArray.size());
+		NA_ASSERT_RETURN_VALUE((size_t)index < childrenArray.size(), INVALID_DESERIALIZATION_PARAMETER, "Failed to find value at index %d", index);
 
 		return childrenArray[index];
 	}
 
-	bool DeserializationParameter::AsBool(bool def)
+	void DeserializationParameterMap::Insert(const char *name, DeserializationParameterMap map)
+	{
+		childrenMap[name] = map;
+	}
+
+	void DeserializationParameterMap::Insert(int index, DeserializationParameterMap map)
+	{
+		childrenArray.insert(childrenArray.begin() + index, map);
+	}
+
+	bool DeserializationParameterMap::AsBool(bool def)
 	{
 		RETURN_DEFAULT_IF_INVALID();
 		return value == "1" || value == "t" || value == "true" || value == "y" || value == "yes";
 	}
 
-	int DeserializationParameter::AsInt(int def)
+	int DeserializationParameterMap::AsInt(int def)
 	{
 		RETURN_DEFAULT_IF_INVALID();
 		return std::stoi(value);
 	}
 
-	float DeserializationParameter::AsFloat(float def)
+	float DeserializationParameterMap::AsFloat(float def)
 	{
 		RETURN_DEFAULT_IF_INVALID();
 		return std::stof(value);
 	}
 
-	DirectX::XMFLOAT2 DeserializationParameter::AsFloat2(DirectX::XMFLOAT2 def)
+	DirectX::XMFLOAT2 DeserializationParameterMap::AsFloat2(DirectX::XMFLOAT2 def)
 	{
 		RETURN_DEFAULT_IF_INVALID();
 		
@@ -55,7 +66,7 @@ namespace na
 		return DirectX::XMFLOAT2(x, y);
 	}
 
-	DirectX::XMFLOAT3 DeserializationParameter::AsFloat3(DirectX::XMFLOAT3 def)
+	DirectX::XMFLOAT3 DeserializationParameterMap::AsFloat3(DirectX::XMFLOAT3 def)
 	{
 		RETURN_DEFAULT_IF_INVALID();
 
@@ -65,7 +76,7 @@ namespace na
 		return DirectX::XMFLOAT3(x, y, z);
 	}
 
-	DirectX::XMFLOAT4 DeserializationParameter::AsFloat4(DirectX::XMFLOAT4 def)
+	DirectX::XMFLOAT4 DeserializationParameterMap::AsFloat4(DirectX::XMFLOAT4 def)
 	{
 		RETURN_DEFAULT_IF_INVALID();
 
@@ -76,7 +87,7 @@ namespace na
 		return DirectX::XMFLOAT4(x, y, z, w);
 	}
 
-	DirectX::XMFLOAT4 DeserializationParameter::AsColor(DirectX::XMFLOAT4 def)
+	DirectX::XMFLOAT4 DeserializationParameterMap::AsColor(DirectX::XMFLOAT4 def)
 	{
 		RETURN_DEFAULT_IF_INVALID();
 
@@ -94,9 +105,9 @@ namespace na
 	}
 
 
-	static DeserializationParameter ParseParameterXML(pugi::xml_node &parent)
+	static DeserializationParameterMap ParseParameterXML(pugi::xml_node &parent)
 	{
-		DeserializationParameter parentParam;
+		DeserializationParameterMap parentParam;
 		parentParam.value = parent.text().as_string();
 
 		// Is array?
@@ -139,7 +150,7 @@ namespace na
 	{
 		DeserializationParameterMap params;
 		for (auto &param : parent.children()) {
-			params[param.name()] = ParseParameterXML(param);
+			params.Insert(param.name(), ParseParameterXML(param));
 		}
 
 		return params;

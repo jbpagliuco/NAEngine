@@ -12,7 +12,7 @@ namespace na
 	public:
 		inline void Deserialize(DeserializationParameterMap &params)
 		{
-			mTestInt = params["int"].AsInt();
+			mTestInt = params["int"].AsInt(100);
 		}
 
 		inline void Update() override { LogInfo("TEST", "%d", mTestInt); }

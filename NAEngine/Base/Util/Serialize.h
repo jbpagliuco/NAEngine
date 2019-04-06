@@ -12,18 +12,21 @@ namespace pugi {
 
 namespace na
 {
-	struct DeserializationParameter
+	struct DeserializationParameterMap
 	{
 		std::string value;
 		std::map<std::string, std::string> meta;
 
-		std::map<std::string, DeserializationParameter> childrenMap;
-		std::vector<DeserializationParameter> childrenArray;
+		std::map<std::string, DeserializationParameterMap> childrenMap;
+		std::vector<DeserializationParameterMap> childrenArray;
 
-		DeserializationParameter& operator[](const char *childName);
-		DeserializationParameter& operator[](int index);
+		DeserializationParameterMap& operator[](const char *childName);
+		DeserializationParameterMap& operator[](int index);
 
-		inline bool operator==(const DeserializationParameter &rhs) { return value == rhs.value; }
+		void Insert(const char *name, DeserializationParameterMap value);
+		void Insert(int index, DeserializationParameterMap value);
+
+		inline bool operator==(const DeserializationParameterMap &rhs) { return value == rhs.value; }
 
 		bool AsBool(bool def = false);
 		int AsInt(int def = 0);
@@ -36,9 +39,7 @@ namespace na
 		DirectX::XMFLOAT4 AsColor(DirectX::XMFLOAT4 def);
 	};
 
-	extern DeserializationParameter INVALID_DESERIALIZATION_PARAMETER;
-
-	typedef std::map<std::string, DeserializationParameter> DeserializationParameterMap;
-
+	extern DeserializationParameterMap INVALID_DESERIALIZATION_PARAMETER;
+	
 	DeserializationParameterMap ParseNode(pugi::xml_node &parent);
 }
