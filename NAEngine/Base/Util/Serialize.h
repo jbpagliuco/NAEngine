@@ -22,6 +22,8 @@ namespace na
 
 		DeserializationParameter& operator[](const char *childName)
 		{
+			NA_ASSERT(childrenMap.find(childName) != childrenMap.end());
+
 			return childrenMap[childName];
 		}
 
