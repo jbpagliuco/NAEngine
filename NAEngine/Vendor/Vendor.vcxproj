@@ -20,36 +20,36 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{BCF92C13-F6E9-408D-AEB7-3FAB79B56678}</ProjectGuid>
-    <RootNamespace>Base</RootNamespace>
+    <ProjectGuid>{36ED7316-C64C-41D7-A29D-0A242DD84979}</ProjectGuid>
+    <RootNamespace>Vendor</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -69,48 +69,21 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(ProjectDir)\..\Output\$(Platform)\$(Configuration)\</OutDir>
-    <LibraryPath>$(SolutionDir)\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
-    <TargetName>NA$(ProjectName)</TargetName>
-    <IncludePath>X:\shit\prog\NAEngine\NAEngine\Vendor;$(ProjectDir);$(IncludePath)</IncludePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(ProjectDir)\..\Output\$(Platform)\$(Configuration)\</OutDir>
-    <LibraryPath>$(SolutionDir)\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
-    <TargetName>NA$(ProjectName)</TargetName>
-    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)\Output\$(Platform)\$(Configuration)\</OutDir>
-    <LibraryPath>$(SolutionDir)\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
-    <TargetName>NA$(ProjectName)</TargetName>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)\Output\$(Platform)\$(Configuration)\</OutDir>
-    <LibraryPath>$(SolutionDir)\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
-    <TargetName>NA$(ProjectName)</TargetName>
-  </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>_NA_DEBUG;_NA_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
-    </ClCompile>
-  </ItemDefinitionGroup>
+  <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>_NA_DEBUG;_NA_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -121,7 +94,6 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>_NA_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -136,7 +108,6 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>_NA_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -144,34 +115,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BaseSystem.cpp" />
-    <ClCompile Include="Debug\Assert.cpp" />
-    <ClCompile Include="Debug\Log.cpp" />
-    <ClCompile Include="File\File.cpp" />
-    <ClCompile Include="Memory\Memory.cpp" />
-    <ClCompile Include="OS\OS.cpp" />
-    <ClCompile Include="OS\OSWin32.cpp" />
-    <ClCompile Include="Util\Color.cpp" />
-    <ClCompile Include="Util\Serialize.cpp" />
-    <ClCompile Include="Util\String.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="BaseSystem.h" />
-    <ClInclude Include="DataStructures\Singleton.h" />
-    <ClInclude Include="Debug\Assert.h" />
-    <ClInclude Include="Debug\Log.h" />
-    <ClInclude Include="File\File.h" />
-    <ClInclude Include="Memory\Memory.h" />
-    <ClInclude Include="OS\OS.h" />
-    <ClInclude Include="Util\Color.h" />
-    <ClInclude Include="Util\Serialize.h" />
-    <ClInclude Include="Util\String.h" />
-    <ClInclude Include="Util\Util.h" />
-    <ClInclude Include="OS\OSWin32.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="File\File.inl" />
-    <None Include="Util\Util.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
