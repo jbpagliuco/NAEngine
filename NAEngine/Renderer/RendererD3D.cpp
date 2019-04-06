@@ -14,8 +14,7 @@
 
 namespace na
 {
-	Renderer* Renderer::msInst = nullptr;
-	static RendererD3D _RendererInstance;
+	NA_CREATE_SINGLETON_INSTANCE(Renderer);
 
 	bool RendererD3D::Initialize(const RendererInitParams &params)
 	{

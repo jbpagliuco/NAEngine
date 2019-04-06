@@ -1,5 +1,7 @@
 #pragma once
 
+#define NA_CREATE_SINGLETON_INSTANCE(T) T* T::msInst = nullptr
+
 namespace na
 {
 	template <typename T>
