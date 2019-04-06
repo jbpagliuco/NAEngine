@@ -2,24 +2,22 @@
 
 #include "RenderableInstance.h"
 
+#include "Renderer/Mesh.h"
+
 namespace na
 {
-	class VertexBuffer;
-	class IndexBuffer;
 	class Material;
 
-	class MeshInstance : public RenderableInstance
+	class MeshInstance : public RenderableInstance, public Factory<MeshInstance>
 	{
 	public:
-		bool Initialize(VertexBuffer *vertexBuffer, IndexBuffer *indexBuffer, Material *material);
+		bool Initialize(const MeshData &meshData, Material *material);
 		void Shutdown();
 
 		virtual void Render() override;
 
 	private:
-		VertexBuffer *mVertexBuffer;
-		IndexBuffer *mIndexBuffer;
-
+		Mesh *mMesh;
 		Material *mMaterial;
 	};
 }

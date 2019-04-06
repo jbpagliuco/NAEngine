@@ -13,6 +13,7 @@ namespace na
 		const char* GetName()const;
 
 		void AddComponent(GameComponent *component);
+		std::vector<GameComponent*>& GetComponents();
 
 	private:
 		char mName[256];

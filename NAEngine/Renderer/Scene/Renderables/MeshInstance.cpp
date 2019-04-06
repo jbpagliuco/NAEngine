@@ -9,10 +9,14 @@
 
 namespace na
 {
-	bool MeshInstance::Initialize(VertexBuffer *vertexBuffer, IndexBuffer *indexBuffer, Material *material)
+	NA_FACTORY_BUILD(MeshInstance);
+
+	bool MeshInstance::Initialize(const MeshData &meshData, Material *material)
 	{
-		mVertexBuffer = vertexBuffer;
-		mIndexBuffer = indexBuffer;
+		// TODO: Reuse meshes
+		mMesh = Mesh::Create();
+		mMesh->Initialize(meshData);
+
 		mMaterial = material;
 
 		return true;
@@ -20,16 +24,13 @@ namespace na
 	
 	void MeshInstance::Shutdown()
 	{
+		Mesh::Destroy(mMesh);
+		mMaterial->Shutdown();
 	}
 
 	void MeshInstance::Render()
 	{
-		mVertexBuffer->Bind();
-		mIndexBuffer->Bind();
-		NA_RContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 		mMaterial->Bind();
-
-		NA_RContext->DrawIndexed((UINT)mIndexBuffer->GetNumIndices(), 0, 0);
+		mMesh->Render();
 	}
 }

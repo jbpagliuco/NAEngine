@@ -2,16 +2,17 @@
 
 #include <vector>
 
+#include "Base/DataStructures/Singleton.h"
+
 namespace na
 {
 	class RenderableInstance;
 
-	class Scene
+	class Scene : public Singleton<Scene>
 	{
 	public:
-		static Scene *GetInstance();
-
 		void AddRenderable(RenderableInstance *r);
+		void RemoveRenderable(RenderableInstance *r);
 
 		const std::vector<RenderableInstance*>& GetRenderables()const;
 

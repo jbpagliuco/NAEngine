@@ -149,6 +149,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RendererD3D.cpp" />
     <ClCompile Include="RenderingSystem.cpp" />
@@ -166,6 +167,8 @@
     <ClCompile Include="Scene\SceneEntity.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Factory.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Material.h" />

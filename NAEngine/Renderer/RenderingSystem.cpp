@@ -44,7 +44,7 @@ namespace na
 		NA_Renderer->BeginRender();
 
 		FRenderer.BeginRender();
-		FRenderer.RenderScene(Scene::GetInstance());
+		FRenderer.RenderScene(Scene::Get());
 		FRenderer.EndRender();
 
 		NA_Renderer->EndRender();

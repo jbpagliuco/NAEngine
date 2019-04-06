@@ -5,7 +5,8 @@
 #include <vector>
 
 #include "Base/Debug/Assert.h"
-#include "TestComponent.h"
+
+#include "StaticMeshComponent.h"
 
 #define FOREACH_COMPONENT(func, ...) for (auto &iter : ComponentTable) { for (auto &component : iter.second) { component->func(__VA_ARGS__); } }
 
@@ -14,7 +15,7 @@
 namespace na
 {
 	static std::map<std::string, GameComponent*(*)()> ComponentInstantiators = {
-		GENERATE_INSTANTIATOR(TestComponent),
+		GENERATE_INSTANTIATOR(StaticMeshComponent),
 	};
 
 	typedef std::vector<GameComponent*> ComponentList;

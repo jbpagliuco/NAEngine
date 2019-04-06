@@ -19,4 +19,9 @@ namespace na
 	{
 		mComponents.push_back(component);
 	}
+
+	std::vector<GameComponent*>& GameObject::GetComponents()
+	{
+		return mComponents;
+	}
 }

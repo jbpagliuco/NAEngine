@@ -25,6 +25,10 @@ namespace na
 	void World::Clear()
 	{
 		for (auto &obj : mObjects) {
+			for (auto &component : obj->GetComponents()) {
+				component->Deactivate();
+			}
+
 			NA_FREE(obj);
 		}
 
@@ -72,6 +76,9 @@ namespace na
 				// Add the component to this game objects
 				obj->AddComponent(component);
 				component->SetOwner(obj);
+
+				// Activate the component
+				component->Activate();
 			}
 
 			World::Get()->AddGameObject(obj);

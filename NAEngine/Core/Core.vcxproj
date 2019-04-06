@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Components\StaticMeshComponent.cpp" />
     <ClCompile Include="Components\TestComponent.cpp" />
     <ClCompile Include="Engine\Engine.cpp" />
     <ClCompile Include="Components\GameComponent.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="World\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Components\StaticMeshComponent.h" />
     <ClInclude Include="Components\TestComponent.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Engine\Engine.h" />
