@@ -3,9 +3,26 @@
 #include <algorithm>
 
 #include "Color.h"
+#include "Debug/Assert.h"
+
+#include "pugixml-1.9/pugixml.hpp"
 
 namespace na
 {
+	DeserializationParameter& DeserializationParameter::operator[](const char *childName)
+	{
+		NA_ASSERT(childrenMap.find(childName) != childrenMap.end());
+
+		return childrenMap[childName];
+	}
+
+	DeserializationParameter& DeserializationParameter::operator[](int index)
+	{
+		NA_ASSERT((size_t)index < childrenArray.size());
+
+		return childrenArray[index];
+	}
+
 	static DeserializationParameter ParseParameterXML(pugi::xml_node &parent)
 	{
 		DeserializationParameter parentParam;

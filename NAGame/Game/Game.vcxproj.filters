@@ -23,4 +23,7 @@
     <FxCompile Include="data\red_vs.hlsl" />
     <FxCompile Include="data\red_ps.hlsl" />
   </ItemGroup>
+  <ItemGroup>
+    <Xml Include="data\world.xml" />
+  </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Base/Memory/Memory.h"
+#include "Base/Util/Serialize.h"
 
 namespace na
 {
@@ -14,7 +15,7 @@ namespace na
 		void SetOwner(GameObject *owner);
 		GameObject* GetOwner()const;
 
-		virtual void Deserialize();
+		virtual void Deserialize(const DeserializationParameterMap &params);
 
 		virtual void Activate();
 		virtual void Deactivate();
@@ -27,8 +28,9 @@ namespace na
 		GameObject *mOwner;
 	};
 
-	// System Do Frame
+	// System Callbacks
 	void GameComponentDoFrame();
+	void GameComponentShutdown();
 
 	GameComponent* CreateComponentFromType(const char *type);
 

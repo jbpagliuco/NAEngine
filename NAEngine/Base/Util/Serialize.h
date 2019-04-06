@@ -6,9 +6,9 @@
 
 #include <DirectXMath.h>
 
-#include <pugixml-1.9/pugixml.hpp>
-
-#include "Debug/Assert.h"
+namespace pugi {
+	class xml_node;
+}
 
 namespace na
 {
@@ -20,19 +20,8 @@ namespace na
 		std::map<std::string, DeserializationParameter> childrenMap;
 		std::vector<DeserializationParameter> childrenArray;
 
-		DeserializationParameter& operator[](const char *childName)
-		{
-			NA_ASSERT(childrenMap.find(childName) != childrenMap.end());
-
-			return childrenMap[childName];
-		}
-
-		DeserializationParameter& operator[](int index)
-		{
-			NA_ASSERT((size_t)index < childrenArray.size());
-
-			return childrenArray[index];
-		}
+		DeserializationParameter& operator[](const char *childName);
+		DeserializationParameter& operator[](int index);
 	};
 
 	typedef std::map<std::string, DeserializationParameter> DeserializationParameterMap;
@@ -62,7 +51,7 @@ namespace na
 	{
 		if (map.find(name) != map.end()) {
 			strncpy_s(buf, map[name].value.c_str(), N);
-			fes::ToLowerCase(buf);
+			na::ToLowerCase(buf);
 		}
 		else {
 			strncpy_s(buf, def, N);

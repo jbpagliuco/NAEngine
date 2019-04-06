@@ -101,7 +101,7 @@ namespace na
 	{
 		const size_t len = strlen(s);
 
-		MultiByteToWideChar(CP_UTF8, 0, s, len, buf, n);
+		MultiByteToWideChar(CP_UTF8, 0, s, (int)len, buf, (int)n);
 		buf[min(n - 1, len)] = 0;
 	}
 }

@@ -73,7 +73,7 @@
     <OutDir>$(ProjectDir)\..\Output\$(Platform)\$(Configuration)\</OutDir>
     <LibraryPath>$(SolutionDir)\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <TargetName>NA$(ProjectName)</TargetName>
-    <IncludePath>X:\shit\prog\NAEngine\NAEngine\Vendor;$(ProjectDir);$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\Vendor;$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(ProjectDir)\..\Output\$(Platform)\$(Configuration)\</OutDir>
@@ -110,7 +110,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_NA_DEBUG;_NA_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Vendor;$(ProjectDir)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

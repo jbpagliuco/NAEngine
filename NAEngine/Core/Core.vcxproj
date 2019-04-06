@@ -149,7 +149,7 @@
     <ClCompile Include="Components\TestComponent.cpp" />
     <ClCompile Include="Engine\Engine.cpp" />
     <ClCompile Include="Components\GameComponent.cpp" />
-    <ClCompile Include="Objects\GameObject.cpp" />
+    <ClCompile Include="World\GameObject.cpp" />
     <ClCompile Include="World\World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -157,7 +157,7 @@
     <ClInclude Include="Core.h" />
     <ClInclude Include="Engine\Engine.h" />
     <ClInclude Include="Components\GameComponent.h" />
-    <ClInclude Include="Objects\GameObject.h" />
+    <ClInclude Include="World\GameObject.h" />
     <ClInclude Include="World\World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

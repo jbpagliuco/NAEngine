@@ -86,3 +86,5 @@ namespace na
 	template <typename T>
 	T& Clamp(T& val, const T& min, const T& max);
 }
+
+#include "Util.inl"

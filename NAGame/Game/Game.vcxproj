@@ -112,7 +112,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\..\NAEngine\;$(IncludePath)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>NABase.lib;NACore.lib;NARenderer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>NABase.lib;NACore.lib;NARenderer.lib;Vendor.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -173,6 +173,9 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="data\world.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "Base/Debug/Assert.h"
-
 #include "TestComponent.h"
 
 #define FOREACH_COMPONENT(func, ...) for (auto &iter : ComponentTable) { for (auto &component : iter.second) { component->func(__VA_ARGS__); } }
@@ -31,7 +30,7 @@ namespace na
 		return mOwner;
 	}
 
-	void GameComponent::Deserialize()
+	void GameComponent::Deserialize(const DeserializationParameterMap &params)
 	{
 	}
 
@@ -61,6 +60,16 @@ namespace na
 		FOREACH_COMPONENT(UpdateEarly);
 		FOREACH_COMPONENT(Update);
 		FOREACH_COMPONENT(UpdateLate);
+	}
+
+	void GameComponentShutdown()
+	{
+		for (auto &iter : ComponentTable) {
+			ComponentList components = iter.second;
+			for (auto &component : components) {
+				NA_FREE(component);
+			}
+		}
 	}
 
 	GameComponent* CreateComponentFromType(const char *type)

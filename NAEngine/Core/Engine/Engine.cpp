@@ -10,6 +10,7 @@
 
 #include "Core/Core.h"
 #include "Core/Components/GameComponent.h"
+#include "Core/World/World.h"
 
 namespace na
 {
@@ -61,7 +62,15 @@ namespace na
 		{
 			SystemRegistration reg;
 			reg.mSystemName = "Component System";
+			reg.mSystemShutdown = GameComponentShutdown;
 			reg.mDoFrame = GameComponentDoFrame;
+			SystemRegistry.push_back(reg);
+		}
+
+		{
+			SystemRegistration reg;
+			reg.mSystemName = "World System";
+			reg.mSystemShutdown = WorldSystemShutdown;
 			SystemRegistry.push_back(reg);
 		}
 	}

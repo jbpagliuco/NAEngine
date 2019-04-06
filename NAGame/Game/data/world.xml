@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<root>
+    <gameobject>
+        <name>TestObject</name>
+        <components>
+            <component type="TestComponent" />
+        </components>
+    </gameobject>
+</root>
