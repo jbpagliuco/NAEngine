@@ -33,7 +33,6 @@ namespace na
 
 	void StaticMeshComponent::UpdateLate()
 	{
-		GetOwner()->mTransform.Translate(Frametime * 0.3f, 0.0f, 0.0f);
 		mMeshInstance.SetWorldTransform(GetOwner()->mTransform.GetMatrix());
 	}
 }

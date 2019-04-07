@@ -15,6 +15,12 @@ namespace na
 		OBJECTDATA
 	};
 
+	struct PerObjectData
+	{
+		DirectX::XMMATRIX world;
+		DirectX::XMMATRIX worldInverseTranspose;
+	};
+
 	bool StateData::Initialize()
 	{
 		{
@@ -35,7 +41,7 @@ namespace na
 			// Object buffer
 			D3D11_BUFFER_DESC desc;
 			desc.Usage = D3D11_USAGE_DYNAMIC;
-			desc.ByteWidth = sizeof(DirectX::XMMATRIX);
+			desc.ByteWidth = sizeof(PerObjectData);
 			desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 			desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 			desc.MiscFlags = 0;
@@ -92,8 +98,10 @@ namespace na
 		HRESULT hr = NA_RContext->Map(mObjectDataBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
 		NA_ASSERT_RETURN(SUCCEEDED(hr));
 
-		DirectX::XMMATRIX m = DirectX::XMMatrixTranspose(transform);
-		memcpy(res.pData, &m, sizeof(DirectX::XMMATRIX));
+		PerObjectData data;
+		data.world = DirectX::XMMatrixTranspose(transform);
+		data.worldInverseTranspose = DirectX::XMMatrixInverse(nullptr, transform); // ^T ^T
+		memcpy(res.pData, &data, sizeof(PerObjectData));
 
 		NA_RContext->Unmap(mObjectDataBuffer, 0);
 

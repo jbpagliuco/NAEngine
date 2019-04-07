@@ -5,6 +5,7 @@ cbuffer cbCamera : register(b0) {
 
 cbuffer cbPerObject : register(b1) {
 	matrix world;
+	matrix worldInverseTranspose;
 };
 
 // Vertex/Pixel inputs
@@ -30,9 +31,8 @@ PixelInput main(VertexInput input)
 	output.svpos = mul(pos, mul(world, viewProj));
 	output.position = mul(pos, world);
 
-	//float4 normal = float4(normalize(input.normal), 0.0f);
-	//output.normal = mul(worldInverseTranspose, normal).xyz;
-	output.normal = float3(0.0f, 0.0f, 0.0f);
+	float4 normal = float4(normalize(input.normal), 0.0f);
+	output.normal = mul(worldInverseTranspose, normal).xyz;
 
 	output.texCoord = input.texCoord;
 

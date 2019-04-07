@@ -5,9 +5,9 @@
 		<name>Camera</name>
 		<transform>
 			<position>
-				<x>.1</x>
+				<x>2</x>
 				<y>3</y>
-				<z>0</z>
+				<z>-5</z>
 			</position>
 			<rotation type="lookat"/>
 		</transform>

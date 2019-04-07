@@ -34,7 +34,7 @@ namespace na
 		float radius = 2.0f;
 		float height = 2.0f;
 		DirectX::XMFLOAT3 pos(radius * cosf(t), height, radius * sinf(t));
-		//GetOwner()->mTransform.SetPosition(pos);
+		GetOwner()->mTransform.SetPosition(pos);
 		GetOwner()->mTransform.SetLookAt(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	}
 
