@@ -15,6 +15,8 @@ namespace na
 		virtual void Activate() override;
 		virtual void Deactivate() override;
 
+		virtual void UpdateLate() override;
+
 	private:
 		MeshInstance mMeshInstance;
 		Material mat;

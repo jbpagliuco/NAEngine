@@ -22,6 +22,7 @@ namespace na
 		void SetRotation(const DirectX::XMVECTOR &qRotation);
 		void SetRotation(const DirectX::XMFLOAT3 &axis, float angle);
 		void SetLookAt(const DirectX::XMFLOAT3 &target);
+		void Rotate(float pitch, float yaw, float roll);
 
 		void ResetScale();
 		DirectX::XMFLOAT3& GetScale();

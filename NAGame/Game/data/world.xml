@@ -5,9 +5,9 @@
 		<name>Camera</name>
 		<transform>
 			<position>
-				<x>2</x>
-				<y>2</y>
-				<z>-5</z>
+				<x>.1</x>
+				<y>3</y>
+				<z>0</z>
 			</position>
 			<rotation type="lookat"/>
 		</transform>
@@ -19,25 +19,15 @@
 			</component>
 		</components>
 	</gameobject>
-	
-    <gameobject>
-        <name>TestObject</name>
-        <components>
-			<component type="StaticMeshComponent">
-				<mesh>data\cube.obj</mesh>
-				<material>data\test_mat.matx</material>
-			</component>
-        </components>
-    </gameobject>
 
 	<gameobject>
 		<name>TestObject2</name>
 		<transform>
 			<position>
-				<x>3</x>
-				<y>1</y>
+				<x>0</x>
+				<y>0</y>
+				<z>0</z>
 			</position>
-			<rotation type="lookat"/>
 		</transform>
 		<components>
 			<component type="StaticMeshComponent">

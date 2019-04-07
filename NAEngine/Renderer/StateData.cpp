@@ -92,7 +92,8 @@ namespace na
 		HRESULT hr = NA_RContext->Map(mObjectDataBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
 		NA_ASSERT_RETURN(SUCCEEDED(hr));
 
-		memcpy(res.pData, &transform, sizeof(DirectX::XMMATRIX));
+		DirectX::XMMATRIX m = DirectX::XMMatrixTranspose(transform);
+		memcpy(res.pData, &m, sizeof(DirectX::XMMATRIX));
 
 		NA_RContext->Unmap(mObjectDataBuffer, 0);
 

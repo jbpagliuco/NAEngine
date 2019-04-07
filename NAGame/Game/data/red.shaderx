@@ -2,7 +2,7 @@
 
 <root>
     <vertexShader>
-        <file>data\\red_vs.hlsl</file>
+        <file>data\red_vs.hlsl</file>
         <inputs>
             <input>
                 <type>float3</type>
@@ -19,6 +19,6 @@
         </inputs>
     </vertexShader>
     <pixelShader>
-        <file>data\\red_ps.hlsl</file>
+        <file>data\red_ps.hlsl</file>
     </pixelShader>
 </root>

@@ -7,6 +7,7 @@
 #include "Renderer/Shader.h"
 #include "Renderer/Material.h"
 
+#include "Core/World/GameObject.h"
 
 namespace na
 {
@@ -28,5 +29,11 @@ namespace na
 		Scene::Get()->RemoveRenderable(&mMeshInstance);
 
 		mMeshInstance.Shutdown();
+	}
+
+	void StaticMeshComponent::UpdateLate()
+	{
+		GetOwner()->mTransform.Translate(Frametime * 0.3f, 0.0f, 0.0f);
+		mMeshInstance.SetWorldTransform(GetOwner()->mTransform.GetMatrix());
 	}
 }

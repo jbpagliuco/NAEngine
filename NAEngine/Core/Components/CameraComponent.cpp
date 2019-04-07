@@ -31,8 +31,10 @@ namespace na
 		static float t = 0.0f;
 		t += Frametime * 1.0f;
 
-		DirectX::XMFLOAT3 pos(2.0f * cosf(t), 2.0f, 2.0f * sinf(t));
-		GetOwner()->mTransform.SetPosition(pos);
+		float radius = 2.0f;
+		float height = 2.0f;
+		DirectX::XMFLOAT3 pos(radius * cosf(t), height, radius * sinf(t));
+		//GetOwner()->mTransform.SetPosition(pos);
 		GetOwner()->mTransform.SetLookAt(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	}
 
