@@ -24,11 +24,23 @@ namespace na
 		ps.Initialize("data\\red_ps.hlsl");
 
 		std::vector<na::InputElement> ilElems;
+
 		na::InputElement ie;
 		ie.mSemantic = "POSITION";
 		ie.mIndex = 0;
-		ie.mFormat = na::Format::R32G32B32_FLOAT;
+		ie.mFormat = Format::R32G32B32_FLOAT;
 		ilElems.push_back(ie);
+
+		ie.mSemantic = "NORMAL";
+		ie.mIndex = 0;
+		ie.mFormat = Format::R32G32B32_FLOAT;
+		ilElems.push_back(ie);
+
+		ie.mSemantic = "TEXCOORD";
+		ie.mIndex = 0;
+		ie.mFormat = Format::R32G32_FLOAT;
+		ilElems.push_back(ie);
+
 		il.Initialize(ilElems, vs);
 
 		shader.Initialize(&il, &vs, &ps);

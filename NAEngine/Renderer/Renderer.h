@@ -6,6 +6,8 @@
 #include "RenderDefs.h"
 #include "StateData.h"
 
+#define NA_RStateData Renderer::Get()->GetStateData()
+
 namespace na
 {
 	struct RendererInitParams

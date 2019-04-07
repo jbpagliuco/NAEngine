@@ -18,13 +18,9 @@ namespace na
 
 	bool RendererD3D::Initialize(const RendererInitParams &params)
 	{
-		if (!Renderer::Initialize(params)) {
-			return false;
-		}
-
 		NA_FATAL_ERROR(InitDevice(params), "Failed to initialize Direct3D device.");
 
-		return true;
+		return Renderer::Initialize(params);
 	}
 
 	void RendererD3D::Shutdown()

@@ -2,6 +2,12 @@
 
 namespace na
 {
+	SceneEntity::SceneEntity() :
+		mDirty(false),
+		mWorldTransform(DirectX::XMMatrixIdentity())
+	{
+	}
+
 	void SceneEntity::SetPosition(const DirectX::XMFLOAT3 &position)
 	{
 		mDirty = true;

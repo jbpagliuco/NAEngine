@@ -10,6 +10,11 @@ namespace na
 {
 	Window INVALID_WINDOW = { 0, 0, 0, 0, NULL };
 
+	float Window::GetAspectRatio()
+	{
+		return (float)width / (float)height;
+	}
+
 	Window CreateAndShowWindow(int x, int y, int w, int h, const wchar_t *title)
 	{
 #if defined(_NA_WIN32)

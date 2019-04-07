@@ -1,5 +1,8 @@
 #pragma once
 
+#include <DirectXMath.h>
+
+struct ID3D11Buffer;
 struct ID3D11RasterizerState;
 
 namespace na
@@ -9,13 +12,21 @@ namespace na
 	class StateData
 	{
 	public:
+		bool Initialize();
 		void Shutdown();
 		
 		void SetViewport(const Rect &rect);
 		
+		void SetViewProjMatrices(const DirectX::XMMATRIX &view, const DirectX::XMMATRIX &proj);
+
+		void SetObjectTransform(const DirectX::XMMATRIX &transform);
+
 		void SetRasterizerState();
 
 	private:
-		ID3D11RasterizerState *mRasterizerState = nullptr;
+		ID3D11Buffer *mViewProjBuffer;
+		ID3D11Buffer *mObjectDataBuffer;
+
+		ID3D11RasterizerState *mRasterizerState;
 	};
 }

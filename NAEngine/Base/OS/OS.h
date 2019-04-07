@@ -19,6 +19,8 @@ namespace na
 
 		bool operator==(const Window &rhs) { return handle == rhs.handle; }
 		bool operator!=(const Window &rhs) { return handle != rhs.handle; }
+
+		float GetAspectRatio();
 	};
 	extern Window INVALID_WINDOW;
 	

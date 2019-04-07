@@ -7,6 +7,8 @@ namespace na
 	class SceneEntity
 	{
 	public:
+		SceneEntity();
+
 		void SetPosition(const DirectX::XMFLOAT3 &position);
 		DirectX::XMFLOAT3 GetPosition()const;
 

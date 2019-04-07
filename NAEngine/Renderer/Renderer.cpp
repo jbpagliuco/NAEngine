@@ -7,6 +7,10 @@ namespace na
 	bool Renderer::Initialize(const RendererInitParams &params)
 	{
 		mWindow = params.mWindow;
+		
+		if (!mStateData.Initialize()) {
+			return false;
+		}
 
 		return true;
 	}

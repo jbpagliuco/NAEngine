@@ -9,8 +9,51 @@ namespace na
 {
 	StateData RendererStateData;
 
+	enum VSConstantBuffers
+	{
+		VIEWPROJ = 0,
+		OBJECTDATA
+	};
+
+	bool StateData::Initialize()
+	{
+		{
+			// ViewProj buffer
+			D3D11_BUFFER_DESC desc;
+			desc.Usage = D3D11_USAGE_DYNAMIC;
+			desc.ByteWidth = sizeof(DirectX::XMMATRIX);
+			desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+			desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+			desc.MiscFlags = 0;
+			desc.StructureByteStride = 0;
+
+			HRESULT hr = NA_RDevice->CreateBuffer(&desc, nullptr, &mViewProjBuffer);
+			NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "Failed to create view proj buffer");
+		}
+
+		{
+			// Object buffer
+			D3D11_BUFFER_DESC desc;
+			desc.Usage = D3D11_USAGE_DYNAMIC;
+			desc.ByteWidth = sizeof(DirectX::XMMATRIX);
+			desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+			desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+			desc.MiscFlags = 0;
+			desc.StructureByteStride = 0;
+
+			HRESULT hr = NA_RDevice->CreateBuffer(&desc, nullptr, &mObjectDataBuffer);
+			NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "Failed to create object data buffer");
+		}
+
+		mRasterizerState = nullptr;
+
+		return true;
+	}
+
 	void StateData::Shutdown()
 	{
+		NA_SAFE_RELEASE(mViewProjBuffer);
+		NA_SAFE_RELEASE(mObjectDataBuffer);
 		NA_SAFE_RELEASE(mRasterizerState);
 	}
 
@@ -25,6 +68,35 @@ namespace na
 		vp.MaxDepth = 1.0f;
 
 		NA_RContext->RSSetViewports(1, &vp);
+	}
+
+	void StateData::SetViewProjMatrices(const DirectX::XMMATRIX &view, const DirectX::XMMATRIX &proj)
+	{
+		D3D11_MAPPED_SUBRESOURCE res;
+
+		HRESULT hr = NA_RContext->Map(mViewProjBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
+		NA_ASSERT_RETURN(SUCCEEDED(hr));
+
+		DirectX::XMMATRIX viewProj = DirectX::XMMatrixMultiplyTranspose(view, proj);
+		memcpy(res.pData, &viewProj, sizeof(DirectX::XMMATRIX));
+
+		NA_RContext->Unmap(mViewProjBuffer, 0);
+
+		NA_RContext->VSSetConstantBuffers((int)VSConstantBuffers::VIEWPROJ, 1, &mViewProjBuffer);
+	}
+
+	void StateData::SetObjectTransform(const DirectX::XMMATRIX &transform)
+	{
+		D3D11_MAPPED_SUBRESOURCE res;
+
+		HRESULT hr = NA_RContext->Map(mObjectDataBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
+		NA_ASSERT_RETURN(SUCCEEDED(hr));
+
+		memcpy(res.pData, &transform, sizeof(DirectX::XMMATRIX));
+
+		NA_RContext->Unmap(mObjectDataBuffer, 0);
+
+		NA_RContext->VSSetConstantBuffers((int)VSConstantBuffers::OBJECTDATA, 1, &mObjectDataBuffer);
 	}
 
 	void StateData::SetRasterizerState()

@@ -5,6 +5,11 @@
 
 namespace na
 {
+	GameObject::GameObject()
+	{
+		mTransform = IDENTITY_TRANSFORM;
+	}
+
 	void GameObject::SetName(const char *name)
 	{
 		strncpy_s(mName, name, STATIC_ARRAY_SIZE(mName) - 1);
