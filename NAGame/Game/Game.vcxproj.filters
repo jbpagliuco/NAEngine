@@ -29,4 +29,7 @@
   <ItemGroup>
     <Object Include="data\cube.obj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="data\red.shaderx" />
+  </ItemGroup>
 </Project>

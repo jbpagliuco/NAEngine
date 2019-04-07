@@ -8,6 +8,7 @@
 
 #include <vector>
 
+#include "Factory.h"
 #include "Formats.h"
 
 namespace na
@@ -25,7 +26,7 @@ namespace na
 		Format mFormat;
 	};
 
-	class InputLayout
+	class InputLayout : public Factory<InputLayout>
 	{
 	public:
 		bool Initialize(const std::vector<InputElement> &elems, const VertexShader &vertexShader);

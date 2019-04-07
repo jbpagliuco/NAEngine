@@ -17,7 +17,9 @@ namespace na
 
 	DeserializationParameterMap& DeserializationParameterMap::operator[](const char *childName)
 	{
-		NA_ASSERT_RETURN_VALUE(childrenMap.find(childName) != childrenMap.end(), INVALID_DESERIALIZATION_PARAMETER, "Failed to find value '%s' in parameter map", childName);
+		if (childrenMap.find(childName) == childrenMap.end()) {
+			return INVALID_DESERIALIZATION_PARAMETER;
+		}
 
 		return childrenMap[childName];
 	}
@@ -37,6 +39,11 @@ namespace na
 	void DeserializationParameterMap::Insert(int index, DeserializationParameterMap map)
 	{
 		childrenArray.insert(childrenArray.begin() + index, map);
+	}
+
+	const char* DeserializationParameterMap::AsString(const char *def)
+	{
+		return value.c_str();
 	}
 
 	bool DeserializationParameterMap::AsBool(bool def)
@@ -154,5 +161,15 @@ namespace na
 		}
 
 		return params;
+	}
+
+	DeserializationParameterMap ParseFile(const char *filename)
+	{
+		pugi::xml_document doc;
+		pugi::xml_parse_result result = doc.load_file(filename);
+		NA_ASSERT_RETURN_VALUE(result, INVALID_DESERIALIZATION_PARAMETER, "Failed to load XML file '%s'", filename);
+
+		pugi::xml_node root = doc.child("root");
+		return ParseNode(root);
 	}
 }

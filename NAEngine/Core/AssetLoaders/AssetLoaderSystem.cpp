@@ -2,6 +2,7 @@
 
 #include "Base/Streaming/Stream.h"
 
+#include "MaterialLoader.h"
 #include "MeshLoader.h"
 
 namespace na
@@ -10,6 +11,7 @@ namespace na
 	{
 		// Register all of our loaders.
 		RegisterAssetStreamer("obj", LoadMeshOBJ);
+		RegisterAssetStreamer("shaderx", LoadShaderx);
 
 		return true;
 	}

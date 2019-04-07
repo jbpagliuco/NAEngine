@@ -1,11 +1,12 @@
 #pragma once
 
-#include "ShaderProgram.h"
+#include "Factory.h"
 #include "InputLayout.h"
+#include "ShaderProgram.h"
 
 namespace na
 {
-	class Shader
+	class Shader : public Factory<Shader>
 	{
 	public:
 		bool Initialize(InputLayout *inputLayout, VertexShader *vertexShader, PixelShader *pixelShader);

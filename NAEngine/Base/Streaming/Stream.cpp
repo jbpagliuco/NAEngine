@@ -31,6 +31,19 @@ namespace na
 		return id;
 	}
 
+	AssetID GetAssetID(const char *filename)
+	{
+		// Doesn't exist yet? Create it.
+		if (AssetIDs.find(filename) == AssetIDs.end()) {
+			AssetID id = FirstUnusedAssetID;
+			AssetIDs[filename] = id;
+			++FirstUnusedAssetID;
+			return id;
+		}
+
+		return AssetIDs[filename];
+	}
+
 	void RegisterAssetStreamer(const char *fileExt, AssetStreamer streamerFunc)
 	{
 		NA_ASSERT_RETURN(Streamers.find(fileExt) == Streamers.end(), "File ext '%s' has already been registered.", fileExt);

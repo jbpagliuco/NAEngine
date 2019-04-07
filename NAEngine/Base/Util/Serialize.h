@@ -28,6 +28,7 @@ namespace na
 
 		inline bool operator==(const DeserializationParameterMap &rhs) { return value == rhs.value; }
 
+		const char* AsString(const char *def = "");
 		bool AsBool(bool def = false);
 		int AsInt(int def = 0);
 		
@@ -42,4 +43,5 @@ namespace na
 	extern DeserializationParameterMap INVALID_DESERIALIZATION_PARAMETER;
 	
 	DeserializationParameterMap ParseNode(pugi::xml_node &parent);
+	DeserializationParameterMap ParseFile(const char *filename);
 }

@@ -6,6 +6,8 @@
 #include <d3d11.h>
 #endif
 
+#include "Factory.h"
+
 namespace na
 {
 #if defined(NA_D3D11)
@@ -34,7 +36,7 @@ namespace na
 		PlatformBlob *mBytecode;
 	};
 
-	class VertexShader : public ShaderProgram<PlatformVertexShader>
+	class VertexShader : public ShaderProgram<PlatformVertexShader>, public Factory<VertexShader>
 	{
 	public:
 		virtual bool Initialize(const char *filename);
@@ -42,7 +44,7 @@ namespace na
 		virtual void Bind();
 	};
 
-	class PixelShader : public ShaderProgram<PlatformPixelShader>
+	class PixelShader : public ShaderProgram<PlatformPixelShader>, public Factory<PixelShader>
 	{
 	public:
 		virtual bool Initialize(const char *filename);

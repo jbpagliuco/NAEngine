@@ -11,7 +11,7 @@ namespace na
 	
 	void Material::Shutdown()
 	{
-		mShader->Shutdown();
+		Shader::Destroy(mShader);
 	}
 
 	void Material::Bind()

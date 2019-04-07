@@ -25,6 +25,7 @@
         <components>
 			<component type="StaticMeshComponent">
 				<mesh>data\\cube.obj</mesh>
+				<shader>data\\red.shaderx</shader>
 			</component>
         </components>
     </gameobject>

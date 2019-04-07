@@ -32,6 +32,7 @@ PixelInput main(VertexInput input)
 
 	//float4 normal = float4(normalize(input.normal), 0.0f);
 	//output.normal = mul(worldInverseTranspose, normal).xyz;
+	output.normal = float3(0.0f, 0.0f, 0.0f);
 
 	output.texCoord = input.texCoord;
 

@@ -10,6 +10,9 @@
 
 namespace na
 {
+	NA_FACTORY_BUILD(VertexShader);
+	NA_FACTORY_BUILD(PixelShader);
+
 #if defined(NA_D3D11)
 	static bool CompileShader(ID3D10Blob **outBuffer, const char *file, const char *target)
 	{

@@ -25,7 +25,7 @@ namespace na
 	bool LoadMeshOBJ(AssetID id, const char *filename, bool async)
 	{
 		if (Mesh::Exists(id)) {
-			return Mesh::Get(id);
+			return true;
 		}
 
 		File file(filename, std::ios::in);

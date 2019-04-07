@@ -2,6 +2,8 @@
 
 namespace na
 {
+	NA_FACTORY_BUILD(Shader);
+
 	bool Shader::Initialize(InputLayout *inputLayout, VertexShader *vertexShader, PixelShader *pixelShader)
 	{
 		mVertexShader = vertexShader;
@@ -14,10 +16,9 @@ namespace na
 
 	void Shader::Shutdown()
 	{
-		mVertexShader->Shutdown();
-		mPixelShader->Shutdown();
-
-		mInputLayout->Shutdown();
+		VertexShader::Destroy(mVertexShader);
+		PixelShader::Destroy(mPixelShader);
+		InputLayout::Destroy(mInputLayout);
 	}
 
 	void Shader::Bind()
