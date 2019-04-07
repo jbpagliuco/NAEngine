@@ -2,4 +2,12 @@
 
 <root>
     <shaderFile>data\red.shaderx</shaderFile>
+	<properties>
+		<property type="float4" name="color">
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>1.0</z>
+			<w>1.0</w>
+		</property>
+	</properties>
 </root>

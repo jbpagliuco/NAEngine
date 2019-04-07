@@ -8,7 +8,7 @@ namespace na
 	class Shader : public Factory<Shader>
 	{
 	public:
-		bool Initialize(InputLayout *inputLayout, VertexShader *vertexShader, PixelShader *pixelShader);
+		bool Initialize(AssetID vertexShader, AssetID pixelShader);
 		void Shutdown();
 
 		void Bind();

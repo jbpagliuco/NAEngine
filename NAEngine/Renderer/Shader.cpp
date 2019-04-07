@@ -4,12 +4,16 @@ namespace na
 {
 	NA_FACTORY_SETUP(Shader);
 
-	bool Shader::Initialize(InputLayout *inputLayout, VertexShader *vertexShader, PixelShader *pixelShader)
+	bool Shader::Initialize(AssetID vertexShader, AssetID pixelShader)
 	{
-		mVertexShader = vertexShader;
-		mPixelShader = pixelShader;
+		mVertexShader = VertexShader::Get(vertexShader);
+		mVertexShader->AddRef();
 
-		mInputLayout = inputLayout;
+		mPixelShader = PixelShader::Get(pixelShader);
+		mPixelShader->AddRef();
+
+		mInputLayout = InputLayout::Get(vertexShader);
+		mInputLayout->AddRef();
 
 		return true;
 	}

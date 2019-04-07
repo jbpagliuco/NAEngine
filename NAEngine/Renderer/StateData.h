@@ -18,7 +18,6 @@ namespace na
 		void SetViewport(const Rect &rect);
 		
 		void SetViewProjMatrices(const DirectX::XMMATRIX &view, const DirectX::XMMATRIX &proj);
-
 		void SetObjectTransform(const DirectX::XMMATRIX &transform);
 
 		void SetRasterizerState();

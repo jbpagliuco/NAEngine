@@ -18,4 +18,6 @@ namespace na
 #endif
 	};
 
+	Format GetFormatFromString(const char *s);
+	size_t GetFormatByteSize(Format format);
 }

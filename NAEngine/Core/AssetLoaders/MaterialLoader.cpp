@@ -30,14 +30,8 @@ namespace na
 			ie.mSemantic = elem["semanticName"].AsString();
 			ie.mIndex = elem["index"].AsInt(0);
 
-			const char *type = elem["type"].AsString();
-			std::map<std::string, Format> _formats = {
-				{ "float", Format::R32_FLOAT },
-				{ "float2", Format::R32G32_FLOAT },
-				{ "float3", Format::R32G32B32_FLOAT },
-				{ "float4", Format::R32G32B32A32_FLOAT }
-			};
-			ie.mFormat = _formats[type];
+			const char *format = elem["type"].AsString();
+			ie.mFormat = GetFormatFromString(format);
 
 			inputElements.push_back(ie);
 		}
@@ -55,7 +49,7 @@ namespace na
 
 		// SHADER
 		Shader *shader = Shader::Create(id);
-		shader->Initialize(inputLayout, vs, ps);
+		shader->Initialize(vsID, psID);
 
 		return true;
 	}
