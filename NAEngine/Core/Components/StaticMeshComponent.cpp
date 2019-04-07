@@ -1,11 +1,12 @@
 #include "StaticMeshComponent.h"
 
+#include "Base/Streaming/Stream.h"
+
 #include "Renderer/Scene/Scene.h"
 
 #include "Renderer/Shader.h"
 #include "Renderer/Material.h"
 
-#include "Core/AssetLoaders/MeshLoader.h"
 
 namespace na
 {
@@ -16,10 +17,6 @@ namespace na
 
 	void StaticMeshComponent::Deserialize(DeserializationParameterMap &params)
 	{
-		// TODO: Check if the file is already loaded, and re-use if it is.
-		const char *filename = params["mesh"].value.c_str();
-		Mesh *mesh = LoadMeshFromFile(filename);
-
 		vs.Initialize("data\\red_vs.hlsl");
 		ps.Initialize("data\\red_ps.hlsl");
 
@@ -47,20 +44,20 @@ namespace na
 
 		mat.Initialize(&shader);
 
-		mMeshInstance = MeshInstance::Create();
-		mMeshInstance->Initialize(mesh, &mat);
+		const char *meshFilename = params["mesh"].value.c_str();
+		mMeshInstance.Initialize(meshFilename, &mat);
 	}
 
 	void StaticMeshComponent::Activate()
 	{
-		Scene::Get()->AddRenderable(mMeshInstance);
+		Scene::Get()->AddRenderable(&mMeshInstance);
 	}
 
 	void StaticMeshComponent::Deactivate()
 	{
-		Scene::Get()->RemoveRenderable(mMeshInstance);
+		mMeshInstance.Shutdown();
 
-		MeshInstance::Destroy(mMeshInstance);
+		Scene::Get()->RemoveRenderable(&mMeshInstance);
 
 		vs.Shutdown();
 		ps.Shutdown();

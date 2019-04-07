@@ -1,11 +1,12 @@
 #pragma once
 
 #include <algorithm>
-#include <vector>
+#include <map>
 
 #include "Base/Memory/Memory.h"
+#include "Base/Streaming/Stream.h"
 
-#define NA_FACTORY_BUILD(T) std::vector<T*> T::Instances = std::vector<T*>()
+#define NA_FACTORY_BUILD(T) std::map<AssetID, T*> T::Instances = std::map<AssetID, T*>()
 
 namespace na
 {
@@ -13,22 +14,53 @@ namespace na
 	class Factory
 	{
 	public:
-		static T* Create()
+		static T* Create(AssetID id)
 		{
+			if (Exists(id)) {
+				return Get(id);
+			}
+
 			T *obj = new (NA_ALLOC(sizeof(T))) T();
-			Instances.push_back(obj);
+			obj->mID = id;
+
+			Instances[id] = obj;
 
 			return obj;
 		}
 
-		static void Destroy(T *obj)
+		static T* Get(AssetID id)
 		{
+			return Instances[id];
+		}
+
+		static void Destroy(AssetID id)
+		{
+			T *obj = Instances[id];
+
 			obj->Shutdown();
-			Instances.erase(std::remove(Instances.begin(), Instances.end(), obj), Instances.end());
+			Instances.erase(id);
+
 			NA_FREE(obj);
 		}
 
+		static void Destroy(T *obj)
+		{
+			Destroy(obj->GetID());
+		}
+
+		static bool Exists(AssetID id)
+		{
+			return Instances.find(id) != Instances.end();
+		}
+
+		AssetID GetID()
+		{
+			return mID;
+		}
+
 	private:
-		static std::vector<T*> Instances;
+		static std::map<AssetID, T*> Instances;
+
+		AssetID mID;
 	};
 }

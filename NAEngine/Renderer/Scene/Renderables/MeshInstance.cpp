@@ -9,20 +9,11 @@
 
 namespace na
 {
-	NA_FACTORY_BUILD(MeshInstance);
-
-	bool MeshInstance::Initialize(const MeshData &meshData, Material *material)
+	bool MeshInstance::Initialize(const char *meshFilename, Material *material)
 	{
-		// TODO: Reuse meshes
-		mMesh = Mesh::Create();
-		mMesh->Initialize(meshData);
+		AssetID id = StreamAsset(meshFilename);
+		mMesh = Mesh::Create(id);
 
-		return Initialize(mMesh, material);
-	}
-
-	bool MeshInstance::Initialize(Mesh *mesh, Material *material)
-	{
-		mMesh = mesh;
 		mMaterial = material;
 
 		return true;

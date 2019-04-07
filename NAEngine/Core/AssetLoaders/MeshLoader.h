@@ -1,8 +1,8 @@
 #pragma once
 
+#include "Base/Streaming/Stream.h"
+
 namespace na
 {
-	class Mesh;
-
-	Mesh* LoadMeshFromFile(const char *filename);
+	bool LoadMeshOBJ(AssetID id, const char *filename, bool async);
 }

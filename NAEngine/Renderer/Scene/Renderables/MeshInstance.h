@@ -8,11 +8,10 @@ namespace na
 {
 	class Material;
 
-	class MeshInstance : public RenderableInstance, public Factory<MeshInstance>
+	class MeshInstance : public RenderableInstance
 	{
 	public:
-		bool Initialize(const MeshData &meshData, Material *material);
-		bool Initialize(Mesh *mesh, Material *material);
+		bool Initialize(const char *meshFilename, Material *material);
 		void Shutdown();
 
 		virtual void Render() override;

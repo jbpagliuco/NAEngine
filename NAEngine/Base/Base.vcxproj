@@ -152,6 +152,7 @@
     <ClCompile Include="Memory\Memory.cpp" />
     <ClCompile Include="OS\OS.cpp" />
     <ClCompile Include="OS\OSWin32.cpp" />
+    <ClCompile Include="Streaming\Stream.cpp" />
     <ClCompile Include="Util\Color.cpp" />
     <ClCompile Include="Util\Serialize.cpp" />
     <ClCompile Include="Util\String.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Math\Transform.h" />
     <ClInclude Include="Memory\Memory.h" />
     <ClInclude Include="OS\OS.h" />
+    <ClInclude Include="Streaming\Stream.h" />
     <ClInclude Include="Util\Color.h" />
     <ClInclude Include="Util\Serialize.h" />
     <ClInclude Include="Util\String.h" />

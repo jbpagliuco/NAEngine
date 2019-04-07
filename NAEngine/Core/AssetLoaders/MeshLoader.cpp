@@ -21,24 +21,13 @@ namespace na
 		uint32_t norm;
 		uint32_t tex;
 	};
-
-	// File-type specific loaders
-	static Mesh* LoadMeshOBJ(const char *filename);
-
-	Mesh* LoadMeshFromFile(const char *filename)
+	
+	bool LoadMeshOBJ(AssetID id, const char *filename, bool async)
 	{
-		const char *ext = GetFileExt(filename);
-		
-		if (strcmp(ext, "obj") == 0) {
-			return LoadMeshOBJ(filename);
+		if (Mesh::Exists(id)) {
+			return Mesh::Get(id);
 		}
-		
-		NA_ASSERT(false, "Mesh file '%s' has invalid extension '%s'", filename, ext);
-		return nullptr;
-	}
 
-	static Mesh* LoadMeshOBJ(const char *filename)
-	{
 		File file(filename, std::ios::in);
 
 		typedef na::Vector3<float> Position;
@@ -95,7 +84,7 @@ namespace na
 			case 'f':
 			{
 				// TODO
-				NA_ASSERT_RETURN_VALUE(normals.size() > 0 && texCoords.size() > 0, nullptr, "Meshes must have both normal and tex coord data.");
+				NA_ASSERT_RETURN_VALUE(normals.size() > 0 && texCoords.size() > 0, false, "Meshes must have both normal and tex coord data.");
 
 				const int numVerticesInFace = 3;
 				FaceIndexData indices[numVerticesInFace];
@@ -122,8 +111,8 @@ namespace na
 			}
 		}
 
-		NA_ASSERT_RETURN_VALUE(positions.size() > 0, nullptr);
-		NA_ASSERT_RETURN_VALUE(faces.size() > 0, nullptr);
+		NA_ASSERT_RETURN_VALUE(positions.size() > 0, false);
+		NA_ASSERT_RETURN_VALUE(faces.size() > 0, false);
 
 		// Remove duplicates and create mesh
 		std::map<std::string, uint32_t> vertexIds;
@@ -169,8 +158,9 @@ namespace na
 		meshData.indices = &(indices[0]);
 		meshData.numIndices = indices.size();
 
-		Mesh *mesh = Mesh::Create();
+		Mesh *mesh = Mesh::Create(id);
 		mesh->Initialize(meshData);
-		return mesh;
+
+		return true;
 	}
 }

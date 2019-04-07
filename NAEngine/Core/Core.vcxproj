@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AssetLoaders\AssetLoaderSystem.cpp" />
     <ClCompile Include="AssetLoaders\MeshLoader.cpp" />
     <ClCompile Include="Components\CameraComponent.cpp" />
     <ClCompile Include="Components\StaticMeshComponent.cpp" />
@@ -156,6 +157,7 @@
     <ClCompile Include="World\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssetLoaders\AssetLoaderSystem.h" />
     <ClInclude Include="AssetLoaders\MeshLoader.h" />
     <ClInclude Include="Components\CameraComponent.h" />
     <ClInclude Include="Components\StaticMeshComponent.h" />

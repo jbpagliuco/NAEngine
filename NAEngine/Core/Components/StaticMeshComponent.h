@@ -16,7 +16,7 @@ namespace na
 		virtual void Deactivate() override;
 
 	private:
-		MeshInstance *mMeshInstance;
+		MeshInstance mMeshInstance;
 		Material mat;
 	};
 }

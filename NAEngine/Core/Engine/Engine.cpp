@@ -8,6 +8,7 @@
 #include "Base/Debug/Log.h"
 #include "Renderer/RenderingSystem.h"
 
+#include "Core/AssetLoaders/AssetLoaderSystem.h"
 #include "Core/Core.h"
 #include "Core/Components/GameComponent.h"
 #include "Core/World/World.h"
@@ -56,6 +57,13 @@ namespace na
 			reg.mSystemInit = RenderingSystemInit;
 			reg.mSystemShutdown = RenderingSystemShutdown;
 			reg.mDoFrame = RenderingSystemDoFrame;
+			SystemRegistry.push_back(reg);
+		}
+
+		{
+			SystemRegistration reg;
+			reg.mSystemName = "Asset Loader System";
+			reg.mSystemInit = AssetLoaderSystemInitialize;
 			SystemRegistry.push_back(reg);
 		}
 
