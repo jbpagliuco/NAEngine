@@ -103,5 +103,11 @@
     <None Include="File\File.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="Streaming\Stream.inl">
+      <Filter>Header Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="Base.natvis" />
   </ItemGroup>
 </Project>

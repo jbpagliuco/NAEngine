@@ -14,6 +14,7 @@ namespace na
 	{
 		AssetID shaderID = StreamAsset(params["shader"].AsString());
 		Shader *shader = Shader::Get(shaderID);
+		shader->AddRef();
 		mat.Initialize(shader);
 
 		const char *meshFilename = params["mesh"].AsString();
@@ -27,8 +28,8 @@ namespace na
 
 	void StaticMeshComponent::Deactivate()
 	{
-		mMeshInstance.Shutdown();
-
 		Scene::Get()->RemoveRenderable(&mMeshInstance);
+
+		mMeshInstance.Shutdown();
 	}
 }

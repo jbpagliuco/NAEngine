@@ -13,6 +13,7 @@ namespace na
 	{
 		AssetID id = StreamAsset(meshFilename);
 		mMesh = Mesh::Create(id);
+		mMesh->AddRef();
 
 		mMaterial = material;
 

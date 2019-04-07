@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Factory.h"
+#include "Base/Streaming/Stream.h"
+
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
 

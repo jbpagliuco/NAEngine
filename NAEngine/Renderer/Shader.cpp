@@ -2,7 +2,7 @@
 
 namespace na
 {
-	NA_FACTORY_BUILD(Shader);
+	NA_FACTORY_SETUP(Shader);
 
 	bool Shader::Initialize(InputLayout *inputLayout, VertexShader *vertexShader, PixelShader *pixelShader)
 	{

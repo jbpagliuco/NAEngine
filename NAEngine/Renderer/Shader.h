@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Factory.h"
 #include "InputLayout.h"
 #include "ShaderProgram.h"
 

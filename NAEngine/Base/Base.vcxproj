@@ -175,7 +175,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="File\File.inl" />
+    <None Include="Streaming\Stream.inl" />
     <None Include="Util\Util.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="Base.natvis" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

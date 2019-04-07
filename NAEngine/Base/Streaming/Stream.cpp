@@ -20,14 +20,21 @@ namespace na
 		const char *ext = GetFileExt(filename);
 		NA_ASSERT_RETURN_VALUE(Streamers.find(ext) != Streamers.end(), INVALID_ASSET_ID, "There is no streamer associated with file extension '%s'.", ext);
 
-		AssetID id = FirstUnusedAssetID;
+		AssetID id = INVALID_ASSET_ID;
+		if (AssetIDs.find(filename) == AssetIDs.end()) {
+			id = FirstUnusedAssetID;
+			++FirstUnusedAssetID;
+		} else {
+			id = AssetIDs[filename];
+		}
 
 		AssetStreamer streamer = Streamers[ext];
 		if (!streamer(id, filename, async)) {
 			return INVALID_ASSET_ID;
 		}
 
-		++FirstUnusedAssetID;
+		AssetIDs[filename] = id;
+
 		return id;
 	}
 
@@ -42,6 +49,17 @@ namespace na
 		}
 
 		return AssetIDs[filename];
+	}
+
+	const char* GetAssetFilename(AssetID id)
+	{
+		for (auto &it : AssetIDs) {
+			if (it.second == id) {
+				return it.first.c_str();
+			}
+		}
+
+		return "";
 	}
 
 	void RegisterAssetStreamer(const char *fileExt, AssetStreamer streamerFunc)

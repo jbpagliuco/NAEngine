@@ -167,7 +167,6 @@
     <ClCompile Include="Scene\SceneEntity.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Factory.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Renderer.h" />

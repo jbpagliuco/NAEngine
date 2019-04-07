@@ -6,7 +6,7 @@
 #include <d3d11.h>
 #endif
 
-#include "Factory.h"
+#include "Base/Streaming/Stream.h"
 
 namespace na
 {

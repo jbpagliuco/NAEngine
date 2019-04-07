@@ -8,7 +8,8 @@
 
 #include <vector>
 
-#include "Factory.h"
+#include "Base/Streaming/Stream.h"
+
 #include "Formats.h"
 
 namespace na

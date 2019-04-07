@@ -4,7 +4,7 @@
 
 namespace na
 {
-	NA_FACTORY_BUILD(Mesh);
+	NA_FACTORY_SETUP(Mesh);
 
 	bool Mesh::Initialize(const MeshData &meshData)
 	{

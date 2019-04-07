@@ -7,7 +7,7 @@
 
 namespace na
 {
-	NA_FACTORY_BUILD(InputLayout);
+	NA_FACTORY_SETUP(InputLayout);
 
 	static DXGI_FORMAT VertexAttributeFormats[] = {
 		DXGI_FORMAT_R32_FLOAT,
