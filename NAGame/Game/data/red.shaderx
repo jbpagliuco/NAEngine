@@ -20,5 +20,6 @@
     </vertexShader>
     <pixelShader>
         <file>data\red_ps.hlsl</file>
+		<bufferSize>16</bufferSize>
     </pixelShader>
 </root>

@@ -156,6 +156,7 @@
     <ClCompile Include="Util\Color.cpp" />
     <ClCompile Include="Util\Serialize.cpp" />
     <ClCompile Include="Util\String.cpp" />
+    <ClCompile Include="Util\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseSystem.h" />

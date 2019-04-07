@@ -85,6 +85,8 @@ namespace na
 	// @param max - The upper bound of the clamp.
 	template <typename T>
 	T& Clamp(T& val, const T& min, const T& max);
+
+	int RoundToNearestMultiple(int num, int multiple);
 }
 
 #include "Util.inl"

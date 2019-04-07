@@ -22,6 +22,9 @@ namespace na
 
 		void SetRasterizerState();
 
+		int GetUserVSConstantBufferIndex()const;
+		int GetUserPSConstantBufferIndex()const;
+
 	private:
 		ID3D11Buffer *mViewProjBuffer;
 		ID3D11Buffer *mObjectDataBuffer;

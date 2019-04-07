@@ -111,6 +111,18 @@ namespace na
 		return DirectX::XMFLOAT4(r, g, b, a);
 	}
 
+	void DeserializationParameterMap::AsType(void *out, const char *type)
+	{
+#define COPY_INTO_BUFFER(s, T, f) if (strcmp(type, s) == 0) { T v = f(); memcpy(out, &v, sizeof(T)); found = true; }
+		bool found = false;
+		COPY_INTO_BUFFER("float", float, AsFloat);
+		COPY_INTO_BUFFER("float2", DirectX::XMFLOAT2, AsFloat2);
+		COPY_INTO_BUFFER("float3", DirectX::XMFLOAT3, AsFloat3);
+		COPY_INTO_BUFFER("float4", DirectX::XMFLOAT4, AsFloat4);
+		NA_ASSERT(found, "Type %s is not recognized.", type);
+#undef COPY_INTO_BUFFER
+	}
+
 
 	static DeserializationParameterMap ParseParameterXML(pugi::xml_node &parent)
 	{

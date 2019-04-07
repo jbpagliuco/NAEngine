@@ -11,6 +11,9 @@ namespace na
 		bool Initialize(AssetID vertexShader, AssetID pixelShader);
 		void Shutdown();
 
+		void VSSetBufferData(void *data, size_t size);
+		void PSSetBufferData(void *data, size_t size);
+
 		void Bind();
 
 	private:

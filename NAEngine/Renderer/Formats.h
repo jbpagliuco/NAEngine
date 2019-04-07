@@ -10,14 +10,16 @@ namespace na
 {
 	enum class Format
 	{
-#if defined(NA_D3D11)
-		R32_FLOAT					= DXGI_FORMAT_R32_FLOAT,
-		R32G32_FLOAT				= DXGI_FORMAT_R32G32_FLOAT,
-		R32G32B32_FLOAT				= DXGI_FORMAT_R32G32B32_FLOAT,
-		R32G32B32A32_FLOAT			= DXGI_FORMAT_R32G32B32A32_FLOAT
-#endif
+		R32_FLOAT = 0,
+		R32G32_FLOAT,
+		R32G32B32_FLOAT,
+		R32G32B32A32_FLOAT
 	};
 
 	Format GetFormatFromString(const char *s);
 	size_t GetFormatByteSize(Format format);
+
+#if defined(NA_D3D11)
+	DXGI_FORMAT GetDXGIFormat(Format format);
+#endif
 }

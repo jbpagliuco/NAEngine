@@ -1,3 +1,8 @@
+cbuffer MaterialBuffer : register(b0)
+{
+	float4 color;
+};
+
 struct PixelInput {
 	float4 svpos : SV_POSITION;
 	float3 position : POSITION0;
@@ -7,5 +12,5 @@ struct PixelInput {
 
 float4 main(PixelInput input) : SV_TARGET
 {
-	return float4(input.normal, 1.0f);
+	return color;
 }

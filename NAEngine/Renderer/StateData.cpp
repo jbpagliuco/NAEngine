@@ -9,10 +9,16 @@ namespace na
 {
 	StateData RendererStateData;
 
-	enum VSConstantBuffers
+	enum class VSConstantBuffers
 	{
 		VIEWPROJ = 0,
-		OBJECTDATA
+		OBJECTDATA,
+		USER
+	};
+
+	enum class PSConstantBuffers
+	{
+		USER = 0
 	};
 
 	struct PerObjectData
@@ -128,5 +134,15 @@ namespace na
 		}
 
 		NA_RContext->RSSetState(mRasterizerState);
+	}
+
+	int StateData::GetUserVSConstantBufferIndex()const
+	{
+		return (int)VSConstantBuffers::USER;
+	}
+
+	int StateData::GetUserPSConstantBufferIndex()const
+	{
+		return (int)PSConstantBuffers::USER;
 	}
 }

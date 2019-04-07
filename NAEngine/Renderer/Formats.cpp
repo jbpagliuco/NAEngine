@@ -21,6 +21,13 @@ namespace na
 		{ "float4", Format::R32G32B32A32_FLOAT }
 	};
 
+	static DXGI_FORMAT DXGIFormats[] = {
+		   DXGI_FORMAT_R32_FLOAT, // R32_FLOAT,
+		   DXGI_FORMAT_R32G32_FLOAT, // R32G32_FLOAT,
+		   DXGI_FORMAT_R32G32B32_FLOAT, // R32G32B32_FLOAT,
+		   DXGI_FORMAT_R32G32B32A32_FLOAT // R32G32B32A32_FLOAT
+	};
+
 
 
 	Format GetFormatFromString(const char *s)
@@ -34,5 +41,10 @@ namespace na
 		NA_ASSERT_RETURN_VALUE((int)format < numFormats, 0, "Failed to find byte length for format %d", (int)format);
 
 		return FormatByteSizes[(int)format];
+	}
+
+	DXGI_FORMAT GetDXGIFormat(Format format)
+	{
+		return DXGIFormats[(int)format];
 	}
 }

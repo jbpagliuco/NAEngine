@@ -29,7 +29,7 @@ namespace na
 
 			element.SemanticName = elem.mSemantic;
 			element.SemanticIndex = elem.mIndex;
-			element.Format = (DXGI_FORMAT)elem.mFormat;
+			element.Format = GetDXGIFormat(elem.mFormat);
 
 			elementDescs.push_back(element);
 		}

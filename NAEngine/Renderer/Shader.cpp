@@ -25,6 +25,16 @@ namespace na
 		InputLayout::Destroy(mInputLayout);
 	}
 
+	void Shader::VSSetBufferData(void *data, size_t size)
+	{
+		mVertexShader->SetConstantBuffer(data, size);
+	}
+
+	void Shader::PSSetBufferData(void *data, size_t size)
+	{
+		mPixelShader->SetConstantBuffer(data, size);
+	}
+
 	void Shader::Bind()
 	{
 		mInputLayout->Bind();
