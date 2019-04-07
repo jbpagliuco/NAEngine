@@ -87,6 +87,16 @@ namespace na
 		mDirty = true;
 	}
 
+	void Transform::SetLookAt(const DirectX::XMFLOAT3 &target)
+	{
+		using namespace DirectX;
+
+		XMMATRIX m = XMMatrixLookAtLH(XMLoadFloat3(&mPosition), XMLoadFloat3(&target), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
+		mRotation = XMQuaternionRotationMatrix(XMMatrixTranspose(m));
+
+		mDirty = true;
+	}
+
 	void Transform::ResetScale()
 	{
 		SetScale(1.0f, 1.0f, 1.0f);

@@ -1,6 +1,25 @@
 <?xml version="1.0"?>
 
 <root>
+	<gameobject>
+		<name>Camera</name>
+		<transform>
+			<position>
+				<x>2</x>
+				<y>2</y>
+				<z>-5</z>
+			</position>
+			<rotation type="lookat"/>
+		</transform>
+		<components>
+			<component type="CameraComponent">
+				<fov>45</fov>
+				<near>0.1</near>
+				<far>100</far>
+			</component>
+		</components>
+	</gameobject>
+	
     <gameobject>
         <name>TestObject</name>
         <components>

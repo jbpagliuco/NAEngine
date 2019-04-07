@@ -1,6 +1,7 @@
 #include "Renderer.h"
 
 #include "Rect.h"
+#include "Scene/Camera.h"
 
 namespace na
 {
@@ -30,5 +31,22 @@ namespace na
 
 		mStateData.SetViewport(r);
 		mStateData.SetRasterizerState();
+
+		if (mActiveCamera != nullptr) {
+			mStateData.SetViewProjMatrices(
+				DirectX::XMMatrixInverse(nullptr, mActiveCamera->mTransform),
+				DirectX::XMMatrixPerspectiveFovLH(mActiveCamera->mFOV, mWindow.GetAspectRatio(), mActiveCamera->mNear, mActiveCamera->mFar)
+			);
+		}
+	}
+
+	void Renderer::SetActiveCamera(Camera *camera)
+	{
+		mActiveCamera = camera;
+	}
+
+	Camera* Renderer::GetActiveCamera()
+	{
+		return mActiveCamera;
 	}
 }

@@ -6,6 +6,7 @@
 
 #include "Base/Debug/Assert.h"
 
+#include "CameraComponent.h"
 #include "StaticMeshComponent.h"
 
 #define FOREACH_COMPONENT(func, ...) for (auto &iter : ComponentTable) { for (auto &component : iter.second) { component->func(__VA_ARGS__); } }
@@ -15,7 +16,8 @@
 namespace na
 {
 	static std::map<std::string, GameComponent*(*)()> ComponentInstantiators = {
-		GENERATE_INSTANTIATOR(StaticMeshComponent),
+		GENERATE_INSTANTIATOR(CameraComponent),
+		GENERATE_INSTANTIATOR(StaticMeshComponent)
 	};
 
 	typedef std::vector<GameComponent*> ComponentList;
@@ -75,6 +77,7 @@ namespace na
 
 	GameComponent* CreateComponentFromType(const char *type)
 	{
+		NA_ASSERT_RETURN_VALUE(ComponentInstantiators.find(type) != ComponentInstantiators.end(), nullptr, "Failed to find instantiator for component type '%s'. Did you forget to add it to this file?", type);
 		GameComponent *component = ComponentInstantiators[type]();
 		NA_ASSERT_RETURN_VALUE(component != nullptr, nullptr, "Failed to create component of type '%s'", type);
 

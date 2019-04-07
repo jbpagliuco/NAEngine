@@ -33,10 +33,6 @@ namespace na
 
 	void ForwardRenderer::RenderScene(Scene *scene)
 	{
-		DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(DirectX::XMVectorSet(2.0f, 2.0f, -2.0f, 1.0f), DirectX::XMVectorZero(), DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
-		DirectX::XMMATRIX proj = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, NA_Renderer->GetWindow().GetAspectRatio(), 0.1f, 100.0f);
-
-		NA_RStateData->SetViewProjMatrices(view, proj);
 		for (auto &r : scene->GetRenderables()) {
 			NA_RStateData->SetObjectTransform(r->GetWorldTransform());
 			r->Render();

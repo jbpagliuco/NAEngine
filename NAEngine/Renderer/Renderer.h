@@ -10,6 +10,8 @@
 
 namespace na
 {
+	class Camera;
+
 	struct RendererInitParams
 	{
 		Window mWindow;
@@ -26,6 +28,9 @@ namespace na
 		virtual void BeginRender() = 0;
 		virtual void EndRender() = 0;
 
+		void SetActiveCamera(Camera *camera);
+		Camera* GetActiveCamera();
+
 		Window GetWindow() { return mWindow; }
 
 		StateData* GetStateData() { return &mStateData; }
@@ -33,5 +38,7 @@ namespace na
 	protected:
 		Window mWindow;
 		StateData mStateData;
+
+		Camera* mActiveCamera;
 	};
 }
