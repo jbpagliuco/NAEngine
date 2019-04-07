@@ -5,6 +5,7 @@
         <name>TestObject</name>
         <components>
 			<component type="StaticMeshComponent">
+				<mesh>data\\cube.obj</mesh>
 			</component>
         </components>
     </gameobject>

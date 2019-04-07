@@ -12,6 +12,7 @@ namespace na
 	{
 	public:
 		bool Initialize(const MeshData &meshData, Material *material);
+		bool Initialize(Mesh *mesh, Material *material);
 		void Shutdown();
 
 		virtual void Render() override;

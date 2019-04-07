@@ -5,6 +5,8 @@
 #include "Renderer/Shader.h"
 #include "Renderer/Material.h"
 
+#include "Core/AssetLoaders/MeshLoader.h"
+
 namespace na
 {
 	na::VertexShader vs;
@@ -14,19 +16,11 @@ namespace na
 
 	void StaticMeshComponent::Deserialize(DeserializationParameterMap &params)
 	{
-		MeshData mesh;
-	
-		float verts[] = { 0.0f, 0.5f, 0.0f,     0.5f, 0.0f, 0.0f,      -0.5f, 0.0f, 0.0f, };
-		mesh.vertices = verts;
-		mesh.numVertices = 3;
-		mesh.vertexStride = sizeof(float) * 3;
-
-		IndexType inds[] = { 0, 1, 2 };
-		mesh.indices = inds;
-		mesh.numIndices = 3;
+		// TODO: Check if the file is already loaded, and re-use if it is.
+		const char *filename = params["mesh"].value.c_str();
+		Mesh *mesh = LoadMeshFromFile(filename);
 
 		vs.Initialize("data\\red_vs.hlsl");
-
 		ps.Initialize("data\\red_ps.hlsl");
 
 		std::vector<na::InputElement> ilElems;

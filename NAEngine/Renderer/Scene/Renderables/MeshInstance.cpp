@@ -17,6 +17,12 @@ namespace na
 		mMesh = Mesh::Create();
 		mMesh->Initialize(meshData);
 
+		return Initialize(mMesh, material);
+	}
+
+	bool MeshInstance::Initialize(Mesh *mesh, Material *material)
+	{
+		mMesh = mesh;
 		mMaterial = material;
 
 		return true;
