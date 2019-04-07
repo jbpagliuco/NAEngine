@@ -12,13 +12,10 @@ namespace na
 {
 	void StaticMeshComponent::Deserialize(DeserializationParameterMap &params)
 	{
-		AssetID shaderID = StreamAsset(params["shader"].AsString());
-		Shader *shader = Shader::Get(shaderID);
-		shader->AddRef();
-		mat.Initialize(shader);
+		AssetID meshID = StreamAsset(params["mesh"].AsString());
+		AssetID matID = StreamAsset(params["material"].AsString());
 
-		const char *meshFilename = params["mesh"].AsString();
-		mMeshInstance.Initialize(meshFilename, &mat);
+		mMeshInstance.Initialize(meshID, matID);
 	}
 
 	void StaticMeshComponent::Activate()

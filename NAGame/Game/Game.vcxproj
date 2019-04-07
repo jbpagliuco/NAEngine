@@ -175,6 +175,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <Xml Include="data\test_mat.matx" />
     <Xml Include="data\world.xml" />
   </ItemGroup>
   <ItemGroup>

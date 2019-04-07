@@ -4,10 +4,10 @@
 
 namespace na
 {
-	class Material
+	class Material : public Factory<Material>
 	{
 	public:
-		bool Initialize(Shader *shader);
+		bool Initialize(AssetID shaderID);
 		void Shutdown();
 
 		void Bind();

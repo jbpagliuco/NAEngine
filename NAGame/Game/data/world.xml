@@ -24,8 +24,8 @@
         <name>TestObject</name>
         <components>
 			<component type="StaticMeshComponent">
-				<mesh>data\\cube.obj</mesh>
-				<shader>data\\red.shaderx</shader>
+				<mesh>data\cube.obj</mesh>
+				<material>data\test_mat.matx</material>
 			</component>
         </components>
     </gameobject>
@@ -41,8 +41,8 @@
 		</transform>
 		<components>
 			<component type="StaticMeshComponent">
-				<mesh>data\\cube.obj</mesh>
-				<shader>data\\red.shaderx</shader>
+				<mesh>data\cube.obj</mesh>
+				<material>data\test_mat.matx</material>
 			</component>
 		</components>
 	</gameobject>

@@ -25,6 +25,7 @@
   </ItemGroup>
   <ItemGroup>
     <Xml Include="data\world.xml" />
+    <Xml Include="data\test_mat.matx" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="data\cube.obj" />

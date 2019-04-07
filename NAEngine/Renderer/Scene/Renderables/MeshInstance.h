@@ -11,7 +11,7 @@ namespace na
 	class MeshInstance : public RenderableInstance
 	{
 	public:
-		bool Initialize(const char *meshFilename, Material *material);
+		bool Initialize(AssetID meshID, AssetID matID);
 		void Shutdown();
 
 		virtual void Render() override;

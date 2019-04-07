@@ -3,6 +3,7 @@
 #include "Base/Util/Serialize.h"
 
 #include "Renderer/Shader.h"
+#include "Renderer/Material.h"
 
 namespace na
 {
@@ -55,6 +56,24 @@ namespace na
 		// SHADER
 		Shader *shader = Shader::Create(id);
 		shader->Initialize(inputLayout, vs, ps);
+
+		return true;
+	}
+
+
+	bool LoadMatx(AssetID id, const char *filename, bool async)
+	{
+		if (Material::Exists(id)) {
+			return true;
+		}
+
+		DeserializationParameterMap params = ParseFile(filename);
+
+		const char *shaderFilename = params["shaderFile"].AsString();
+		AssetID shaderID = StreamAsset(shaderFilename);
+
+		Material *mat = Material::Create(id);
+		mat->Initialize(shaderID);
 
 		return true;
 	}

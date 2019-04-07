@@ -32,6 +32,8 @@ namespace na
 	template <typename T>
 	void Factory<T>::Destroy(AssetID id)
 	{
+		NA_ASSERT_RETURN(Instances.find(id) != Instances.end(), "Asset instance with id %lu doesn't exist!", id);
+
 		Instances[id].mRefCount--;
 		if (Instances[id].mRefCount > 0) {
 			return;

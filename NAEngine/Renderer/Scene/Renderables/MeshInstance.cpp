@@ -9,13 +9,13 @@
 
 namespace na
 {
-	bool MeshInstance::Initialize(const char *meshFilename, Material *material)
+	bool MeshInstance::Initialize(AssetID meshID, AssetID matID)
 	{
-		AssetID id = StreamAsset(meshFilename);
-		mMesh = Mesh::Create(id);
+		mMesh = Mesh::Get(meshID);
 		mMesh->AddRef();
 
-		mMaterial = material;
+		mMaterial = Material::Get(matID);
+		mMaterial->AddRef();
 
 		return true;
 	}
@@ -23,7 +23,7 @@ namespace na
 	void MeshInstance::Shutdown()
 	{
 		Mesh::Destroy(mMesh);
-		mMaterial->Shutdown();
+		Material::Destroy(mMaterial);
 	}
 
 	void MeshInstance::Render()

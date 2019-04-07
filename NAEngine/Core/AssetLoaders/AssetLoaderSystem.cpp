@@ -12,6 +12,7 @@ namespace na
 		// Register all of our loaders.
 		RegisterAssetStreamer("obj", LoadMeshOBJ);
 		RegisterAssetStreamer("shaderx", LoadShaderx);
+		RegisterAssetStreamer("matx", LoadMatx);
 
 		return true;
 	}

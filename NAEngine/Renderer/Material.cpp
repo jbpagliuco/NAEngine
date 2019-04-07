@@ -2,9 +2,12 @@
 
 namespace na
 {
-	bool Material::Initialize(Shader *shader)
+	NA_FACTORY_SETUP(Material);
+
+	bool Material::Initialize(AssetID shaderID)
 	{
-		mShader = shader;
+		mShader = Shader::Get(shaderID);
+		mShader->AddRef();
 
 		return true;
 	}
