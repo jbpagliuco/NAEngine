@@ -20,15 +20,15 @@ namespace na
 		std::map<std::string, DeserializationParameterMap> childrenMap;
 		std::vector<DeserializationParameterMap> childrenArray;
 
-		DeserializationParameterMap& operator[](const char *childName);
+		DeserializationParameterMap& operator[](const std::string &childName);
 		DeserializationParameterMap& operator[](int index);
 
-		void Insert(const char *name, DeserializationParameterMap value);
+		void Insert(const std::string &name, DeserializationParameterMap value);
 		void Insert(int index, DeserializationParameterMap value);
 
 		inline bool operator==(const DeserializationParameterMap &rhs) { return value == rhs.value; }
 
-		const char* AsString(const char *def = "");
+		std::string AsString(const std::string &def = "");
 		bool AsBool(bool def = false);
 		int AsInt(int def = 0);
 		
@@ -39,11 +39,11 @@ namespace na
 
 		DirectX::XMFLOAT4 AsColor(DirectX::XMFLOAT4 def);
 
-		void AsType(void *out, const char *type);
+		void AsType(void *out, const std::string &type);
 	};
 
 	extern DeserializationParameterMap INVALID_DESERIALIZATION_PARAMETER;
 	
 	DeserializationParameterMap ParseNode(pugi::xml_node &parent);
-	DeserializationParameterMap ParseFile(const char *filename);
+	DeserializationParameterMap ParseFile(const std::string &filename);
 }

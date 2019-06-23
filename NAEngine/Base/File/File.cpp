@@ -6,16 +6,16 @@
 
 namespace na
 {
-	File::File(const char *filename, int mode)
+	File::File(const std::string &filename, int mode)
 	{
 		Open(filename, mode);
 
 		// If the file is readable, make sure we can open it.
 		if ((mode & std::ios::in) != 0) {
-			NA_ASSERT(mFile.is_open(), "Unable to open file '%s'", filename);
+			NA_ASSERT(mFile.is_open(), "Unable to open file '%s'", filename.c_str());
 		}
 	}
-	
+
 	File::operator bool()const
 	{
 		return !mFile.eof();
@@ -26,25 +26,24 @@ namespace na
 		mFile.close();
 	}
 
-	const char* File::GetFileExt()const
+	std::string File::GetFileExt()const
 	{
 		return na::GetFileExt(mFilename);
 	}
 
-	bool File::ReadBytes(char *buf, size_t n)
+	bool File::ReadBytes(std::string &buf)
 	{
-		return !!mFile.read(buf, n);
+		char cBuf[1024];
+		const bool success = !!mFile.read(cBuf, 1024);
+
+		buf = cBuf;
+
+		return success;
 	}
 
-	bool File::ReadLine(char *buf, size_t n)
+	bool File::ReadLine(std::string &buf)
 	{
-		std::string lineData;
-		if (std::getline(mFile, lineData)) {
-			strncpy_s(buf, n - 1, lineData.c_str(), _TRUNCATE);
-			return true;
-		}
-
-		return false;
+		return !!std::getline(mFile, buf);
 	}
 
 	bool File::WriteBytes(const char *buf, size_t n)
@@ -52,47 +51,85 @@ namespace na
 		return !!mFile.write(buf, n);
 	}
 
-	void File::Open(const char *filename, int mode)
+	void File::Open(const std::string &filename, int mode)
 	{
 		// Look for the file in these places:
 		// 1. Straight up
 		// 2. Under the data folder
 
 		// 1
-		strncpy_s(mFilename, filename, MAX_FILEPATH_LENGTH);
-		mFile.open(filename, mode);
+		mFilename = filename;
+		mFile.open(mFilename, mode);
 		if (mFile.is_open()) {
 			return;
 		}
 
 		// 2
-		sprintf_s(mFilename, "data\\%s", filename);
+		mFilename = "data\\" + filename;
 		mFile.open(mFilename, mode);
 	}
 
-	const char* GetFileExt(const char *filename)
+	std::string GetFileExt(const std::string &filename)
 	{
-		const char *i = filename;
-		const char *lastDot = nullptr;
-		while (*i != 0) {
-			if (*i == '.') {
-				lastDot = i;
-			}
-
-			++i;
-		}
-
-		if (lastDot == nullptr) {
+		const size_t lastDot = filename.find_last_of(".");
+		if (lastDot == filename.npos) {
 			return "";
 		}
 
-		return lastDot + 1;
+		return filename.substr(lastDot + 1);
 	}
 
-	bool IsAbsoluteFilePath(const char *path)
+	bool IsAbsoluteFilePath(const std::string &path)
 	{
 #if defined(_NA_WIN32)
-		return strlen(path) > 1 && path[1] == ':';
+		return path.length() > 1 && path[1] == ':';
 #endif
 	}
+
+
+
+#if defined(_NA_TOOLS) && defined(_NA_WIN32)
+
+#include "OS/NAWindows.h"
+#include <shobjidl.h>
+
+	void OpenFileDialog(std::string &buf, const std::string &defaultPath)
+	{
+		HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
+			COINIT_DISABLE_OLE1DDE);
+		if (SUCCEEDED(hr)) {
+			IFileOpenDialog *pFileOpen;
+
+			// Create the FileOpenDialog object.
+			hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
+				IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
+
+			if (SUCCEEDED(hr)) {
+				// Show the Open dialog box.
+				hr = pFileOpen->Show(NULL);
+
+				// Get the file name from the dialog box.
+				if (SUCCEEDED(hr)) {
+					IShellItem *pItem;
+					hr = pFileOpen->GetResult(&pItem);
+					if (SUCCEEDED(hr)) {
+						PWSTR pszFilePath;
+						hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+
+						// Display the file name to the user.
+						if (SUCCEEDED(hr)) {
+							WideCharToMultiByte(CP_ACP, 0, pszFilePath, MAX_FILEPATH_LENGTH, buffer, N, 0, 0);
+							CoTaskMemFree(pszFilePath);
+						}
+						pItem->Release();
+					}
+				}
+				pFileOpen->Release();
+			}
+			CoUninitialize();
+		}
+	}
+
+#endif // defined(NA_TOOLS) && defined(_NA_WIN32)
+
 }

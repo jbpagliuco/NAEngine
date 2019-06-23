@@ -24,7 +24,7 @@ namespace na
 	class ShaderProgram
 	{
 	public:
-		virtual bool Initialize(const char *filename, size_t constantBufferSize) = 0;
+		virtual bool Initialize(const std::string &filename, size_t constantBufferSize) = 0;
 		virtual void Shutdown()
 		{
 			NA_SAFE_RELEASE(mCB);
@@ -48,7 +48,7 @@ namespace na
 	class VertexShader : public ShaderProgram<PlatformVertexShader>, public Factory<VertexShader>
 	{
 	public:
-		virtual bool Initialize(const char *filename, size_t constantBufferSize);
+		virtual bool Initialize(const std::string &filename, size_t constantBufferSize);
 
 		virtual void SetConstantBuffer(void *data, size_t size);
 
@@ -58,7 +58,7 @@ namespace na
 	class PixelShader : public ShaderProgram<PlatformPixelShader>, public Factory<PixelShader>
 	{
 	public:
-		virtual bool Initialize(const char *filename, size_t constantBufferSize);
+		virtual bool Initialize(const std::string &filename, size_t constantBufferSize);
 
 		virtual void SetConstantBuffer(void *data, size_t size);
 
@@ -73,7 +73,7 @@ namespace na
 
 
 	template <typename T>
-	bool ShaderProgram<T>::Initialize(const char *filename, size_t constantBufferSize)
+	bool ShaderProgram<T>::Initialize(const std::string &filename, size_t constantBufferSize)
 	{
 		if (constantBufferSize > 0) {
 			D3D11_BUFFER_DESC desc;

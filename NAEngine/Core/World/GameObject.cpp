@@ -10,12 +10,12 @@ namespace na
 		mTransform = IDENTITY_TRANSFORM;
 	}
 
-	void GameObject::SetName(const char *name)
+	void GameObject::SetName(const std::string &name)
 	{
-		strncpy_s(mName, name, STATIC_ARRAY_SIZE(mName) - 1);
+		mName = name;
 	}
 
-	const char* GameObject::GetName()const
+	std::string GameObject::GetName()const
 	{
 		return mName;
 	}

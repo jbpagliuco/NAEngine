@@ -8,35 +8,34 @@
 
 namespace na
 {
-	static void LogToOutputWindow(const char *filter, const char *message)
+	static void LogToOutputWindow(const std::string &filter, const std::string &message)
 	{
 		size_t garbage;
 
 		wchar_t wFilter[256];
-		mbstowcs_s(&garbage, wFilter, filter, STATIC_ARRAY_SIZE(wFilter));
+		mbstowcs_s(&garbage, wFilter, filter.c_str(), STATIC_ARRAY_SIZE(wFilter));
 		OutputDebugString(wFilter);
 
 		wchar_t wMessage[1024];
-		mbstowcs_s(&garbage, wMessage, message, STATIC_ARRAY_SIZE(wMessage));
+		mbstowcs_s(&garbage, wMessage, message.c_str(), STATIC_ARRAY_SIZE(wMessage));
 		OutputDebugString(wMessage);
 
 		OutputDebugString(L"\r\n");
 	}
 
-	void LogInfoV(const char *filter, const char *format, va_list args)
+	void LogInfoV(const std::string &filter, const char *format, va_list args)
 	{
-		char filterFormatted[64];
-		sprintf_s(filterFormatted, "[%s] ", filter);
+		const std::string filterFormatted = "[" + filter + "]";
 
 		char message[1024];
 		vsprintf_s(message, format, args);
 
-		printf("%s%s\r\n", filterFormatted, message);
+		printf("%s%s\r\n", filterFormatted.c_str(), message);
 
 		LogToOutputWindow(filterFormatted, message);
 	}
 
-	void LogInfo(const char *filter, const char *format, ...)
+	void LogInfo(const std::string &filter, const char *format, ...)
 	{
 		va_list args;
 		va_start(args, format);
@@ -44,10 +43,9 @@ namespace na
 		va_end(args);
 	}
 
-	void LogErrorV(const char *filter, const char *format, va_list args)
+	void LogErrorV(const std::string &filter, const char *format, va_list args)
 	{
-		char filterFormatted[64];
-		sprintf_s(filterFormatted, "[%s] ", filter);
+		const std::string filterFormatted = "[" + filter + "]";
 
 		char message[1024];
 		vsprintf_s(message, format, args);
@@ -62,7 +60,7 @@ namespace na
 		saved_attributes = consoleInfo.wAttributes;
 
 		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-		printf("%s%s\r\n", filterFormatted, message);
+		printf("%s%s\r\n", filterFormatted.c_str(), message);
 
 		// Restore original attributes
 		SetConsoleTextAttribute(hConsole, saved_attributes);
@@ -70,7 +68,7 @@ namespace na
 		LogToOutputWindow(filterFormatted, message);
 	}
 
-	void LogError(const char *filter, const char *format, ...)
+	void LogError(const std::string &filter, const char *format, ...)
 	{
 		va_list args;
 		va_start(args, format);

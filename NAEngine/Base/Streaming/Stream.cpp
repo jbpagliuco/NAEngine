@@ -15,10 +15,10 @@ namespace na
 	static AssetID FirstUnusedAssetID = 1; // OMEGALUL
 	static std::map<std::string, AssetID> AssetIDs; // Filename -> AssetID. This is terrible.
 
-	AssetID StreamAsset(const char *filename, bool async)
+	AssetID StreamAsset(const std::string &filename, bool async)
 	{
-		const char *ext = GetFileExt(filename);
-		NA_ASSERT_RETURN_VALUE(Streamers.find(ext) != Streamers.end(), INVALID_ASSET_ID, "There is no streamer associated with file extension '%s'.", ext);
+		std::string ext = GetFileExt(filename);
+		NA_ASSERT_RETURN_VALUE(Streamers.find(ext) != Streamers.end(), INVALID_ASSET_ID, "There is no streamer associated with file extension '%s'.", ext.c_str());
 
 		AssetID id = INVALID_ASSET_ID;
 		if (AssetIDs.find(filename) == AssetIDs.end()) {
@@ -38,7 +38,7 @@ namespace na
 		return id;
 	}
 
-	AssetID GetAssetID(const char *filename)
+	AssetID GetAssetID(const std::string &filename)
 	{
 		// Doesn't exist yet? Create it.
 		if (AssetIDs.find(filename) == AssetIDs.end()) {
@@ -51,7 +51,7 @@ namespace na
 		return AssetIDs[filename];
 	}
 
-	const char* GetAssetFilename(AssetID id)
+	std::string GetAssetFilename(AssetID id)
 	{
 		for (auto &it : AssetIDs) {
 			if (it.second == id) {
@@ -62,9 +62,9 @@ namespace na
 		return "";
 	}
 
-	void RegisterAssetStreamer(const char *fileExt, AssetStreamer streamerFunc)
+	void RegisterAssetStreamer(const std::string &fileExt, AssetStreamer streamerFunc)
 	{
-		NA_ASSERT_RETURN(Streamers.find(fileExt) == Streamers.end(), "File ext '%s' has already been registered.", fileExt);
+		NA_ASSERT_RETURN(Streamers.find(fileExt) == Streamers.end(), "File ext '%s' has already been registered.", fileExt.c_str());
 
 		Streamers[fileExt] = streamerFunc;
 	}

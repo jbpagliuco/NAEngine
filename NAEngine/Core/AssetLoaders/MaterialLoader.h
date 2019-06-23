@@ -4,7 +4,7 @@
 
 namespace na
 {
-	bool LoadShaderx(AssetID id, const char *filename, bool async);
+	bool LoadShaderx(AssetID id, const std::string &filename, bool async);
 
-	bool LoadMatx(AssetID id, const char *filename, bool async);
+	bool LoadMatx(AssetID id, const std::string &filename, bool async);
 }

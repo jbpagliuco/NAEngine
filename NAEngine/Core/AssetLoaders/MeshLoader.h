@@ -4,5 +4,5 @@
 
 namespace na
 {
-	bool LoadMeshOBJ(AssetID id, const char *filename, bool async);
+	bool LoadMeshOBJ(AssetID id, const std::string &filename, bool async);
 }

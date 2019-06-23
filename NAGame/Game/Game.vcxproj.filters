@@ -22,6 +22,11 @@
   <ItemGroup>
     <FxCompile Include="data\red_vs.hlsl" />
     <FxCompile Include="data\red_ps.hlsl" />
+    <FxCompile Include="data\shaders\tex_debug\tex_debug_ps.hlsl" />
+    <FxCompile Include="data\shaders\tex_debug\tex_debug_vs.hlsl" />
+    <FxCompile Include="data\shaders\shader_common.h" />
+    <FxCompile Include="data\shaders\shader_common_ps.h" />
+    <FxCompile Include="data\shaders\shader_common_vs.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="data\world.xml" />
@@ -29,8 +34,11 @@
   </ItemGroup>
   <ItemGroup>
     <Object Include="data\cube.obj" />
+    <Object Include="data\test.obj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\red.shaderx" />
+    <None Include="data\shaders\tex_debug\tex_debug.shaderx" />
+    <None Include="data\materials\tex_debug.matx" />
   </ItemGroup>
 </Project>

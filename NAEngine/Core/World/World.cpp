@@ -17,7 +17,7 @@ namespace na
 
 	void World::AddGameObject(GameObject *obj)
 	{
-		NA_ASSERT_RETURN(std::find(mObjects.begin(), mObjects.end(), obj) == mObjects.end(), "Game object '%s' is already in world.", obj->GetName());
+		NA_ASSERT_RETURN(std::find(mObjects.begin(), mObjects.end(), obj) == mObjects.end(), "Game object '%s' is already in world.", obj->GetName().c_str());
 
 		mObjects.push_back(obj);
 	}
@@ -90,23 +90,22 @@ namespace na
 		return Transform(position, rotation, scale);
 	}
 
-	void LoadWorldFromFile(const char *filename)
+	void LoadWorldFromFile(const std::string &filename)
 	{
 		World::Get()->Clear();
 
 		std::vector<GameObject*> gameObjects;
 
 		pugi::xml_document doc;
-		pugi::xml_parse_result result = doc.load_file(filename);
-		NA_FATAL_ERROR(result, "Failed to load world file '%s'", filename);
+		pugi::xml_parse_result result = doc.load_file(filename.c_str());
+		NA_FATAL_ERROR(result, "Failed to load world file '%s'", filename.c_str());
 
 		pugi::xml_node root = doc.child("root");
 
 		for (auto &gameObjectXML : root) {
 			GameObject *obj = new (NA_ALLOC(sizeof(GameObject))) GameObject();
 
-			char name[256];
-			strncpy_s(name, gameObjectXML.child("name").text().as_string(), 256);
+			const std::string name = gameObjectXML.child("name").text().as_string();
 			obj->SetName(name);
 
 			obj->mTransform = gameObjectXML.child("transform") ? ParseTransformFromXML(gameObjectXML.child("transform")) : Transform();
@@ -116,7 +115,7 @@ namespace na
 			pugi::xml_node componentsArrayXML = gameObjectXML.child("components");
 			for (auto &componentXML : componentsArrayXML.children("component")) {
 				// Create the component
-				const char *componentType = componentXML.attribute("type").value();
+				const std::string componentType = componentXML.attribute("type").value();
 				GameComponent *component = CreateComponentFromType(componentType);
 
 				// Deserialize the component

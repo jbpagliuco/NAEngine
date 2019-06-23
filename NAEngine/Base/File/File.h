@@ -10,38 +10,37 @@ namespace na
 	struct File
 	{
 	public:
-		File(const char *filename, int mode);
+		File(const std::string &filename, int mode);
 		virtual ~File();
 
 		operator bool()const;
 
-		const char* GetFileExt()const;
+		std::string GetFileExt()const;
 
 		template <typename T>
 		bool Read(T &out);
-		bool ReadBytes(char *buf, size_t n);
-		bool ReadLine(char *buf, size_t n);
+		bool ReadBytes(std::string &buf);
+		bool ReadLine(std::string &buf);
 		
 		template <typename T>
 		bool Write(const T &val);
 		bool WriteBytes(const char *buf, size_t n);
 
 	public:
-		char mFilename[MAX_FILEPATH_SIZE];
+		std::string mFilename;
 		std::fstream mFile;
 
 	private:
-		void Open(const char *filename, int mode);
+		void Open(const std::string &filename, int mode);
 	};
 
 	// Dot (.) not included.
-	const char* GetFileExt(const char *filename);
+	std::string GetFileExt(const std::string &filename);
 
-	bool IsAbsoluteFilePath(const char *path);
+	bool IsAbsoluteFilePath(const std::string &path);
 
 #if defined(_NA_TOOLS)
-	template <size_t N>
-	void OpenFileDialog(char(&buffer)[N], const char *defaultPath = "");
+	void OpenFileDialog(std::string &buf, const std::string &defaultPath = "");
 #endif
 }
 

@@ -7,7 +7,7 @@
 
 namespace na
 {
-	bool LoadShaderx(AssetID id, const char *filename, bool async)
+	bool LoadShaderx(AssetID id, const std::string &filename, bool async)
 	{
 		if (Shader::Exists(id)) {
 			return true;
@@ -17,7 +17,7 @@ namespace na
 
 		// VERTEX SHADER
 		auto vsParams = params["vertexShader"];
-		const char *vsFilename = vsParams["file"].AsString();
+		std::string vsFilename = vsParams["file"].AsString();
 		AssetID vsID = GetAssetID(vsFilename);
 
 		VertexShader *vs = VertexShader::Create(vsID);
@@ -30,7 +30,7 @@ namespace na
 			ie.mSemantic = elem["semanticName"].AsString();
 			ie.mIndex = elem["index"].AsInt(0);
 
-			const char *format = elem["type"].AsString();
+			std::string format = elem["type"].AsString();
 			ie.mFormat = GetFormatFromString(format);
 
 			inputElements.push_back(ie);
@@ -41,7 +41,7 @@ namespace na
 
 		// PIXEL SHADER
 		auto psParams = params["pixelShader"];
-		const char *psFilename = psParams["file"].AsString();
+		std::string psFilename = psParams["file"].AsString();
 		AssetID psID = GetAssetID(psFilename);
 
 		PixelShader *ps = PixelShader::Create(psID);
@@ -55,7 +55,7 @@ namespace na
 	}
 
 
-	bool LoadMatx(AssetID id, const char *filename, bool async)
+	bool LoadMatx(AssetID id, const std::string &filename, bool async)
 	{
 		if (Material::Exists(id)) {
 			return true;
@@ -63,7 +63,7 @@ namespace na
 
 		DeserializationParameterMap params = ParseFile(filename);
 
-		const char *shaderFilename = params["shaderFile"].AsString();
+		std::string shaderFilename = params["shaderFile"].AsString();
 		AssetID shaderID = StreamAsset(shaderFilename);
 
 		size_t propertyByteLength = std::stoul(params["properties"].meta["size"]);
@@ -71,7 +71,7 @@ namespace na
 
 		size_t calculatedSize = 0;
 		for (auto &prop : params["properties"].childrenArray) {
-			const char *type = prop.meta["type"].c_str();
+			std::string type = prop.meta["type"];
 			prop.AsType((unsigned char*)propertyData + calculatedSize, type);
 
 			calculatedSize += GetFormatByteSize(GetFormatFromString(type));

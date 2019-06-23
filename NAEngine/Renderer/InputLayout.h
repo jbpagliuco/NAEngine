@@ -22,7 +22,7 @@ namespace na
 
 	struct InputElement
 	{
-		const char *mSemantic;
+		std::string mSemantic;
 		int mIndex;
 		Format mFormat;
 	};

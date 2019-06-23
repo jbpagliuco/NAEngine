@@ -14,14 +14,14 @@ namespace na
 	typedef uint64_t AssetID;
 	extern AssetID INVALID_ASSET_ID;
 	
-	AssetID StreamAsset(const char *filename, bool async = false);
-	AssetID GetAssetID(const char *filename);
-	const char* GetAssetFilename(AssetID id);
+	AssetID StreamAsset(const std::string &filename, bool async = false);
+	AssetID GetAssetID(const std::string &filename);
+	std::string GetAssetFilename(AssetID id);
 	
 	// It is up to each asset system to provide its own storage for
 	// every asset.
-	typedef bool(*AssetStreamer)(AssetID, const char*, bool);
-	void RegisterAssetStreamer(const char *fileExt, AssetStreamer streamerFunc);
+	typedef bool(*AssetStreamer)(AssetID, const std::string&, bool);
+	void RegisterAssetStreamer(const std::string &fileExt, AssetStreamer streamerFunc);
 	
 
 	template <typename T>

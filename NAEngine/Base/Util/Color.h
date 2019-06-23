@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string>
 
 namespace na
 {
@@ -11,7 +12,7 @@ namespace na
 
 		Color();
 		Color(uint8_t R, uint8_t G, uint8_t B, uint8_t A = 255);
-		Color(const char *colorString);
+		Color(const std::string &colorString);
 
 		// 0x00RRGGBB
 		uint32_t _R8G8B8()const;

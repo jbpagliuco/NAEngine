@@ -15,7 +15,7 @@ namespace na
 	// Lol what is this
 	DeserializationParameterMap INVALID_DESERIALIZATION_PARAMETER = { "~*INVALID*~" };
 
-	DeserializationParameterMap& DeserializationParameterMap::operator[](const char *childName)
+	DeserializationParameterMap& DeserializationParameterMap::operator[](const std::string &childName)
 	{
 		if (childrenMap.find(childName) == childrenMap.end()) {
 			return INVALID_DESERIALIZATION_PARAMETER;
@@ -31,7 +31,7 @@ namespace na
 		return childrenArray[index];
 	}
 
-	void DeserializationParameterMap::Insert(const char *name, DeserializationParameterMap map)
+	void DeserializationParameterMap::Insert(const std::string &name, DeserializationParameterMap map)
 	{
 		childrenMap[name] = map;
 	}
@@ -41,7 +41,7 @@ namespace na
 		childrenArray.insert(childrenArray.begin() + index, map);
 	}
 
-	const char* DeserializationParameterMap::AsString(const char *def)
+	std::string DeserializationParameterMap::AsString(const std::string &def)
 	{
 		return value.c_str();
 	}
@@ -100,7 +100,7 @@ namespace na
 
 		// String
 		if (value.length() != 0) {
-			ColorF color(value.c_str());
+			ColorF color(value);
 			return DirectX::XMFLOAT4(color.r, color.g, color.b, color.a);
 		}
 
@@ -111,15 +111,15 @@ namespace na
 		return DirectX::XMFLOAT4(r, g, b, a);
 	}
 
-	void DeserializationParameterMap::AsType(void *out, const char *type)
+	void DeserializationParameterMap::AsType(void *out, const std::string &type)
 	{
-#define COPY_INTO_BUFFER(s, T, f) if (strcmp(type, s) == 0) { T v = f(); memcpy(out, &v, sizeof(T)); found = true; }
+#define COPY_INTO_BUFFER(s, T, f) if (type == s) { T v = f(); memcpy(out, &v, sizeof(T)); found = true; }
 		bool found = false;
 		COPY_INTO_BUFFER("float", float, AsFloat);
 		COPY_INTO_BUFFER("float2", DirectX::XMFLOAT2, AsFloat2);
 		COPY_INTO_BUFFER("float3", DirectX::XMFLOAT3, AsFloat3);
 		COPY_INTO_BUFFER("float4", DirectX::XMFLOAT4, AsFloat4);
-		NA_ASSERT(found, "Type %s is not recognized.", type);
+		NA_ASSERT(found, "Type %s is not recognized.", type.c_str());
 #undef COPY_INTO_BUFFER
 	}
 
@@ -175,11 +175,11 @@ namespace na
 		return params;
 	}
 
-	DeserializationParameterMap ParseFile(const char *filename)
+	DeserializationParameterMap ParseFile(const std::string &filename)
 	{
 		pugi::xml_document doc;
-		pugi::xml_parse_result result = doc.load_file(filename);
-		NA_ASSERT_RETURN_VALUE(result, INVALID_DESERIALIZATION_PARAMETER, "Failed to load XML file '%s'", filename);
+		pugi::xml_parse_result result = doc.load_file(filename.c_str());
+		NA_ASSERT_RETURN_VALUE(result, INVALID_DESERIALIZATION_PARAMETER, "Failed to load XML file '%s'", filename.c_str());
 
 		pugi::xml_node root = doc.child("root");
 		return ParseNode(root);

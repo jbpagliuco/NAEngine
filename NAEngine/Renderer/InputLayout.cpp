@@ -27,7 +27,7 @@ namespace na
 			element.InstanceDataStepRate = 0;
 			element.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 
-			element.SemanticName = elem.mSemantic;
+			element.SemanticName = elem.mSemantic.c_str();
 			element.SemanticIndex = elem.mIndex;
 			element.Format = GetDXGIFormat(elem.mFormat);
 

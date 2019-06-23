@@ -21,5 +21,5 @@ namespace na
 
 	void WorldSystemShutdown();
 
-	void LoadWorldFromFile(const char *filename);
+	void LoadWorldFromFile(const std::string &filename);
 }

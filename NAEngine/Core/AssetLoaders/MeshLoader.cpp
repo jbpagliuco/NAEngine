@@ -22,7 +22,7 @@ namespace na
 		uint32_t tex;
 	};
 	
-	bool LoadMeshOBJ(AssetID id, const char *filename, bool async)
+	bool LoadMeshOBJ(AssetID id, const std::string &filename, bool async)
 	{
 		if (Mesh::Exists(id)) {
 			return true;
@@ -40,14 +40,14 @@ namespace na
 		std::vector<FaceIndexData> faces;
 
 		/////////////////////////////////////////////////
-		char line[256];
-		while (file.ReadLine(line, 256)) {
-			RemoveCapWhitespace(line);
+		std::string line;
+		while (file.ReadLine(line)) {
+			Trim(line);
 
 			std::stringstream ss(line);
 
 			// Strip the prefix
-			char garbage[16];
+			std::string garbage;
 			ss >> garbage;
 
 			switch (line[0]) {
@@ -90,18 +90,18 @@ namespace na
 				FaceIndexData indices[numVerticesInFace];
 
 				for (int i = 0; i < numVerticesInFace; ++i) {
-					char faceString[64];
+					std::string faceString;
 					ss >> faceString;
 					std::stringstream faceSS(faceString);
 
-					char indexString[16];
-					faceSS.getline(indexString, 16, '/');
+					std::string indexString;
+					std::getline(faceSS, indexString, '/');
 					indices[i].pos = std::stoul(indexString) - 1;
 
-					faceSS.getline(indexString, 16, '/');
+					std::getline(faceSS, indexString, '/');
 					indices[i].tex = std::stoul(indexString) - 1;
 
-					faceSS.getline(indexString, 16, '/');
+					std::getline(faceSS, indexString, '/');
 					indices[i].norm = std::stoul(indexString) - 1;
 
 					faces.push_back(indices[i]);

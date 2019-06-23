@@ -1,5 +1,6 @@
 #include "String.h"
 
+#include <algorithm>
 #include <cstring>
 #include <cctype>
 
@@ -103,5 +104,25 @@ namespace na
 
 		MultiByteToWideChar(CP_UTF8, 0, s, (int)len, buf, (int)n);
 		buf[min(n - 1, len)] = 0;
+	}
+
+	void LTrim(std::string &s)
+	{
+		s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) {
+			return !std::isspace(ch);
+		}));
+	}
+
+	void RTrim(std::string &s)
+	{
+		s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {
+			return !std::isspace(ch);
+		}).base(), s.end());
+	}
+
+	void Trim(std::string &s)
+	{
+		LTrim(s);
+		RTrim(s);
 	}
 }

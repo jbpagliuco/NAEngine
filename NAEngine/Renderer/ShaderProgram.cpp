@@ -14,19 +14,19 @@ namespace na
 	NA_FACTORY_SETUP(PixelShader);
 
 #if defined(NA_D3D11)
-	static bool CompileShader(ID3D10Blob **outBuffer, const char *file, const char *target)
+	static bool CompileShader(ID3D10Blob **outBuffer, const std::string &file, const std::string &target)
 	{
 		const size_t MAX_FILE_LENGTH = 256;
 		wchar_t wfile[MAX_FILE_LENGTH];
-		MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, file, -1, wfile, MAX_FILE_LENGTH);
+		MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, file.c_str(), -1, wfile, MAX_FILE_LENGTH);
 
 		ID3D10Blob *errorMessage = nullptr;
-		HRESULT hr = D3DCompileFromFile(wfile, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", target, D3D10_SHADER_ENABLE_STRICTNESS, 0, outBuffer, &errorMessage);
+		HRESULT hr = D3DCompileFromFile(wfile, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", target.c_str(), D3D10_SHADER_ENABLE_STRICTNESS, 0, outBuffer, &errorMessage);
 		if (FAILED(hr)) {
 			if (errorMessage != nullptr) {
-				NA_ASSERT(false, "Failed to compile HLSL shader '%s' with error message: %.*s", file, errorMessage->GetBufferSize(), errorMessage->GetBufferPointer());
+				NA_ASSERT(false, "Failed to compile HLSL shader '%s' with error message: %.*s", file.c_str(), errorMessage->GetBufferSize(), errorMessage->GetBufferPointer());
 			} else {
-				NA_ASSERT(false, "Failed to compile HLSL shader '%s' with unknown error", file);
+				NA_ASSERT(false, "Failed to compile HLSL shader '%s' with unknown error", file.c_str());
 			}
 			return false;
 		}
@@ -36,7 +36,7 @@ namespace na
 #endif
 
 	// Vertex Shader ////////////////////////////////////////////////////
-	bool VertexShader::Initialize(const char *filename, size_t constantBufferSize)
+	bool VertexShader::Initialize(const std::string &filename, size_t constantBufferSize)
 	{
 		if (!ShaderProgram::Initialize(filename, constantBufferSize)) {
 			return false;
@@ -82,7 +82,7 @@ namespace na
 
 
 	// Pixel Shader ////////////////////////////////////////////////////
-	bool PixelShader::Initialize(const char *filename, size_t constantBufferSize)
+	bool PixelShader::Initialize(const std::string &filename, size_t constantBufferSize)
 	{
 		if (!ShaderProgram::Initialize(filename, constantBufferSize)) {
 			return false;

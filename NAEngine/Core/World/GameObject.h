@@ -13,8 +13,8 @@ namespace na
 	public:
 		GameObject();
 
-		void SetName(const char *name);
-		const char* GetName()const;
+		void SetName(const std::string &name);
+		std::string GetName()const;
 
 		void AddComponent(GameComponent *component);
 		std::vector<GameComponent*>& GetComponents();
@@ -23,7 +23,7 @@ namespace na
 		Transform mTransform;
 
 	private:
-		char mName[256];
+		std::string mName;
 		std::vector<GameComponent*> mComponents;
 	};
 }

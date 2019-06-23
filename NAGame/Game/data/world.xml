@@ -31,8 +31,8 @@
 		</transform>
 		<components>
 			<component type="StaticMeshComponent">
-				<mesh>data\cube.obj</mesh>
-				<material>data\test_mat.matx</material>
+				<mesh>data\test.obj</mesh>
+				<material>data\materials\tex_debug.matx</material>
 			</component>
 		</components>
 	</gameobject>

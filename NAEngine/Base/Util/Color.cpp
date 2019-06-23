@@ -37,7 +37,7 @@ namespace na
 	Color::Color() : r(0), g(0), b(0), a(255) { }
 	Color::Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) : r(r), g(g), b(b), a(a) { }
 
-	Color::Color(const char *colorString)
+	Color::Color(const std::string &colorString)
 	{
 		static std::map<std::string, Color> _colors;
 		static bool bInit = false;
@@ -65,13 +65,13 @@ namespace na
 		}
 
 		char colorStringLower[32];
-		strcpy_s(colorStringLower, colorString);
+		strcpy_s(colorStringLower, colorString.c_str());
 		ToLowerCase(colorStringLower);
 
 		if (_colors.find(colorStringLower) != _colors.end())
 			*this = _colors[colorStringLower];
 		else {
-			NA_ASSERT(false, "Color string '%s' was not found. Defaulting to red");
+			NA_ASSERT(false, "Color string '%s' was not found. Defaulting to red.", colorStringLower);
 			*this = COLOR_BLACK;
 		}
 	}

@@ -30,7 +30,7 @@ namespace na
 
 
 
-	Format GetFormatFromString(const char *s)
+	Format GetFormatFromString(const std::string &s)
 	{
 		return FormatStringConversions[s];
 	}

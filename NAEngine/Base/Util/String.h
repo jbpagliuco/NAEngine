@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace na
 {
 	// Returns true if the string *s* starts with *prefix*
@@ -34,4 +36,8 @@ namespace na
 	void ToUpperCase(char *s);
 
 	void ToWideChar(wchar_t *buf, size_t n, const char *s);
+
+	void LTrim(std::string &s);
+	void RTrim(std::string &s);
+	void Trim(std::string &s);
 }

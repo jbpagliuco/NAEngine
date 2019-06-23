@@ -75,11 +75,11 @@ namespace na
 		}
 	}
 
-	GameComponent* CreateComponentFromType(const char *type)
+	GameComponent* CreateComponentFromType(const std::string &type)
 	{
-		NA_ASSERT_RETURN_VALUE(ComponentInstantiators.find(type) != ComponentInstantiators.end(), nullptr, "Failed to find instantiator for component type '%s'. Did you forget to add it to this file?", type);
+		NA_ASSERT_RETURN_VALUE(ComponentInstantiators.find(type) != ComponentInstantiators.end(), nullptr, "Failed to find instantiator for component type '%s'. Did you forget to add it to this file?", type.c_str());
 		GameComponent *component = ComponentInstantiators[type]();
-		NA_ASSERT_RETURN_VALUE(component != nullptr, nullptr, "Failed to create component of type '%s'", type);
+		NA_ASSERT_RETURN_VALUE(component != nullptr, nullptr, "Failed to create component of type '%s'", type.c_str());
 
 		if (ComponentTable.find(type) == ComponentTable.end()) {
 			ComponentTable[type] = ComponentList();

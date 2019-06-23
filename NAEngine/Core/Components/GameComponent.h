@@ -32,7 +32,7 @@ namespace na
 	void GameComponentDoFrame();
 	void GameComponentShutdown();
 
-	GameComponent* CreateComponentFromType(const char *type);
+	GameComponent* CreateComponentFromType(const std::string &type);
 
 	template <typename T>
 	GameComponent* InstantiateGameComponent()

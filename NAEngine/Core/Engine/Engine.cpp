@@ -22,7 +22,7 @@ namespace na
 		typedef bool(*InitFunc)();
 		typedef void(*Func)();
 
-		const char *mSystemName;
+		std::string mSystemName;
 
 		InitFunc mSystemInit;
 		Func mSystemShutdown;
@@ -90,10 +90,10 @@ namespace na
 		LogInfo(CORE_LOG_FILTER, "=============================================");
 		for (auto &sys : SystemRegistry)
 		{
-			LogInfo(CORE_LOG_FILTER, "Initializing %s", sys.mSystemName);
+			LogInfo(CORE_LOG_FILTER, "Initializing %s", sys.mSystemName.c_str());
 			if (sys.mSystemInit != nullptr) {
 				bool ret = sys.mSystemInit();
-				NA_ASSERT_RETURN_VALUE(ret, false, "Failed to initialize system '%s'.", sys.mSystemName);
+				NA_ASSERT_RETURN_VALUE(ret, false, "Failed to initialize system '%s'.", sys.mSystemName.c_str());
 			}
 		}
 		LogInfo(CORE_LOG_FILTER, "System initialization complete.");
@@ -109,7 +109,7 @@ namespace na
 		LogInfo(CORE_LOG_FILTER, "=============================================");
 		for (auto it = SystemRegistry.rbegin(); it != SystemRegistry.rend(); ++it) {
 			auto &sys = *it;
-			LogInfo(CORE_LOG_FILTER, "Shutting down %s", sys.mSystemName);
+			LogInfo(CORE_LOG_FILTER, "Shutting down %s", sys.mSystemName.c_str());
 
 			if (sys.mSystemShutdown != nullptr) {
 				sys.mSystemShutdown();
