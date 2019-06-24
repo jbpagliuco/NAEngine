@@ -39,6 +39,8 @@ namespace na
 
 		DirectX::XMFLOAT4 AsColor(DirectX::XMFLOAT4 def);
 
+		std::string AsFilepath(const std::string &def = "");
+
 		void AsType(void *out, const std::string &type);
 	};
 

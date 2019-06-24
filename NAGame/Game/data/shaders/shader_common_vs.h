@@ -1,8 +1,6 @@
 #if !defined(SHADER_COMMON_VS_H)
 #define SHADER_COMMON_VS_H
 
-#include "shader_common.hlsl"
-
 // Constant Buffers
 cbuffer cbCamera : register(b0) {
 	matrix viewProj;

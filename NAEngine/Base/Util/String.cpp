@@ -106,6 +106,17 @@ namespace na
 		buf[min(n - 1, len)] = 0;
 	}
 
+
+	bool StartsWith(const std::string &s, const std::string &prefix)
+	{
+		return s.size() >= prefix.size() && 0 == s.compare(0, prefix.size(), prefix);
+	}
+
+	bool EndsWith(const std::string &s, const std::string &suffix)
+	{
+		return s.size() >= suffix.size() && 0 == s.compare(s.size() - suffix.size(), suffix.size(), suffix);
+	}
+
 	void LTrim(std::string &s)
 	{
 		s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) {

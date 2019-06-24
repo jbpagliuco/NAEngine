@@ -37,6 +37,11 @@ namespace na
 	// Dot (.) not included.
 	std::string GetFileExt(const std::string &filename);
 
+	bool IsFilePath(const std::string &filename);
+	bool FileExists(const std::string &filename);
+	bool FindFileRecursively(std::string &out, const std::string &directory, const std::string &filename);
+	bool GetFullFilepath(std::string &out, const std::string &filename);
+
 	bool IsAbsoluteFilePath(const std::string &path);
 
 #if defined(_NA_TOOLS)

@@ -1,8 +1,10 @@
 #include "File.h"
 
+#include <experimental/filesystem>
 #include <sstream>
 
 #include "Debug/Assert.h"
+#include "Util/String.h"
 
 namespace na
 {
@@ -53,19 +55,12 @@ namespace na
 
 	void File::Open(const std::string &filename, int mode)
 	{
-		// Look for the file in these places:
-		// 1. Straight up
-		// 2. Under the data folder
-
-		// 1
-		mFilename = filename;
-		mFile.open(mFilename, mode);
-		if (mFile.is_open()) {
-			return;
+		if (IsFilePath(filename)) {
+			mFilename = filename;
+		} else {
+			FindFileRecursively(mFilename, "data", filename);
 		}
 
-		// 2
-		mFilename = "data\\" + filename;
 		mFile.open(mFilename, mode);
 	}
 
@@ -77,6 +72,52 @@ namespace na
 		}
 
 		return filename.substr(lastDot + 1);
+	}
+
+
+	bool IsFilePath(const std::string &filename)
+	{
+		return filename.find('\\') != filename.npos;
+	}
+
+	bool FileExists(const std::string &filename)
+	{
+		if (IsFilePath(filename)) {
+			return std::experimental::filesystem::exists(filename);
+		} else {
+			std::string temp;
+			return FindFileRecursively(temp, "data", filename);
+		}
+	}
+	
+	bool FindFileRecursively(std::string &out, const std::string &directory, const std::string &filename)
+	{
+		const std::string suffix = "/" + filename;
+
+		for (auto &entry : std::experimental::filesystem::recursive_directory_iterator(directory)) {
+			const std::string f = entry.path().generic_string();
+			if (EndsWith(f, suffix)) {
+				out = f;
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool GetFullFilepath(std::string &out, const std::string &filename)
+	{
+		if (IsFilePath(filename)) {
+			if (FileExists(filename)) {
+				out = filename;
+				return true;
+			}
+
+			return false;
+
+		} else {
+			return FindFileRecursively(out, "data", filename);
+		}
 	}
 
 	bool IsAbsoluteFilePath(const std::string &path)

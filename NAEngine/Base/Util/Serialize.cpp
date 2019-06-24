@@ -4,6 +4,7 @@
 
 #include "Color.h"
 #include "Debug/Assert.h"
+#include "File/File.h"
 #include "Util/String.h"
 
 #include "pugixml-1.9/pugixml.hpp"
@@ -109,6 +110,19 @@ namespace na
 		float b = childrenMap["b"].AsFloat(0.0f);
 		float a = childrenMap["a"].AsFloat(0.0f);
 		return DirectX::XMFLOAT4(r, g, b, a);
+	}
+
+	std::string DeserializationParameterMap::AsFilepath(const std::string &def)
+	{
+		RETURN_DEFAULT_IF_INVALID();
+
+		if (FileExists(value)) {
+			std::string temp;
+			GetFullFilepath(temp, value);
+			return temp;
+		}
+
+		return def;
 	}
 
 	void DeserializationParameterMap::AsType(void *out, const std::string &type)

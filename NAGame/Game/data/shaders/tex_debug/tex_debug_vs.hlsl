@@ -1,4 +1,5 @@
-#include "shader_common.hlsl"
+#include "../shader_common.h"
+#include "../shader_common_vs.h"
 
 // Vertex/Pixel inputs
 struct VertexInput {

@@ -37,6 +37,8 @@ namespace na
 
 	void ToWideChar(wchar_t *buf, size_t n, const char *s);
 
+	bool StartsWith(const std::string &s, const std::string &prefix);
+	bool EndsWith(const std::string &s, const std::string &suffix);
 	void LTrim(std::string &s);
 	void RTrim(std::string &s);
 	void Trim(std::string &s);

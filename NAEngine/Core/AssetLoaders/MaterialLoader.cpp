@@ -17,7 +17,7 @@ namespace na
 
 		// VERTEX SHADER
 		auto vsParams = params["vertexShader"];
-		std::string vsFilename = vsParams["file"].AsString();
+		std::string vsFilename = vsParams["file"].AsFilepath();
 		AssetID vsID = GetAssetID(vsFilename);
 
 		VertexShader *vs = VertexShader::Create(vsID);
@@ -41,7 +41,7 @@ namespace na
 
 		// PIXEL SHADER
 		auto psParams = params["pixelShader"];
-		std::string psFilename = psParams["file"].AsString();
+		std::string psFilename = psParams["file"].AsFilepath();
 		AssetID psID = GetAssetID(psFilename);
 
 		PixelShader *ps = PixelShader::Create(psID);
@@ -66,8 +66,8 @@ namespace na
 		std::string shaderFilename = params["shaderFile"].AsString();
 		AssetID shaderID = StreamAsset(shaderFilename);
 
-		size_t propertyByteLength = std::stoul(params["properties"].meta["size"]);
-		void *propertyData = NA_ALLOC_ALIGNED(propertyByteLength, 16);
+		constexpr size_t MAX_PROPERTY_BYTE_LENGTH = 16;
+		void *propertyData = NA_ALLOC_ALIGNED(MAX_PROPERTY_BYTE_LENGTH, 16);
 
 		size_t calculatedSize = 0;
 		for (auto &prop : params["properties"].childrenArray) {
@@ -77,10 +77,10 @@ namespace na
 			calculatedSize += GetFormatByteSize(GetFormatFromString(type));
 		}
 
-		NA_ASSERT(propertyByteLength == calculatedSize);
+		NA_ASSERT(calculatedSize <= MAX_PROPERTY_BYTE_LENGTH);
 
 		Material *mat = Material::Create(id);
-		mat->Initialize(shaderID, propertyData, propertyByteLength);
+		mat->Initialize(shaderID, propertyData, calculatedSize);
 
 		NA_FREE_ALIGNED(propertyData);
 
