@@ -7,7 +7,6 @@ namespace na
 	bool Material::Initialize(AssetID shaderID, void *propertyData, size_t propertyByteLength)
 	{
 		mShader = Shader::Get(shaderID);
-		mShader->AddRef();
 
 		mPropertyData = NA_ALLOC_ALIGNED(propertyByteLength, 16);
 		memcpy(mPropertyData, propertyData, propertyByteLength);
@@ -18,8 +17,7 @@ namespace na
 	
 	void Material::Shutdown()
 	{
-		Shader::Destroy(mShader);
-
+		NA_SAFE_RELEASE_ASSET_OBJECT(mShader);
 		NA_FREE_ALIGNED(mPropertyData);
 	}
 

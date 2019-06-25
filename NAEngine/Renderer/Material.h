@@ -4,7 +4,7 @@
 
 namespace na
 {
-	class Material : public Factory<Material>
+	class Material : public AssetFactory<Material>
 	{
 	public:
 		bool Initialize(AssetID shaderID, void *properties, size_t propertiesSize);

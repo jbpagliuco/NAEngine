@@ -8,7 +8,8 @@
 #include "Base/Debug/Log.h"
 #include "Renderer/RenderingSystem.h"
 
-#include "Core/AssetLoaders/AssetLoaderSystem.h"
+#include "Core/Assets/MeshAsset.h"
+#include "Core/Assets/MaterialAsset.h"
 #include "Core/Core.h"
 #include "Core/Components/GameComponent.h"
 #include "Core/World/World.h"
@@ -62,13 +63,6 @@ namespace na
 
 		{
 			SystemRegistration reg;
-			reg.mSystemName = "Asset Loader System";
-			reg.mSystemInit = AssetLoaderSystemInitialize;
-			SystemRegistry.push_back(reg);
-		}
-
-		{
-			SystemRegistration reg;
 			reg.mSystemName = "Component System";
 			reg.mSystemShutdown = GameComponentShutdown;
 			reg.mDoFrame = GameComponentDoFrame;
@@ -78,7 +72,22 @@ namespace na
 		{
 			SystemRegistration reg;
 			reg.mSystemName = "World System";
-			reg.mSystemShutdown = WorldSystemShutdown;
+			SystemRegistry.push_back(reg);
+		}
+		
+		{
+			SystemRegistration reg;
+			reg.mSystemName = "Mesh System";
+			reg.mSystemInit = MeshSystemInit;
+			reg.mSystemShutdown = MeshSystemShutdown;
+			SystemRegistry.push_back(reg);
+		}
+
+		{
+			SystemRegistration reg;
+			reg.mSystemName = "Material System";
+			reg.mSystemInit = MaterialSystemInit;
+			reg.mSystemShutdown = MaterialSystemShutdown;
 			SystemRegistry.push_back(reg);
 		}
 	}
@@ -105,6 +114,9 @@ namespace na
 
 	void ShutdownEngine()
 	{
+		// Manually shutdown the world first
+		WorldSystemShutdown();
+
 		LogLineBreak();
 		LogInfo(CORE_LOG_FILTER, "=============================================");
 		for (auto it = SystemRegistry.rbegin(); it != SystemRegistry.rend(); ++it) {

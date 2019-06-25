@@ -10,9 +10,6 @@
 
 namespace na
 {
-	NA_FACTORY_SETUP(VertexShader);
-	NA_FACTORY_SETUP(PixelShader);
-
 #if defined(NA_D3D11)
 	static bool CompileShader(ID3D10Blob **outBuffer, const std::string &file, const std::string &target)
 	{

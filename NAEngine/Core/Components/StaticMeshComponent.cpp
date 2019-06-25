@@ -13,8 +13,8 @@ namespace na
 {
 	void StaticMeshComponent::Deserialize(DeserializationParameterMap &params)
 	{
-		AssetID meshID = StreamAsset(params["mesh"].AsString());
-		AssetID matID = StreamAsset(params["material"].AsString());
+		AssetID meshID = RequestAsset(params["mesh"].AsFilepath());
+		AssetID matID = RequestAsset(params["material"].AsFilepath());
 
 		mMeshInstance.Initialize(meshID, matID);
 	}

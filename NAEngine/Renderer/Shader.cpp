@@ -4,41 +4,36 @@ namespace na
 {
 	NA_FACTORY_SETUP(Shader);
 
-	bool Shader::Initialize(AssetID vertexShader, AssetID pixelShader)
+	bool Shader::Initialize(VertexShader vertexShader, PixelShader pixelShader, InputLayout inputLayout)
 	{
-		mVertexShader = VertexShader::Get(vertexShader);
-		mVertexShader->AddRef();
-
-		mPixelShader = PixelShader::Get(pixelShader);
-		mPixelShader->AddRef();
-
-		mInputLayout = InputLayout::Get(vertexShader);
-		mInputLayout->AddRef();
+		mVertexShader = vertexShader;
+		mPixelShader = pixelShader;
+		mInputLayout = inputLayout;
 
 		return true;
 	}
 
 	void Shader::Shutdown()
 	{
-		VertexShader::Destroy(mVertexShader);
-		PixelShader::Destroy(mPixelShader);
-		InputLayout::Destroy(mInputLayout);
+		mVertexShader.Shutdown();
+		mPixelShader.Shutdown();
+		mInputLayout.Shutdown();
 	}
 
 	void Shader::VSSetBufferData(void *data, size_t size)
 	{
-		mVertexShader->SetConstantBuffer(data, size);
+		mVertexShader.SetConstantBuffer(data, size);
 	}
 
 	void Shader::PSSetBufferData(void *data, size_t size)
 	{
-		mPixelShader->SetConstantBuffer(data, size);
+		mPixelShader.SetConstantBuffer(data, size);
 	}
 
 	void Shader::Bind()
 	{
-		mInputLayout->Bind();
-		mVertexShader->Bind();
-		mPixelShader->Bind();
+		mInputLayout.Bind();
+		mVertexShader.Bind();
+		mPixelShader.Bind();
 	}
 }

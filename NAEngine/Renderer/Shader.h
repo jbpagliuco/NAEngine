@@ -1,14 +1,15 @@
 #pragma once
 
+#include "Base/Streaming/AssetFactory.h"
 #include "InputLayout.h"
 #include "ShaderProgram.h"
 
 namespace na
 {
-	class Shader : public Factory<Shader>
+	class Shader : public AssetFactory<Shader>
 	{
 	public:
-		bool Initialize(AssetID vertexShader, AssetID pixelShader);
+		bool Initialize(VertexShader vertexShader, PixelShader pixelShader, InputLayout inputLayout);
 		void Shutdown();
 
 		void VSSetBufferData(void *data, size_t size);
@@ -17,9 +18,9 @@ namespace na
 		void Bind();
 
 	private:
-		VertexShader *mVertexShader;
-		PixelShader *mPixelShader;
+		VertexShader mVertexShader;
+		PixelShader mPixelShader;
 		
-		InputLayout *mInputLayout;
+		InputLayout mInputLayout;
 	};
 }

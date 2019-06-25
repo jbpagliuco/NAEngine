@@ -73,7 +73,7 @@
     <OutDir>$(ProjectDir)\..\Output\$(Platform)\$(Configuration)\</OutDir>
     <LibraryPath>$(SolutionDir)\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <TargetName>NA$(ProjectName)</TargetName>
-    <IncludePath>$(ProjectDir)..\Vendor;$(ProjectDir);$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..;$(ProjectDir)..\Vendor;$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(ProjectDir)\..\Output\$(Platform)\$(Configuration)\</OutDir>
@@ -167,6 +167,7 @@
     <ClInclude Include="Math\Transform.h" />
     <ClInclude Include="Memory\Memory.h" />
     <ClInclude Include="OS\OS.h" />
+    <ClInclude Include="Streaming\AssetFactory.h" />
     <ClInclude Include="Streaming\Stream.h" />
     <ClInclude Include="Util\Color.h" />
     <ClInclude Include="Util\Serialize.h" />
@@ -176,7 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="File\File.inl" />
-    <None Include="Streaming\Stream.inl" />
+    <None Include="Streaming\AssetFactory.inl" />
     <None Include="Util\Util.inl" />
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,7 @@
 #include "Stream.h"
 
+#include <algorithm>
 #include <map>
-#include <string>
 
 #include "Debug/Assert.h"
 #include "File/File.h"
@@ -9,63 +9,158 @@
 namespace na
 {
 	AssetID INVALID_ASSET_ID = 0;
+	AssetRecord INVALID_ASSET_RECORD;
 
-	static std::map<std::string, AssetStreamer> Streamers;
+	static std::map<std::string, AssetType> AssetTypes;
 
-	static AssetID FirstUnusedAssetID = 1; // OMEGALUL
-	static std::map<std::string, AssetID> AssetIDs; // Filename -> AssetID. This is terrible.
+	static std::map<AssetID, AssetRecord> AssetRecords;
+	static std::map<std::string, AssetID> AssetIDs;
+	static AssetID NextAssetID = 1;
 
-	AssetID StreamAsset(const std::string &filename, bool async)
+
+	static AssetID CreateOrGetAssetID(const std::string &filename)
 	{
-		std::string ext = GetFileExt(filename);
-		NA_ASSERT_RETURN_VALUE(Streamers.find(ext) != Streamers.end(), INVALID_ASSET_ID, "There is no streamer associated with file extension '%s'.", ext.c_str());
+		AssetID id = GetAssetID(filename);
+		if (id == INVALID_ASSET_ID) {
+			id = NextAssetID;
+			++NextAssetID;
 
-		AssetID id = INVALID_ASSET_ID;
-		if (AssetIDs.find(filename) == AssetIDs.end()) {
-			id = FirstUnusedAssetID;
-			++FirstUnusedAssetID;
-		} else {
-			id = AssetIDs[filename];
+			AssetIDs[filename] = id;
 		}
-
-		AssetStreamer streamer = Streamers[ext];
-		if (!streamer(id, filename, async)) {
-			return INVALID_ASSET_ID;
-		}
-
-		AssetIDs[filename] = id;
 
 		return id;
 	}
 
-	AssetID GetAssetID(const std::string &filename)
+	static AssetRecord& CreateOrGetAssetRecord(const AssetID &id)
 	{
-		// Doesn't exist yet? Create it.
-		if (AssetIDs.find(filename) == AssetIDs.end()) {
-			AssetID id = FirstUnusedAssetID;
-			AssetIDs[filename] = id;
-			++FirstUnusedAssetID;
-			return id;
+		if (AssetRecords.find(id) != AssetRecords.end()) {
+			return AssetRecords[id];
 		}
 
-		return AssetIDs[filename];
+		AssetRecord record;
+		record.mID = id;
+		
+		AssetRecords[id] = record;
+
+		return AssetRecords[id];
 	}
 
-	std::string GetAssetFilename(AssetID id)
+
+
+	AssetRecord::AssetRecord() :
+		mID(INVALID_ASSET_ID),
+		mRefCount(0)
+	{}
+
+	void AssetRecord::AddRef()
 	{
-		for (auto &it : AssetIDs) {
-			if (it.second == id) {
-				return it.first.c_str();
-			}
+		++mRefCount;
+	}
+
+	void AssetRecord::DecRef()
+	{
+		--mRefCount;
+	}
+
+
+
+	void RegisterAssetType(const AssetType &type)
+	{
+#if _NA_DEBUG
+		NA_ASSERT(AssetTypes.find(type.mExt) == AssetTypes.end(), false, "Asset type '.%s' is already registered.", type.mExt.c_str());
+#endif
+
+		AssetTypes[type.mExt] = type;
+	}
+
+
+
+	AssetID GetAssetID(const std::string &filename)
+	{
+		if (AssetIDs.find(filename) != AssetIDs.end()) {
+			return AssetIDs[filename];
+		}
+
+		return INVALID_ASSET_ID;
+	}
+
+	const char* GetAssetFilename(const AssetID &id)
+	{
+		const auto predicate = [id](std::pair<std::string, AssetID> it)
+		{
+			return it.second == id;
+		};
+
+		const auto &filename = std::find_if(AssetIDs.begin(), AssetIDs.end(), predicate);
+		if (filename != AssetIDs.end()) {
+			return filename->first.c_str();
 		}
 
 		return "";
 	}
 
-	void RegisterAssetStreamer(const std::string &fileExt, AssetStreamer streamerFunc)
+	AssetRecord& GetAssetRecord(const AssetID &id)
 	{
-		NA_ASSERT_RETURN(Streamers.find(fileExt) == Streamers.end(), "File ext '%s' has already been registered.", fileExt.c_str());
+		if (AssetRecords.find(id) != AssetRecords.end()) {
+			return AssetRecords[id];
+		}
 
-		Streamers[fileExt] = streamerFunc;
+		return INVALID_ASSET_RECORD;
+	}
+
+
+
+	AssetID RequestAsset(const std::string &filename)
+	{
+		const std::string ext = GetFileExt(filename);
+
+		NA_ASSERT_RETURN_VALUE(AssetTypes.find(ext) != AssetTypes.end(), INVALID_ASSET_ID, "Requesting asset '%s', but no registered asset type was found!", filename.c_str());
+		AssetType &type = AssetTypes[ext];
+		
+		AssetID id = CreateOrGetAssetID(filename);
+		AssetRecord &record = CreateOrGetAssetRecord(id);
+
+		record.AddRef();
+		if (record.mRefCount == 1) {
+			// The asset hasn't been loaded yet.
+			record.mType = &type;
+			type.mOnLoad(id, filename);
+		}
+
+		return id;
+	}
+
+	void ReleaseAsset(const AssetID &id)
+	{
+		NA_ASSERT_RETURN(id != INVALID_ASSET_ID);
+
+		AssetRecord &record = GetAssetRecord(id);
+		NA_ASSERT_RETURN(record != INVALID_ASSET_RECORD);
+		
+		record.DecRef();
+		if (record.mRefCount == 0) {
+			record.mType->mOnUnload(id);
+			AssetRecords.erase(id);
+
+			AssetIDs.erase(GetAssetFilename(id));
+		}
+	}
+
+	void ReleaseAsset(const std::string &filename)
+	{
+		ReleaseAsset(GetAssetID(filename));
+	}
+
+	
+
+	bool StreamSystemInit()
+	{
+		return true;
+	}
+
+	void StreamSystemShutdown()
+	{
+		NA_ASSERT(AssetRecords.size() == 0, "There were left over streaming asset records at shutdown!");
+		NA_ASSERT(AssetIDs.size() == 0, "There were left over streaming asset ids at shutdown!");
 	}
 }

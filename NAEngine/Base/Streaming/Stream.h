@@ -1,58 +1,52 @@
 #pragma once
 
 #include <stdint.h>
+#include <string>
 
-#include <algorithm>
-#include <map>
-
-#include "../Memory/Memory.h"
-
-#define NA_FACTORY_SETUP(T) std::map<AssetID, Factory<T>::Asset> T::Instances = std::map<AssetID, Factory<T>::Asset>()
+#define NA_SAFE_RELEASE_ASSET_OBJECT(obj) ReleaseAsset(obj->GetID()); obj = nullptr
 
 namespace na
 {
 	typedef uint64_t AssetID;
 	extern AssetID INVALID_ASSET_ID;
-	
-	AssetID StreamAsset(const std::string &filename, bool async = false);
-	AssetID GetAssetID(const std::string &filename);
-	std::string GetAssetFilename(AssetID id);
-	
-	// It is up to each asset system to provide its own storage for
-	// every asset.
-	typedef bool(*AssetStreamer)(AssetID, const std::string&, bool);
-	void RegisterAssetStreamer(const std::string &fileExt, AssetStreamer streamerFunc);
-	
 
-	template <typename T>
-	class Factory
+	struct AssetType
 	{
-	public:
-		virtual ~Factory();
+		std::string mExt;
+		bool(*mOnLoad)(const AssetID &id, const std::string &filename);
+		void(*mOnUnload)(const AssetID &id);
+	};
+	void RegisterAssetType(const AssetType &type);
 
-		static T* Create(AssetID id);
-
-		static void Destroy(AssetID id);
-		static void Destroy(T *obj);
-
-		static T* Get(AssetID id);
-		static bool Exists(AssetID id);
-
-		void AddRef();
-
-		AssetID GetID();
-
-		struct Asset
-		{
-			T* mAsset = nullptr;
-			int mRefCount = 0;
-		};
-
-	private:
-		static std::map<AssetID, Asset> Instances;
+	struct AssetRecord
+	{
+		AssetRecord();
 
 		AssetID mID;
-	};
-}
+		uint16_t mRefCount;
 
-#include "Stream.inl"
+		const AssetType *mType;
+
+		void AddRef();
+		void DecRef();
+
+		inline bool operator==(const AssetRecord &rhs)const { return mID == rhs.mID; }
+		inline bool operator!=(const AssetRecord &rhs)const { return mID != rhs.mID; }
+	};
+	extern AssetRecord INVALID_ASSET_RECORD;
+
+
+	AssetID GetAssetID(const std::string &filename);
+	const char* GetAssetFilename(const AssetID &id);
+
+	AssetRecord& GetAssetRecord(const AssetID &id);
+
+	AssetID RequestAsset(const std::string &filename);
+
+	void ReleaseAsset(const AssetID &id);
+	void ReleaseAsset(const std::string &filename);
+
+
+	bool StreamSystemInit();
+	void StreamSystemShutdown();
+}

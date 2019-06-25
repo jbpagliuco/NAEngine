@@ -36,4 +36,21 @@
 			</component>
 		</components>
 	</gameobject>
+
+	<gameobject>
+		<name>TestObject2</name>
+		<transform>
+			<position>
+				<x>1</x>
+				<y>2</y>
+				<z>0</z>
+			</position>
+		</transform>
+		<components>
+			<component type="StaticMeshComponent">
+				<mesh>data\test.obj</mesh>
+				<material>data\materials\tex_debug.matx</material>
+			</component>
+		</components>
+	</gameobject>
 </root>

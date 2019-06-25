@@ -12,18 +12,15 @@ namespace na
 	bool MeshInstance::Initialize(AssetID meshID, AssetID matID)
 	{
 		mMesh = Mesh::Get(meshID);
-		mMesh->AddRef();
-
 		mMaterial = Material::Get(matID);
-		mMaterial->AddRef();
 
 		return true;
 	}
 	
 	void MeshInstance::Shutdown()
 	{
-		Mesh::Destroy(mMesh);
-		Material::Destroy(mMaterial);
+		NA_SAFE_RELEASE_ASSET_OBJECT(mMesh);
+		NA_SAFE_RELEASE_ASSET_OBJECT(mMaterial);
 	}
 
 	void MeshInstance::Render()

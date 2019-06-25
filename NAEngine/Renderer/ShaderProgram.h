@@ -2,12 +2,13 @@
 
 #include "RenderDefs.h"
 
+#include <string>
+
 #if defined(NA_D3D11)
 #include <d3d11.h>
 #include "RendererD3D.h"
 #endif
 
-#include "Base/Streaming/Stream.h"
 #include "Base/Util/Util.h"
 
 namespace na
@@ -45,22 +46,22 @@ namespace na
 		size_t mCBSize;
 	};
 
-	class VertexShader : public ShaderProgram<PlatformVertexShader>, public Factory<VertexShader>
+	class VertexShader : public ShaderProgram<PlatformVertexShader>
 	{
 	public:
-		virtual bool Initialize(const std::string &filename, size_t constantBufferSize);
+		virtual bool Initialize(const std::string &filename, size_t constantBufferSize) override;
 
-		virtual void SetConstantBuffer(void *data, size_t size);
+		virtual void SetConstantBuffer(void *data, size_t size) override;
 
 		virtual void Bind();
 	};
 
-	class PixelShader : public ShaderProgram<PlatformPixelShader>, public Factory<PixelShader>
+	class PixelShader : public ShaderProgram<PlatformPixelShader>
 	{
 	public:
-		virtual bool Initialize(const std::string &filename, size_t constantBufferSize);
+		virtual bool Initialize(const std::string &filename, size_t constantBufferSize) override;
 
-		virtual void SetConstantBuffer(void *data, size_t size);
+		virtual void SetConstantBuffer(void *data, size_t size) override;
 
 		virtual void Bind();
 	};

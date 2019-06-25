@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Base/Streaming/Stream.h"
+#include "Base/Streaming/AssetFactory.h"
 
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
@@ -17,7 +17,7 @@ namespace na
 		size_t numIndices;
 	};
 
-	class Mesh : public Factory<Mesh>
+	class Mesh : public AssetFactory<Mesh>
 	{
 	public:
 		bool Initialize(const MeshData &meshData);

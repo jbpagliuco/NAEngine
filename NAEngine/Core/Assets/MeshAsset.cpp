@@ -1,32 +1,63 @@
-#include "MeshLoader.h"
+#include "MeshAsset.h"
 
-#include <map>
 #include <sstream>
-#include <string>
 #include <vector>
 
 #include <DirectXMath.h>
 
+#include "Base/Streaming/Stream.h"
 #include "Base/File/File.h"
 #include "Base/Util/String.h"
 #include "Base/Util/Util.h"
-
 #include "Renderer/Mesh.h"
 
 namespace na
 {
-	struct FaceIndexData
+	static bool OnMeshOBJLoad(const AssetID &id, const std::string &filename);
+	static void OnMeshUnload(const AssetID &id);
+
+	static bool CreateMeshFromOBJ(Mesh *mesh, const std::string &filename);
+
+	bool MeshSystemInit()
 	{
-		uint32_t pos;
-		uint32_t norm;
-		uint32_t tex;
-	};
+		AssetType meshType;
+		meshType.mExt = "obj";
+		meshType.mOnLoad = OnMeshOBJLoad;
+		meshType.mOnUnload = OnMeshUnload;
+		RegisterAssetType(meshType);
+
+		return true;
+	}
+
+	void MeshSystemShutdown()
+	{
+		NA_ASSERT(Mesh::NumInstances() == 0, "There were still meshes allocated during shutdown!");
+		Mesh::ReleaseAll();
+	}
+
+	static bool OnMeshOBJLoad(const AssetID &id, const std::string &filename)
+	{
+		Mesh *pMesh = Mesh::Create(id);
+		NA_ASSERT_RETURN_VALUE(pMesh != nullptr, false, "Failed to allocate mesh.");
+
+		return CreateMeshFromOBJ(pMesh, filename);
+	}
 	
-	bool LoadMeshOBJ(AssetID id, const std::string &filename, bool async)
+	static void OnMeshUnload(const AssetID &id)
 	{
-		if (Mesh::Exists(id)) {
-			return true;
-		}
+		Mesh::Release(id);
+	}
+
+
+
+	static bool CreateMeshFromOBJ(Mesh *mesh, const std::string &filename)
+	{
+		struct FaceIndexData
+		{
+			uint32_t pos;
+			uint32_t norm;
+			uint32_t tex;
+		};
 
 		File file(filename, std::ios::in);
 
@@ -158,7 +189,6 @@ namespace na
 		meshData.indices = &(indices[0]);
 		meshData.numIndices = indices.size();
 
-		Mesh *mesh = Mesh::Create(id);
 		mesh->Initialize(meshData);
 
 		return true;

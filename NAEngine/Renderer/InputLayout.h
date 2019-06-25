@@ -8,8 +8,6 @@
 
 #include <vector>
 
-#include "Base/Streaming/Stream.h"
-
 #include "Formats.h"
 
 namespace na
@@ -27,7 +25,7 @@ namespace na
 		Format mFormat;
 	};
 
-	class InputLayout : public Factory<InputLayout>
+	class InputLayout
 	{
 	public:
 		bool Initialize(const std::vector<InputElement> &elems, const VertexShader &vertexShader);

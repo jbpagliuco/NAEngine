@@ -33,16 +33,13 @@
     <ClCompile Include="Components\StaticMeshComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AssetLoaders\MeshLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Components\CameraComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AssetLoaders\AssetLoaderSystem.cpp">
+    <ClCompile Include="Assets\MeshAsset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AssetLoaders\MaterialLoader.cpp">
+    <ClCompile Include="Assets\MaterialAsset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -68,16 +65,13 @@
     <ClInclude Include="Components\StaticMeshComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AssetLoaders\MeshLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Components\CameraComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AssetLoaders\AssetLoaderSystem.h">
+    <ClInclude Include="Assets\MeshAsset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AssetLoaders\MaterialLoader.h">
+    <ClInclude Include="Assets\MaterialAsset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
