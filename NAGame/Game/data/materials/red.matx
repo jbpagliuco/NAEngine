@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 
 <root>
-    <shaderFile>data\red.shaderx</shaderFile>
+    <shaderFile>data\shaders\red\red.shaderx</shaderFile>
 	<properties size="16">
 		<property type="float4" name="color">
-			<x>0.0</x>
-			<y>1.0</y>
-			<z>1.0</z>
+			<x>1.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
 			<w>1.0</w>
 		</property>
 	</properties>

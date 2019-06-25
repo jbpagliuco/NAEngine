@@ -20,8 +20,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="data\red_vs.hlsl" />
-    <FxCompile Include="data\red_ps.hlsl" />
     <FxCompile Include="data\shaders\tex_debug\tex_debug_ps.hlsl" />
     <FxCompile Include="data\shaders\tex_debug\tex_debug_vs.hlsl" />
     <FxCompile Include="data\shaders\shader_common.h" />
@@ -30,14 +28,13 @@
   </ItemGroup>
   <ItemGroup>
     <Xml Include="data\world.xml" />
-    <Xml Include="data\test_mat.matx" />
+    <Xml Include="data\materials\red.matx" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="data\cube.obj" />
-    <Object Include="data\meshes\test.objx" />
+    <Object Include="data\meshes\cube.objx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="data\red.shaderx" />
     <None Include="data\shaders\tex_debug\tex_debug.shaderx" />
     <None Include="data\materials\tex_debug.matx" />
   </ItemGroup>

@@ -21,6 +21,28 @@
 	</gameobject>
 
 	<gameobject>
+		<name>Ground</name>
+		<transform>
+			<position>
+				<x>0</x>
+				<y>0</y>
+				<z>0</z>
+			</position>
+			<scale>
+				<x>10</x>
+				<y>0.2</y>
+				<z>10</z>
+			</scale>
+		</transform>
+		<components>
+			<component type="StaticMeshComponent">
+				<mesh>data\meshes\cube.objx</mesh>
+				<material>data\materials\red.matx</material>
+			</component>
+		</components>
+	</gameobject>
+
+	<gameobject>
 		<name>Sphere</name>
 		<transform>
 			<position>
