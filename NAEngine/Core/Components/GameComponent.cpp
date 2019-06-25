@@ -15,6 +15,13 @@
 
 namespace na
 {
+	template <typename T>
+	GameComponent* InstantiateGameComponent()
+	{
+		void *mem = NA_ALLOC(sizeof(T));
+		return new (mem) T();
+	}
+
 	static std::map<std::string, GameComponent*(*)()> ComponentInstantiators = {
 		GENERATE_INSTANTIATOR(CameraComponent),
 		GENERATE_INSTANTIATOR(StaticMeshComponent)

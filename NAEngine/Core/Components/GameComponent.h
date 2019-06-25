@@ -33,11 +33,4 @@ namespace na
 	void GameComponentShutdown();
 
 	GameComponent* CreateComponentFromType(const std::string &type);
-
-	template <typename T>
-	GameComponent* InstantiateGameComponent()
-	{
-		void *mem = NA_ALLOC(sizeof(T));
-		return new (mem) T();
-	}
 }
