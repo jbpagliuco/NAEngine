@@ -21,7 +21,9 @@ namespace na
 
 	void BaseSystemShutdown()
 	{
-		StreamSystemShutdown();
-		MemorySystemShutdown();
+#define SYSTEM_SHUTDOWN(name, f) LogInfo(BASE_LOG_FILTER, "Shutting down %s", name); f()
+		SYSTEM_SHUTDOWN("Streaming system", StreamSystemShutdown);
+		SYSTEM_SHUTDOWN("Memory system", MemorySystemShutdown);
+#undef SYSTEM_SHUTDOWN
 	}
 }
