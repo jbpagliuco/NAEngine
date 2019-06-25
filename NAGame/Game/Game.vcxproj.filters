@@ -34,7 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <Object Include="data\cube.obj" />
-    <Object Include="data\test.obj" />
+    <Object Include="data\meshes\test.objx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\red.shaderx" />

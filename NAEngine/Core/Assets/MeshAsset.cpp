@@ -21,7 +21,7 @@ namespace na
 	bool MeshSystemInit()
 	{
 		AssetType meshType;
-		meshType.mExt = "obj";
+		meshType.mExt = "objx";
 		meshType.mOnLoad = OnMeshOBJLoad;
 		meshType.mOnUnload = OnMeshUnload;
 		RegisterAssetType(meshType);
