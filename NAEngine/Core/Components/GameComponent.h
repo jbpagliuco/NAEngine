@@ -6,6 +6,7 @@
 namespace na
 {
 	class GameObject;
+	class Transform;
 
 	extern float Frametime;
 
@@ -24,8 +25,9 @@ namespace na
 		virtual void Update();
 		virtual void UpdateLate();
 
-	private:
+	protected:
 		GameObject *mOwner;
+		Transform *mTransform;
 	};
 
 	// System Callbacks

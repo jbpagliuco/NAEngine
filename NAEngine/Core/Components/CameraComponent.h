@@ -18,6 +18,15 @@ namespace na
 		virtual void UpdateLate() override;
 
 	private:
+		void HandleMovementInput();
+
+	private:
 		Camera mCamera;
+
+		float mPitch;
+		float mYaw;
+		float mRoll;
+
+		float mSensitivity;
 	};
 }

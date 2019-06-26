@@ -9,6 +9,8 @@
 
 namespace na
 {
+	void RegisterWndProcCallback(bool(*callback)(HWND, UINT, WPARAM, LPARAM));
+
 	Window CreateWindowWin32(int x, int y, int w, int h, const wchar_t *title);
 }
 

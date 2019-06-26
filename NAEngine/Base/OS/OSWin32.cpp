@@ -1,9 +1,15 @@
 #include "OSWin32.h"
 
+#if defined(_NA_WIN32)
+
+#include <vector>
+
 #include "Debug/Assert.h"
 
 namespace na
 {
+	static std::vector<bool(*)(HWND, UINT, WPARAM, LPARAM)> Callbacks;
+
 	static LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
 		switch (msg) {
@@ -24,7 +30,24 @@ namespace na
 		}
 		};
 
+		// System callbacks
+		bool handled = false;
+		for (auto &callback : Callbacks) {
+			if (callback(hwnd, msg, wparam, lparam)) {
+				handled = true;
+			}
+		}
+
+		if (handled) {
+			return 0;
+		}
+
 		return DefWindowProc(hwnd, msg, wparam, lparam);
+	}
+
+	void RegisterWndProcCallback(bool(*callback)(HWND, UINT, WPARAM, LPARAM))
+	{
+		Callbacks.push_back(callback);
 	}
 
 	Window CreateWindowWin32(int x, int y, int w, int h, const wchar_t *title)
@@ -72,4 +95,37 @@ namespace na
 		// Success!
 		return { x, y, w, h, hwnd };
 	}
+
+
+	bool Window::IsActiveWindow()const
+	{
+		return GetForegroundWindow() == handle;
+	}
+
+	Point Window::GetPosition()const
+	{
+		RECT rect;
+		GetWindowRect(handle, &rect);
+
+		return Point(rect.left, rect.top);
+	}
+
+	Size Window::GetSize()const
+	{
+		RECT rect;
+		GetWindowRect(handle, &rect);
+
+		return Size(rect.right - rect.left, rect.bottom - rect.top);
+	}
+
+	Size Window::GetViewportSize()const
+	{
+		RECT rect;
+		GetClientRect(handle, &rect);
+
+		// .right and .bottom are 0
+		return Size(rect.right, rect.bottom);
+	}
 }
+
+#endif

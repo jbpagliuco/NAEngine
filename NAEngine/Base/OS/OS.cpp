@@ -10,7 +10,7 @@ namespace na
 {
 	Window INVALID_WINDOW = { 0, 0, 0, 0, NULL };
 
-	float Window::GetAspectRatio()
+	float Window::GetAspectRatio()const
 	{
 		return (float)width / (float)height;
 	}

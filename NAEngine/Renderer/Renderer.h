@@ -31,7 +31,7 @@ namespace na
 		void SetActiveCamera(Camera *camera);
 		Camera* GetActiveCamera();
 
-		Window GetWindow() { return mWindow; }
+		const Window& GetWindow() { return mWindow; }
 
 		StateData* GetStateData() { return &mStateData; }
 

@@ -5,6 +5,8 @@
 #include <Windows.h>
 #endif
 
+#include "Base/Util/Util.h"
+
 namespace na
 {
 #if defined(_NA_WIN32)
@@ -20,7 +22,13 @@ namespace na
 		bool operator==(const Window &rhs) { return handle == rhs.handle; }
 		bool operator!=(const Window &rhs) { return handle != rhs.handle; }
 
-		float GetAspectRatio();
+		bool IsActiveWindow()const;
+
+		Point GetPosition()const;
+		Size GetSize()const;
+		Size GetViewportSize()const;
+
+		float GetAspectRatio()const;
 	};
 	extern Window INVALID_WINDOW;
 	

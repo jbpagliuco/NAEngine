@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "Base/Debug/Assert.h"
+#include "Core/World/GameObject.h"
 
 #include "CameraComponent.h"
 #include "StaticMeshComponent.h"
@@ -33,6 +34,7 @@ namespace na
 	void GameComponent::SetOwner(GameObject *owner)
 	{
 		mOwner = owner;
+		mTransform = &(GetOwner()->mTransform);
 	}
 
 	GameObject* GameComponent::GetOwner()const

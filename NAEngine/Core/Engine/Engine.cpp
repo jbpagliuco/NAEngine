@@ -12,6 +12,7 @@
 #include "Core/Assets/MaterialAsset.h"
 #include "Core/Core.h"
 #include "Core/Components/GameComponent.h"
+#include "Core/Input/Input.h"
 #include "Core/World/World.h"
 
 namespace na
@@ -27,13 +28,16 @@ namespace na
 
 		InitFunc mSystemInit;
 		Func mSystemShutdown;
+
 		Func mDoFrame;
+		Func mDoFrameLate;
 
 		SystemRegistration() :
 			mSystemName(""),
 			mSystemInit(nullptr),
 			mSystemShutdown(nullptr),
-			mDoFrame(nullptr)
+			mDoFrame(nullptr),
+			mDoFrameLate(nullptr)
 		{
 		}
 	};
@@ -58,6 +62,15 @@ namespace na
 			reg.mSystemInit = RenderingSystemInit;
 			reg.mSystemShutdown = RenderingSystemShutdown;
 			reg.mDoFrame = RenderingSystemDoFrame;
+			SystemRegistry.push_back(reg);
+		}
+
+		{
+			SystemRegistration reg;
+			reg.mSystemName = "Input System";
+			reg.mSystemInit = InputSystemInit;
+			reg.mSystemShutdown = InputSystemShutdown;
+			reg.mDoFrameLate = InputSystemDoFrameLate;
 			SystemRegistry.push_back(reg);
 		}
 
@@ -135,10 +148,15 @@ namespace na
 	{
 		auto start = std::chrono::high_resolution_clock::now();
 
-		for (auto &sys : SystemRegistry)
-		{
+		for (auto &sys : SystemRegistry) {
 			if (sys.mDoFrame != nullptr) {
 				sys.mDoFrame();
+			}
+		}
+
+		for (auto &sys : SystemRegistry) {
+			if (sys.mDoFrameLate != nullptr) {
+				sys.mDoFrameLate();
 			}
 		}
 
