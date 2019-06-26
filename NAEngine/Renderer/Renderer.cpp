@@ -34,7 +34,7 @@ namespace na
 
 		if (mActiveCamera != nullptr) {
 			mStateData.SetViewProjMatrices(
-				DirectX::XMMatrixInverse(nullptr, mActiveCamera->mTransform),
+				DirectX::XMMatrixInverse(nullptr, mActiveCamera->mTransform.GetMatrix()),
 				DirectX::XMMatrixPerspectiveFovLH(mActiveCamera->mFOV, mWindow.GetAspectRatio(), mActiveCamera->mNear, mActiveCamera->mFar)
 			);
 		}

@@ -22,9 +22,6 @@
   <ItemGroup>
     <FxCompile Include="data\shaders\tex_debug\tex_debug_ps.hlsl" />
     <FxCompile Include="data\shaders\tex_debug\tex_debug_vs.hlsl" />
-    <FxCompile Include="data\shaders\shader_common.hlsli" />
-    <FxCompile Include="data\shaders\shader_common_ps.hlsli" />
-    <FxCompile Include="data\shaders\shader_common_vs.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="data\world.xml" />
@@ -37,6 +34,5 @@
   <ItemGroup>
     <None Include="data\shaders\tex_debug\tex_debug.shaderx" />
     <None Include="data\materials\tex_debug.matx" />
-    <None Include="data\shaders\light.hlsli" />
   </ItemGroup>
 </Project>

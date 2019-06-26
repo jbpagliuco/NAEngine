@@ -2,7 +2,7 @@
 
 #if defined(NA_D3D11)
 #include <d3dcompiler.h>
-#include "RendererD3D.h"
+#include "Renderer/RendererD3D.h"
 #endif
 
 #include "Base/File/File.h"
@@ -23,8 +23,16 @@ namespace na
 			{
 			case D3D_INCLUDE_LOCAL:
 			case D3D_INCLUDE_SYSTEM:
-				FindFileRecursively(fullPath, "data\\shaders", pFilename);
+			{
+				const bool found = FindFileRecursively(fullPath, "data\\shaders", pFilename);
+				if (!found) {
+					NA_ASSERT(false, "Failed to find HLSL include '%s'", pFilename);
+					*ppData = nullptr;
+					*pBytes = 0;
+					return S_FALSE;
+				}
 				break;
+			}
 
 			default:
 				break;

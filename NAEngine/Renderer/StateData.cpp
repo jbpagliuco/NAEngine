@@ -5,6 +5,8 @@
 #include "Rect.h"
 #include "RendererD3D.h"
 
+#include "Light.h"
+
 namespace na
 {
 	StateData RendererStateData;
@@ -18,7 +20,8 @@ namespace na
 
 	enum class PSConstantBuffers
 	{
-		USER = 0
+		LIGHTS = 0,
+		USER
 	};
 
 	struct PerObjectData
@@ -26,6 +29,9 @@ namespace na
 		DirectX::XMMATRIX world;
 		DirectX::XMMATRIX worldInverseTranspose;
 	};
+	
+
+
 
 	bool StateData::Initialize()
 	{
@@ -57,6 +63,20 @@ namespace na
 			NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "Failed to create object data buffer");
 		}
 
+		{
+			// Lights buffer
+			D3D11_BUFFER_DESC desc;
+			desc.Usage = D3D11_USAGE_DYNAMIC;
+			desc.ByteWidth = sizeof(LightsData);
+			desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+			desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+			desc.MiscFlags = 0;
+			desc.StructureByteStride = 0;
+
+			HRESULT hr = NA_RDevice->CreateBuffer(&desc, nullptr, &mLightsBuffer);
+			NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "Failed to create lights buffer");
+		}
+
 		mRasterizerState = nullptr;
 
 		return true;
@@ -66,6 +86,7 @@ namespace na
 	{
 		NA_SAFE_RELEASE(mViewProjBuffer);
 		NA_SAFE_RELEASE(mObjectDataBuffer);
+		NA_SAFE_RELEASE(mLightsBuffer);
 		NA_SAFE_RELEASE(mRasterizerState);
 	}
 
@@ -112,6 +133,20 @@ namespace na
 		NA_RContext->Unmap(mObjectDataBuffer, 0);
 
 		NA_RContext->VSSetConstantBuffers((int)VSConstantBuffers::OBJECTDATA, 1, &mObjectDataBuffer);
+	}
+
+	void StateData::SetLightsData(const LightsData &lights)
+	{
+		D3D11_MAPPED_SUBRESOURCE res;
+
+		HRESULT hr = NA_RContext->Map(mLightsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
+		NA_ASSERT_RETURN(SUCCEEDED(hr));
+
+		memcpy(res.pData, &lights, sizeof(LightsData));
+
+		NA_RContext->Unmap(mLightsBuffer, 0);
+
+		NA_RContext->PSSetConstantBuffers((int)PSConstantBuffers::LIGHTS, 1, &mLightsBuffer);
 	}
 
 	void StateData::SetRasterizerState()

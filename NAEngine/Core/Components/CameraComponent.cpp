@@ -17,7 +17,7 @@ namespace na
 
 	void CameraComponent::Activate()
 	{
-		mCamera.mTransform = mTransform->GetMatrix();
+		mCamera.mTransform = *mTransform;
 		NA_Renderer->SetActiveCamera(&mCamera);
 
 		mPitch = mYaw = mRoll = 0.0f;
@@ -37,7 +37,7 @@ namespace na
 
 	void CameraComponent::UpdateLate()
 	{
-		mCamera.mTransform = mTransform->GetMatrix();
+		mCamera.mTransform = *mTransform;
 	}
 
 	void CameraComponent::HandleMovementInput()

@@ -100,7 +100,8 @@ namespace na
 	{
 		const std::string suffix = "/" + filename;
 
-		for (auto &entry : std::experimental::filesystem::recursive_directory_iterator(directory)) {
+		using namespace std::experimental::filesystem;
+		for (auto &entry : recursive_directory_iterator(directory, directory_options::follow_directory_symlink)) {
 			const std::string f = entry.path().generic_string();
 			if (EndsWith(f, suffix)) {
 				out = f;

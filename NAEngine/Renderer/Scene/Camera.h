@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Base/Math/Transform.h"
 #include "Renderer/RenderDefs.h"
 
 #if defined(NA_D3D11)
@@ -12,7 +13,7 @@ namespace na
 	class Camera
 	{
 	public:
-		DirectX::XMMATRIX mTransform;
+		Transform mTransform;
 
 		float mFOV;
 		float mNear;

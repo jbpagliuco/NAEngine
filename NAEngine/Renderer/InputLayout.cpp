@@ -3,7 +3,7 @@
 #include <d3d11.h>
 
 #include "RendererD3D.h"
-#include "ShaderProgram.h"
+#include "Shader/ShaderProgram.h"
 
 namespace na
 {

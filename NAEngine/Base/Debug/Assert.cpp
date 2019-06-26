@@ -19,6 +19,8 @@ namespace na
 	{
 		LOG_ASSERT_MESSAGE("%s", assert);
 
+		ShowCursor(true);
+
 		switch (MessageBoxA(nullptr, assert, "Assert Failed", MB_YESNOCANCEL)) {
 		case IDYES:
 			return true;
@@ -44,6 +46,8 @@ namespace na
 		va_end(args);
 
 		LOG_ASSERT_MESSAGE("%s, %s", assert, message);
+
+		ShowCursor(true);
 
 		switch (MessageBoxA(nullptr, message, "Assert Failed", MB_YESNOCANCEL)) {
 		case IDYES:

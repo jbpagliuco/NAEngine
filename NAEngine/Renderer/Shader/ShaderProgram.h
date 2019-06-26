@@ -1,12 +1,12 @@
 #pragma once
 
-#include "RenderDefs.h"
+#include "Renderer/RenderDefs.h"
 
 #include <string>
 
 #if defined(NA_D3D11)
 #include <d3d11.h>
-#include "RendererD3D.h"
+#include "Renderer/RendererD3D.h"
 #endif
 
 #include "Base/Util/Util.h"

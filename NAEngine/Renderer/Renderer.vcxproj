@@ -149,6 +149,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Formats.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -159,8 +160,8 @@
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="Scene\Camera.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="Shader\Shader.cpp" />
+    <ClCompile Include="Shader\ShaderProgram.cpp" />
     <ClCompile Include="StateData.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="Scene\ForwardRenderer.cpp" />
@@ -168,6 +169,7 @@
     <ClCompile Include="Scene\SceneEntity.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Light.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Renderer.h" />
@@ -180,8 +182,8 @@
     <ClInclude Include="InputLayout.h" />
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="Scene\Camera.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="Shader\Shader.h" />
+    <ClInclude Include="Shader\ShaderProgram.h" />
     <ClInclude Include="StateData.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="Scene\ForwardRenderer.h" />
@@ -194,6 +196,12 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader\HLSL\light.hlsli" />
+    <None Include="Shader\HLSL\shader_common.hlsli" />
+    <None Include="Shader\HLSL\shader_common_ps.hlsli" />
+    <None Include="Shader\HLSL\shader_common_vs.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
