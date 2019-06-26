@@ -1,5 +1,7 @@
-#if !defined(SHADER_COMMON_VS_H)
-#define SHADER_COMMON_VS_H
+#if !defined(SHADER_COMMON_VS_HLSLI)
+#define SHADER_COMMON_VS_HLSLI
+
+#include <shader_common.hlsli>
 
 // Constant Buffers
 cbuffer cbCamera : register(b0) {
@@ -11,4 +13,4 @@ cbuffer cbPerObject : register(b1) {
 	matrix worldInverseTranspose;
 };
 
-#endif // defined(SHADER_COMMON_VS_H)
+#endif // defined(SHADER_COMMON_VS_HLSLI)

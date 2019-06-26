@@ -1,8 +1,9 @@
 #include "ForwardRenderer.h"
 
-#include "Scene.h"
+#include "Base/Util/Color.h"
 #include "Renderables/RenderableInstance.h"
 #include "Renderer/RendererD3D.h"
+#include "Scene.h"
 
 namespace na
 {
@@ -22,8 +23,8 @@ namespace na
 	{
 		mRT.Bind();
 
-		const float clearColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
-		mRT.Clear(clearColor);
+		const ColorF clearColor = COLOR_CORNFLOWERBLUE;
+		mRT.Clear(clearColor.vArray);
 	}
 
 	void ForwardRenderer::EndRender()

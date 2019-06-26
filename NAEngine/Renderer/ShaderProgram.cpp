@@ -5,11 +5,65 @@
 #include "RendererD3D.h"
 #endif
 
+#include "Base/File/File.h"
+#include "Base/Memory/Memory.h"
+
 #define VERTEX_SHADER_TARGET "vs_5_0"
 #define PIXEL_SHADER_TARGET  "ps_5_0"
 
 namespace na
 {
+#if defined(NA_D3D11)
+	class ShaderProgramInclude : public ID3DInclude
+	{
+		virtual HRESULT __stdcall Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFilename, LPCVOID pParentData, LPCVOID *ppData, UINT *pBytes) override
+		{
+			std::string fullPath = "";
+			switch(IncludeType)
+			{
+			case D3D_INCLUDE_LOCAL:
+			case D3D_INCLUDE_SYSTEM:
+				FindFileRecursively(fullPath, "data\\shaders", pFilename);
+				break;
+
+			default:
+				break;
+			}
+
+			File file(fullPath, std::ios::in);
+			if (!file) {
+				*ppData = nullptr;
+				*pBytes = 0;
+				return S_FALSE;
+			}
+
+			const UINT fileSize = (UINT)file.GetFileSize();
+
+			if(fileSize > 0) {
+				char *buf = (char*)NA_ALLOC(fileSize);
+				file.ReadBytes(buf, fileSize);
+
+				*ppData = buf;
+				*pBytes = fileSize;
+			} else {
+				*ppData = nullptr;
+				*pBytes = 0;
+			}
+			return S_OK;
+		}
+
+		virtual HRESULT __stdcall Close(LPCVOID pData) override
+		{
+			// Here we must correctly free buffer created in Open.
+			NA_FREE((void*)pData);
+			return S_OK;
+		}
+
+	};
+#endif
+
+
+
 #if defined(NA_D3D11)
 	static bool CompileShader(ID3D10Blob **outBuffer, const std::string &file, const std::string &target)
 	{
@@ -17,8 +71,10 @@ namespace na
 		wchar_t wfile[MAX_FILE_LENGTH];
 		MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, file.c_str(), -1, wfile, MAX_FILE_LENGTH);
 
+		ShaderProgramInclude includer;
+
 		ID3D10Blob *errorMessage = nullptr;
-		HRESULT hr = D3DCompileFromFile(wfile, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", target.c_str(), D3D10_SHADER_ENABLE_STRICTNESS, 0, outBuffer, &errorMessage);
+		HRESULT hr = D3DCompileFromFile(wfile, nullptr, &includer, "main", target.c_str(), D3D10_SHADER_ENABLE_STRICTNESS, 0, outBuffer, &errorMessage);
 		if (FAILED(hr)) {
 			if (errorMessage != nullptr) {
 				NA_ASSERT(false, "Failed to compile HLSL shader '%s' with error message: %.*s", file.c_str(), errorMessage->GetBufferSize(), errorMessage->GetBufferPointer());
@@ -59,7 +115,7 @@ namespace na
 		NA_RContext->VSSetShader(mShader, nullptr, 0);
 
 		if (mCB != nullptr) {
-			NA_RContext->VSSetConstantBuffers(NA_RStateData->GetUserPSConstantBufferIndex(), 1, &mCB);
+			NA_RContext->VSSetConstantBuffers(NA_RStateData->GetUserVSConstantBufferIndex(), 1, &mCB);
 		}
 #endif
 	}

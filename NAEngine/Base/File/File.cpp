@@ -33,14 +33,9 @@ namespace na
 		return na::GetFileExt(mFilename);
 	}
 
-	bool File::ReadBytes(std::string &buf)
+	bool File::ReadBytes(char *buf, size_t size)
 	{
-		char cBuf[1024];
-		const bool success = !!mFile.read(cBuf, 1024);
-
-		buf = cBuf;
-
-		return success;
+		return !!mFile.read(buf, size);
 	}
 
 	bool File::ReadLine(std::string &buf)
@@ -72,6 +67,17 @@ namespace na
 		}
 
 		return filename.substr(lastDot + 1);
+	}
+
+	size_t File::GetFileSize()
+	{
+		std::ifstream temp;
+		temp.open(mFilename, std::ios::ate | std::ios::binary);
+		const size_t size = temp.tellg();
+		
+		temp.close();
+
+		return size;
 	}
 
 

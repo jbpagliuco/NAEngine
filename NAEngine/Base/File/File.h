@@ -19,12 +19,15 @@ namespace na
 
 		template <typename T>
 		bool Read(T &out);
-		bool ReadBytes(std::string &buf);
+		bool ReadBytes(char *buf, size_t size);
 		bool ReadLine(std::string &buf);
 		
 		template <typename T>
 		bool Write(const T &val);
 		bool WriteBytes(const char *buf, size_t n);
+
+		// Returns the file size in bytes.
+		size_t GetFileSize();
 
 	public:
 		std::string mFilename;
