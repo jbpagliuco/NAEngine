@@ -36,25 +36,25 @@
 		</transform>
 		<components>
 			<component type="StaticMeshComponent">
-				<mesh>data\meshes\cube.objx</mesh>
-				<material>data\materials\red.matx</material>
+				<mesh>cube.objx</mesh>
+				<material>red.matx</material>
 			</component>
 		</components>
 	</gameobject>
 
 	<gameobject>
-		<name>Sphere</name>
+		<name>Cube</name>
 		<transform>
 			<position>
 				<x>0</x>
-				<y>0</y>
+				<y>1</y>
 				<z>0</z>
 			</position>
 		</transform>
 		<components>
 			<component type="StaticMeshComponent">
-				<mesh>data\meshes\sphere.objx</mesh>
-				<material>data\materials\tex_debug.matx</material>
+				<mesh>cube.objx</mesh>
+				<material>tex_debug.matx</material>
 			</component>
 		</components>
 	</gameobject>

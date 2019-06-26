@@ -98,6 +98,10 @@ namespace na
 			const std::string f = entry.path().generic_string();
 			if (EndsWith(f, suffix)) {
 				out = f;
+
+#if defined(_NA_WIN32)
+				std::replace(out.begin(), out.end(), '/', '\\');
+#endif
 				return true;
 			}
 		}
