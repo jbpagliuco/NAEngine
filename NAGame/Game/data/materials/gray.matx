@@ -10,9 +10,9 @@
 			<w>1.0</w>
 		</property>
 		<property type="float4" name="diffuse">
-			<x>1.0</x>
-			<y>0.2</y>
-			<z>0.2</z>
+			<x>0.5</x>
+			<y>0.5</y>
+			<z>0.5</z>
 			<w>1.0</w>
 		</property>
 		<property type="float4" name="specular">

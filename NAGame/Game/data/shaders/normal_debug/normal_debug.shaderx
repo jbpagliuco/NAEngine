@@ -2,7 +2,7 @@
 
 <root>
     <vertexShader>
-        <file>red_vs.hlsl</file>
+        <file>normal_debug_vs.hlsl</file>
         <inputs>
             <input>
                 <type>float3</type>
@@ -19,7 +19,7 @@
         </inputs>
     </vertexShader>
     <pixelShader>
-        <file>red_ps.hlsl</file>
+        <file>normal_debug_ps.hlsl</file>
 		<bufferSize>48</bufferSize>
     </pixelShader>
 </root>

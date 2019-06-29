@@ -198,6 +198,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shader\EngineShaders\material.hlsli" />
     <None Include="Shader\HLSL\light.hlsli" />
     <None Include="Shader\HLSL\shader_common.hlsli" />
     <None Include="Shader\HLSL\shader_common_ps.hlsli" />

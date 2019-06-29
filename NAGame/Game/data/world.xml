@@ -5,8 +5,8 @@
 		<name>Camera</name>
 		<transform>
 			<position>
-				<x>2</x>
-				<y>3</y>
+				<x>0</x>
+				<y>2</y>
 				<z>-5</z>
 			</position>
 			<rotation type="lookat"/>
@@ -43,7 +43,7 @@
 	</gameobject>
 
 	<gameobject>
-		<name>Cube</name>
+		<name>Sphere</name>
 		<transform>
 			<position>
 				<x>0</x>
@@ -53,8 +53,8 @@
 		</transform>
 		<components>
 			<component type="StaticMeshComponent">
-				<mesh>cube.objx</mesh>
-				<material>tex_debug.matx</material>
+				<mesh>sphere.objx</mesh>
+				<material>gray.matx</material>
 			</component>
 		</components>
 	</gameobject>

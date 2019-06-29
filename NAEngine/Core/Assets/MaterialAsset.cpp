@@ -48,7 +48,7 @@ namespace na
 
 		const AssetID shaderID = RequestAsset(params["shaderFile"].AsFilepath());
 
-		constexpr size_t MAX_PROPERTY_BYTE_LENGTH = 16;
+		constexpr size_t MAX_PROPERTY_BYTE_LENGTH = 64;
 		void *propertyData = NA_ALLOC_ALIGNED(MAX_PROPERTY_BYTE_LENGTH, 16);
 
 		size_t calculatedSize = 0;

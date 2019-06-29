@@ -155,5 +155,6 @@
     <None Include="Shader\HLSL\shader_common.hlsli" />
     <None Include="Shader\HLSL\shader_common_ps.hlsli" />
     <None Include="Shader\HLSL\shader_common_vs.hlsli" />
+    <None Include="Shader\EngineShaders\material.hlsli" />
   </ItemGroup>
 </Project>

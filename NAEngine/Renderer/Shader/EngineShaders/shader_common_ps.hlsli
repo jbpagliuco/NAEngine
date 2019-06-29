@@ -2,6 +2,7 @@
 #define SHADER_COMMON_PS_HLSLI
 
 #include <shader_common.hlsli>
+#include <material.hlsli>
 #include <light.hlsli>
 
 // Constant Buffers
@@ -15,7 +16,7 @@ cbuffer cbLights : register(b0)
 
 cbuffer cbMaterial : register(b1)
 {
-	float4 color;
+	MaterialProperties material;
 };
 
 #endif // defined(SHADER_COMMON_PS_HLSLI)
