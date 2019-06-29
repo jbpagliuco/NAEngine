@@ -6,16 +6,13 @@
 
 #define DEBUG_BREAK __debugbreak
 
-namespace na
-{
-	bool PrintAssertMessage(const char *assert, const char *file, int line);
-	bool PrintAssertMessage(const char *assert, const char *file, int line, const char *format, ...);
+bool NAPrintAssertMessage(const char *assert, const char *file, int line);
+bool NAPrintAssertMessage(const char *assert, const char *file, int line, const char *format, ...);
 
-	void PrintErrorMessage(const char *assert, const char *file, int line);
-	void PrintErrorMessage(const char *assert, const char *file, int ilne, const char *format, ...);
-}
+void NAPrintErrorMessage(const char *assert, const char *file, int line);
+void NAPrintErrorMessage(const char *assert, const char *file, int ilne, const char *format, ...);
 
-#define NA_PRINT_ASSERT_MESSAGE(cond, ...) na::PrintAssertMessage(#cond, __FILE__, __LINE__, __VA_ARGS__)
+#define NA_PRINT_ASSERT_MESSAGE(cond, ...) NAPrintAssertMessage(#cond, __FILE__, __LINE__, __VA_ARGS__)
 
 #define NA_ASSERT(cond, ...)											\
 	if (!(cond)) {														\
@@ -50,7 +47,7 @@ namespace na
 
 #define NA_FATAL_ERROR(cond, ...)										\
 	if (!(cond)) {														\
-		na::PrintErrorMessage(#cond, __FILE__, __LINE__, __VA_ARGS__);	\
+		NAPrintErrorMessage(#cond, __FILE__, __LINE__, __VA_ARGS__);	\
 		exit(EXIT_FAILURE);												\
 	}																	
 

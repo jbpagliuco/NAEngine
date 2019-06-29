@@ -86,8 +86,10 @@ namespace na
 		const BOOL registered = RegisterRawInputDevices(rid, 1, sizeof(rid[0]));
 		NA_ASSERT(registered, "Failed to register mouse input device.");
 
+#if !defined(_NA_TOOLS)
 		// Hide the mouse cursor
 		while (ShowCursor(false) > 0);
+#endif
 
 		RegisterWndProcCallback(&InputWndProc);
 

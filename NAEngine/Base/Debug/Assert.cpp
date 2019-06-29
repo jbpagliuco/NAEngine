@@ -8,80 +8,78 @@
 
 #define ASSERT_LOG_FILTER "Asserts"
 
-#define LOG_ASSERT_MESSAGE(fmt, ...)						\
-	LogError(ASSERT_LOG_FILTER, fmt, __VA_ARGS__);			\
-	LogError(ASSERT_LOG_FILTER, "Filename: %s", file);		\
-	LogError(ASSERT_LOG_FILTER, "Line: %d", line)		
+#define LOG_ASSERT_MESSAGE(fmt, ...)							\
+	na::LogError(ASSERT_LOG_FILTER, fmt, __VA_ARGS__);			\
+	na::LogError(ASSERT_LOG_FILTER, "Filename: %s", file);		\
+	na::LogError(ASSERT_LOG_FILTER, "Line: %d", line)		
 
-namespace na
+
+bool NAPrintAssertMessage(const char *assert, const char *file, int line)
 {
-	bool PrintAssertMessage(const char *assert, const char *file, int line)
-	{
-		LOG_ASSERT_MESSAGE("%s", assert);
+	LOG_ASSERT_MESSAGE("%s", assert);
 
-		ShowCursor(true);
+	ShowCursor(true);
 
-		switch (MessageBoxA(nullptr, assert, "Assert Failed", MB_YESNOCANCEL)) {
-		case IDYES:
-			return true;
-
-		case IDNO:
-			return false;
-
-		case IDCANCEL:
-			exit(-1);
-			return false;
-		}
-
+	switch (MessageBoxA(nullptr, assert, "Assert Failed", MB_YESNOCANCEL)) {
+	case IDYES:
 		return true;
+
+	case IDNO:
+		return false;
+
+	case IDCANCEL:
+		exit(-1);
+		return false;
 	}
 
-	bool PrintAssertMessage(const char *assert, const char *file, int line, const char *format, ...)
-	{
-		va_list args;
-		va_start(args, format);
+	return true;
+}
 
-		char message[1024];
-		vsprintf_s(message, format, args);
-		va_end(args);
+bool NAPrintAssertMessage(const char *assert, const char *file, int line, const char *format, ...)
+{
+	va_list args;
+	va_start(args, format);
 
-		LOG_ASSERT_MESSAGE("%s, %s", assert, message);
+	char message[1024];
+	vsprintf_s(message, format, args);
+	va_end(args);
 
-		ShowCursor(true);
+	LOG_ASSERT_MESSAGE("%s, %s", assert, message);
 
-		switch (MessageBoxA(nullptr, message, "Assert Failed", MB_YESNOCANCEL)) {
-		case IDYES:
-			return true;
+	ShowCursor(true);
 
-		case IDNO:
-			return false;
-
-		case IDCANCEL:
-			exit(-1);
-			return false;
-		}
-
+	switch (MessageBoxA(nullptr, message, "Assert Failed", MB_YESNOCANCEL)) {
+	case IDYES:
 		return true;
+
+	case IDNO:
+		return false;
+
+	case IDCANCEL:
+		exit(-1);
+		return false;
 	}
 
-	void PrintErrorMessage(const char *assert, const char *file, int line)
-	{
-		LOG_ASSERT_MESSAGE("%s", assert);
+	return true;
+}
 
-		MessageBoxA(nullptr, assert, "Fatal Error", MB_OK);
-	}
+void NAPrintErrorMessage(const char *assert, const char *file, int line)
+{
+	LOG_ASSERT_MESSAGE("%s", assert);
 
-	void PrintErrorMessage(const char *assert, const char *file, int line, const char *format, ...)
-	{
-		va_list args;
-		va_start(args, format);
+	MessageBoxA(nullptr, assert, "Fatal Error", MB_OK);
+}
 
-		char message[1024];
-		vsprintf_s(message, format, args);
-		va_end(args);
+void NAPrintErrorMessage(const char *assert, const char *file, int line, const char *format, ...)
+{
+	va_list args;
+	va_start(args, format);
 
-		LOG_ASSERT_MESSAGE("%s, %s", assert, message);
+	char message[1024];
+	vsprintf_s(message, format, args);
+	va_end(args);
 
-		MessageBoxA(nullptr, message, "Fatal Error", MB_OK);
-	}
+	LOG_ASSERT_MESSAGE("%s, %s", assert, message);
+
+	MessageBoxA(nullptr, message, "Fatal Error", MB_OK);
 }

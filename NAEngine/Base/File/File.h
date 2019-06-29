@@ -15,7 +15,7 @@ namespace na
 
 		operator bool()const;
 
-		std::string GetFileExt()const;
+		std::string FileExt()const;
 
 		template <typename T>
 		bool Read(T &out);
@@ -39,6 +39,8 @@ namespace na
 
 	// Dot (.) not included.
 	std::string GetFileExt(const std::string &filename);
+	
+	std::string DropFileExt(const std::string &filename);
 
 	bool IsFilePath(const std::string &filename);
 	bool FileExists(const std::string &filename);
@@ -48,7 +50,7 @@ namespace na
 	bool IsAbsoluteFilePath(const std::string &path);
 
 #if defined(_NA_TOOLS)
-	void OpenFileDialog(std::string &buf, const std::string &defaultPath = "");
+	std::string OpenFileDialog(const std::string &defaultPath = "");
 #endif
 }
 

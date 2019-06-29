@@ -18,6 +18,9 @@
     <ClCompile Include="src\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Tools.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="data\shaders\tex_debug\tex_debug_ps.hlsl" />
@@ -38,5 +41,10 @@
     <None Include="data\materials\tex_debug.matx" />
     <None Include="data\materials\gray.matx" />
     <None Include="data\shaders\normal_debug\normal_debug.shaderx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Tools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

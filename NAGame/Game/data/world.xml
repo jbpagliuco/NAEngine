@@ -167,7 +167,7 @@
 		</transform>
 		<components>
 			<component type="StaticMeshComponent">
-				<mesh>sphere.objx</mesh>
+				<mesh>sphere.meshx</mesh>
 				<material>gray.matx</material>
 			</component>
 		</components>

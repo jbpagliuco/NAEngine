@@ -3,10 +3,15 @@
 #include <Windows.h>
 
 #include "Core/Engine/Engine.h"
-
 #include "Core/World/World.h"
 
-int main(int argc, char *argv[])
+#if defined(_NA_TOOLS)
+#include "Tools.h"
+#endif
+
+#if !defined(_NA_TOOLS)
+
+static int GameMain()
 {
 	// Initialize
 	if (na::InitializeEngine() == false) {
@@ -40,4 +45,15 @@ int main(int argc, char *argv[])
 
 	// Success!
 	return 0;
+}
+
+#endif
+
+int main(int argc, char *argv[])
+{
+#if defined(_NA_TOOLS)
+	return ToolsMain();
+#else
+	return GameMain();
+#endif
 }

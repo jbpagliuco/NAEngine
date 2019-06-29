@@ -6,6 +6,8 @@
 #include "Debug/Assert.h"
 #include "Util/String.h"
 
+static std::string NAOpenFileDialog(const std::string &defaultPath);
+
 namespace na
 {
 	File::File(const std::string &filename, int mode)
@@ -28,9 +30,9 @@ namespace na
 		mFile.close();
 	}
 
-	std::string File::GetFileExt()const
+	std::string File::FileExt()const
 	{
-		return na::GetFileExt(mFilename);
+		return GetFileExt(mFilename);
 	}
 
 	bool File::ReadBytes(char *buf, size_t size)
@@ -59,6 +61,18 @@ namespace na
 		mFile.open(mFilename, mode);
 	}
 
+	size_t File::GetFileSize()
+	{
+		std::ifstream temp;
+		temp.open(mFilename, std::ios::ate | std::ios::binary);
+		const size_t size = temp.tellg();
+
+		temp.close();
+
+		return size;
+	}
+
+
 	std::string GetFileExt(const std::string &filename)
 	{
 		const size_t lastDot = filename.find_last_of(".");
@@ -69,15 +83,10 @@ namespace na
 		return filename.substr(lastDot + 1);
 	}
 
-	size_t File::GetFileSize()
+	std::string DropFileExt(const std::string &filename)
 	{
-		std::ifstream temp;
-		temp.open(mFilename, std::ios::ate | std::ios::binary);
-		const size_t size = temp.tellg();
-		
-		temp.close();
-
-		return size;
+		std::string ext = GetFileExt(filename);
+		return filename.substr(0, filename.length() - ext.length() - 1);
 	}
 
 
@@ -141,22 +150,40 @@ namespace na
 
 
 #if defined(_NA_TOOLS) && defined(_NA_WIN32)
-
-#include "OS/NAWindows.h"
-#include <shobjidl.h>
-
-	void OpenFileDialog(std::string &buf, const std::string &defaultPath)
+	std::string OpenFileDialog(const std::string &defaultPath)
 	{
-		HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
-			COINIT_DISABLE_OLE1DDE);
-		if (SUCCEEDED(hr)) {
-			IFileOpenDialog *pFileOpen;
+		return NAOpenFileDialog(defaultPath);
+	}
+#endif // defined(NA_TOOLS) && defined(_NA_WIN32)
 
-			// Create the FileOpenDialog object.
-			hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
-				IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
+}
+
+#if defined(_NA_TOOLS) && defined(_NA_WIN32)
+#include "OS/OSWin32.h"
+#include <shobjidl.h>
+static std::string NAOpenFileDialog(const std::string &defaultPath)
+{
+	std::string filename;
+
+	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
+		COINIT_DISABLE_OLE1DDE);
+	if (SUCCEEDED(hr)) {
+		IFileOpenDialog *pFileOpen;
+
+		// Create the FileOpenDialog object.
+		hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
+			IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
+
+		if (SUCCEEDED(hr)) {
+			wchar_t wDefaultPath[2048];
+			MultiByteToWideChar(CP_ACP, 0, defaultPath.c_str(), MAX_FILEPATH_LENGTH, wDefaultPath, MAX_FILEPATH_LENGTH);
+
+			IShellItem *pSI;
+			hr = SHCreateItemFromParsingName(wDefaultPath, NULL, IID_PPV_ARGS(&pSI));
 
 			if (SUCCEEDED(hr)) {
+				pFileOpen->SetDefaultFolder(pSI);
+
 				// Show the Open dialog box.
 				hr = pFileOpen->Show(NULL);
 
@@ -170,8 +197,11 @@ namespace na
 
 						// Display the file name to the user.
 						if (SUCCEEDED(hr)) {
-							WideCharToMultiByte(CP_ACP, 0, pszFilePath, MAX_FILEPATH_LENGTH, buffer, N, 0, 0);
+							char buffer[2048];
+							WideCharToMultiByte(CP_ACP, 0, pszFilePath, MAX_FILEPATH_LENGTH, buffer, 2048, 0, 0);
 							CoTaskMemFree(pszFilePath);
+
+							filename = buffer;
 						}
 						pItem->Release();
 					}
@@ -182,6 +212,6 @@ namespace na
 		}
 	}
 
-#endif // defined(NA_TOOLS) && defined(_NA_WIN32)
-
+	return filename;
 }
+#endif
