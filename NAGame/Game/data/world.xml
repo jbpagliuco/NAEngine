@@ -21,6 +21,98 @@
 	</gameobject>
 
 	<gameobject>
+		<name>PointLight</name>
+		<transform>
+			<position>
+				<x>3</x>
+				<y>2</y>
+				<z>1</z>
+			</position>
+			<scale>
+				<x>0.25</x>
+				<y>0.25</y>
+				<z>0.25</z>
+			</scale>
+		</transform>
+		<components>
+			<component type="PointLightComponent">
+				<color>white</color>
+				<intensity>0.75</intensity>
+				<constantAttenuation>1.0</constantAttenuation>
+				<linearAttenuation>0.5</linearAttenuation>
+			</component>
+			<component type="StaticMeshComponent">
+				<mesh>cube.objx</mesh>
+				<material>gray.matx</material>
+			</component>
+		</components>
+	</gameobject>
+
+	<gameobject>
+		<name>DirectionalLight</name>
+		<transform>
+			<position>
+				<x>-3</x>
+				<y>3</y>
+				<z>-2</z>
+			</position>
+			<rotation type="lookat">
+			</rotation>
+			<scale>
+				<x>0.25</x>
+				<y>0.25</y>
+				<z>0.25</z>
+			</scale>
+		</transform>
+		<components>
+			<component type="DirectionalLightComponent">
+				<color>maroon</color>
+				<intensity>0.15</intensity>
+				<constantAttenuation>1.0</constantAttenuation>
+				<linearAttenuation>0.5</linearAttenuation>
+			</component>
+			<component type="StaticMeshComponent">
+				<mesh>cube.objx</mesh>
+				<material>gray.matx</material>
+			</component>
+		</components>
+	</gameobject>
+
+	<gameobject>
+		<name>SpotLight</name>
+		<transform>
+			<position>
+				<x>0</x>
+				<y>0.5</y>
+				<z>0</z>
+			</position>
+			<rotation type="lookat">
+				<y>2</y>
+				<z>5</z>
+			</rotation>
+			<scale>
+				<x>0.25</x>
+				<y>0.25</y>
+				<z>0.25</z>
+			</scale>
+		</transform>
+		<components>
+			<component type="SpotLightComponent">
+				<color>white</color>
+				<intensity>1</intensity>
+				<spotLightAngle>25</spotLightAngle>
+				<constantAttenuation>0</constantAttenuation>
+				<linearAttenuation>0</linearAttenuation>
+				<quadraticAttenuation>.25</quadraticAttenuation>
+			</component>
+			<component type="StaticMeshComponent">
+				<mesh>cube.objx</mesh>
+				<material>gray.matx</material>
+			</component>
+		</components>
+	</gameobject>
+
+	<gameobject>
 		<name>Ground</name>
 		<transform>
 			<position>
@@ -43,12 +135,34 @@
 	</gameobject>
 
 	<gameobject>
+		<name>Wall</name>
+		<transform>
+			<position>
+				<x>0</x>
+				<y>0</y>
+				<z>4</z>
+			</position>
+			<scale>
+				<x>10</x>
+				<y>8</y>
+				<z>1</z>
+			</scale>
+		</transform>
+		<components>
+			<component type="StaticMeshComponent">
+				<mesh>cube.objx</mesh>
+				<material>red.matx</material>
+			</component>
+		</components>
+	</gameobject>
+
+	<gameobject>
 		<name>Sphere</name>
 		<transform>
 			<position>
 				<x>0</x>
 				<y>1</y>
-				<z>0</z>
+				<z>-2</z>
 			</position>
 		</transform>
 		<components>

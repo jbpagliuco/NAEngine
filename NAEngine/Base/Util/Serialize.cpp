@@ -112,6 +112,12 @@ namespace na
 		return DirectX::XMFLOAT4(r, g, b, a);
 	}
 
+	float DeserializationParameterMap::AsRadian(float def)
+	{
+		RETURN_DEFAULT_IF_INVALID();
+		return DirectX::XMConvertToRadians(AsFloat(def));
+	}
+
 	std::string DeserializationParameterMap::AsFilepath(const std::string &def)
 	{
 		RETURN_DEFAULT_IF_INVALID();

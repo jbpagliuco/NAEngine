@@ -25,7 +25,7 @@ float4 main(PixelInput input) : SV_TARGET
 
 	lit.diffuse = saturate(lit.diffuse);
 	lit.specular = saturate(lit.specular);
-
+	
 	float4 ambient = material.ambient * globalAmbient;
 	float4 diffuse = material.diffuse * lit.diffuse;
 	float4 specular = float4(material.specular.xyz * lit.specular.xyz, 1.0f);

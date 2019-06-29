@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Base/Streaming/AssetFactory.h"
-#include "InputLayout.h"
+#include "Renderer/InputLayout.h"
 #include "ShaderProgram.h"
 
 namespace na

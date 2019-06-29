@@ -37,7 +37,9 @@ namespace na
 		DirectX::XMFLOAT3 AsFloat3(DirectX::XMFLOAT3 def = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 		DirectX::XMFLOAT4 AsFloat4(DirectX::XMFLOAT4 def = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f));
 
-		DirectX::XMFLOAT4 AsColor(DirectX::XMFLOAT4 def);
+		DirectX::XMFLOAT4 AsColor(DirectX::XMFLOAT4 def = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+
+		float AsRadian(float def = 0.0f);
 
 		std::string AsFilepath(const std::string &def = "");
 

@@ -35,4 +35,5 @@ namespace na
 	};
 
 	Light* CreateLight(LightType type);
+	void DestroyLight(Light *pLight);
 }

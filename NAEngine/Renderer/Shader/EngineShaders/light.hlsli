@@ -116,7 +116,7 @@ LightingResult ComputeSpotLight(Light light, MaterialProperties material, float3
 
 	result.diffuse = ComputeDiffuse(light, material, L, N) * attenuation * spotIntensity;
 	result.specular = ComputeSpecular(light, material, V, L, N) * attenuation * spotIntensity;
-
+	
 	return result;
 }
 
