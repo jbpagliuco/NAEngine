@@ -15,10 +15,10 @@
 			<a>1.0</a>
 		</parameter>
 		<parameter name="DiffuseTexture" type="texture">
-			brick_diff.texx
+			brick_diff.dds
 		</parameter>
 		<parameter name="NormalTexture" type="texture">
-			brick_norm.texx
+			brick_norm.dds
 		</parameter>
 	</parameters>
 </root>

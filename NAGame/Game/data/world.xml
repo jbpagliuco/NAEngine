@@ -145,7 +145,7 @@
 		<components>
 			<component type="StaticMeshComponent">
 				<mesh>cube.objx</mesh>
-				<material>normal_map.matx</material>
+				<material>brick.matx</material>
 			</component>
 		</components>
 	</gameobject>

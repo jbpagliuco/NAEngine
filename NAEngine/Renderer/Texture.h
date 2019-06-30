@@ -47,13 +47,13 @@ namespace na
 
 	struct SamplerStateParameters
 	{
-		TextureFilter mFilter;
+		TextureFilter mFilter = TextureFilter::LINEAR;
 
-		TextureAddressMode mAddressU;
-		TextureAddressMode mAddressV;
-		TextureAddressMode mAddressW;
+		TextureAddressMode mAddressU = TextureAddressMode::WRAP;
+		TextureAddressMode mAddressV = TextureAddressMode::WRAP;
+		TextureAddressMode mAddressW = TextureAddressMode::WRAP;
 
-		DirectX::XMFLOAT4 mBorderColor;
+		DirectX::XMFLOAT4 mBorderColor = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 	};
 
 	class Texture : public AssetFactory<Texture>

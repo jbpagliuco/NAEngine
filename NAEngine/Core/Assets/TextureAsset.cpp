@@ -6,16 +6,23 @@
 
 namespace na
 {
-	static bool OnTextureLoad(const AssetID &id, const std::string &filename);
+	static bool OnTextureTexxLoad(const AssetID &id, const std::string &filename);
+	static bool OnTextureDDSLoad(const AssetID &id, const std::string &filename);
 	static void OnTextureUnload(const AssetID &id);
 
 	bool TextureAssetSystemInit()
 	{
 		AssetType texType;
 		texType.mExt = "texx";
-		texType.mOnLoad = OnTextureLoad;
+		texType.mOnLoad = OnTextureTexxLoad;
 		texType.mOnUnload = OnTextureUnload;
 		RegisterAssetType(texType);
+
+		AssetType ddsType;
+		ddsType.mExt = "dds";
+		ddsType.mOnLoad = OnTextureDDSLoad;
+		ddsType.mOnUnload = OnTextureUnload;
+		RegisterAssetType(ddsType);
 
 		return true;
 	}
@@ -27,7 +34,7 @@ namespace na
 	}
 
 
-	static bool OnTextureLoad(const AssetID &id, const std::string &filename)
+	static bool OnTextureTexxLoad(const AssetID &id, const std::string &filename)
 	{
 		Texture *pTex = Texture::Create(id);
 		NA_ASSERT_RETURN_VALUE(pTex != nullptr, false, "Failed to allocate texture");
@@ -66,6 +73,15 @@ namespace na
 		samplerStateParams.mBorderColor = samplerStateParamMap.AsColor();
 		
 		return pTex->Initialize(textureFile, samplerStateParams);
+	}
+
+	static bool OnTextureDDSLoad(const AssetID &id, const std::string &filename)
+	{
+		Texture *pTex = Texture::Create(id);
+		NA_ASSERT_RETURN_VALUE(pTex != nullptr, false, "Failed to allocate texture");
+
+		// Create the texture right from a DDS file, with the normal sampler state parameters
+		return pTex->Initialize(filename, SamplerStateParameters());
 	}
 
 	static void OnTextureUnload(const AssetID &id)
