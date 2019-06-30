@@ -17,6 +17,8 @@ namespace na
 			return false;
 		}
 
+		mVertexFormat = meshData.mVertexFormat;
+
 		return true;
 	}
 

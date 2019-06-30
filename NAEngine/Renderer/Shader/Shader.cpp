@@ -4,11 +4,10 @@ namespace na
 {
 	NA_FACTORY_SETUP(Shader);
 
-	bool Shader::Initialize(VertexShader vertexShader, PixelShader pixelShader, InputLayout inputLayout)
+	bool Shader::Initialize(VertexShader vertexShader, PixelShader pixelShader)
 	{
 		mVertexShader = vertexShader;
 		mPixelShader = pixelShader;
-		mInputLayout = inputLayout;
 
 		return true;
 	}
@@ -17,12 +16,10 @@ namespace na
 	{
 		mVertexShader.Shutdown();
 		mPixelShader.Shutdown();
-		mInputLayout.Shutdown();
 	}
 
 	void Shader::Bind()
 	{
-		mInputLayout.Bind();
 		mVertexShader.Bind();
 		mPixelShader.Bind();
 	}

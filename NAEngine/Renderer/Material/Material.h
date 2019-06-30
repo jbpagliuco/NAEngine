@@ -16,6 +16,8 @@ namespace na
 
 		virtual int GetMaterialType()const = 0;
 
+		inline Shader* GetShader()const { return mShader; }
+
 	private:
 		Shader *mShader;
 	};

@@ -2,6 +2,7 @@
 
 #include "RenderableInstance.h"
 
+#include "Renderer/InputLayout.h"
 #include "Renderer/Mesh.h"
 
 namespace na
@@ -19,5 +20,7 @@ namespace na
 	private:
 		Mesh *mMesh;
 		Material *mMaterial;
+
+		InputLayout mInputLayout;
 	};
 }

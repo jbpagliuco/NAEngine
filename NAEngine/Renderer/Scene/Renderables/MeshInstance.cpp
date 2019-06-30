@@ -14,6 +14,36 @@ namespace na
 		mMesh = Mesh::Get(meshID);
 		mMaterial = GetMaterialByID(matID);
 
+		const VertexShader &vs = mMaterial->GetShader()->GetVertexShader();
+
+		// Build the input layout
+		VertexFormatDesc vDesc;
+		for (auto &shaderInput : vs.GetVertexFormatDesc().mAttributes) {
+			VertexAttribute attr;
+			
+			// Find the matching input from the mesh.
+			bool found = false;
+			for (auto &meshAttr : mMesh->GetVertexFormatDesc().mAttributes) {
+				if (shaderInput.mSemanticType == meshAttr.mSemanticType && shaderInput.mSemanticIndex == meshAttr.mSemanticIndex) {
+					attr = shaderInput;
+					attr.mOffset = meshAttr.mOffset;
+					found = true;
+					break;
+				}
+			}
+
+			NA_ASSERT_RETURN_VALUE(found, false,
+				"Shader '%s' requires %s%d, but mesh '%s' does not supply it.",
+				GetAssetFilename(matID),
+				GetSemanticName(shaderInput.mSemanticType),
+				shaderInput.mSemanticIndex,
+				GetAssetFilename(meshID));
+
+			vDesc.mAttributes.push_back(attr);
+		}
+
+		mInputLayout.Initialize(vDesc, vs);
+
 		return true;
 	}
 	
@@ -23,11 +53,14 @@ namespace na
 		
 		ReleaseMaterial(mMaterial);
 		mMaterial = nullptr;
+
+		mInputLayout.Shutdown();
 	}
 
 	void MeshInstance::Render()
 	{
 		mMaterial->Bind();
+		mInputLayout.Bind();
 		mMesh->Render();
 	}
 }

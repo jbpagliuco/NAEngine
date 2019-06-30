@@ -7,27 +7,20 @@
 
 namespace na
 {
-	static DXGI_FORMAT VertexAttributeFormats[] = {
-		DXGI_FORMAT_R32_FLOAT,
-		DXGI_FORMAT_R32G32_FLOAT,
-		DXGI_FORMAT_R32G32B32_FLOAT,
-		DXGI_FORMAT_R32G32B32A32_FLOAT
-	};
-
-	bool InputLayout::Initialize(const std::vector<InputElement> &elems, const VertexShader &vertexShader)
+	bool InputLayout::Initialize(const VertexFormatDesc &vertexFormatDesc, const VertexShader &vertexShader)
 	{
 #if defined(NA_D3D11)
 		std::vector<D3D11_INPUT_ELEMENT_DESC> elementDescs;
-		for (auto &elem : elems) {
+		for (auto &attr : vertexFormatDesc.mAttributes) {
 			D3D11_INPUT_ELEMENT_DESC element;
 			element.InputSlot = 0;
 			element.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 			element.InstanceDataStepRate = 0;
-			element.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 
-			element.SemanticName = elem.mSemantic.c_str();
-			element.SemanticIndex = elem.mIndex;
-			element.Format = GetDXGIFormat(elem.mFormat);
+			element.Format = GetDXGIFormat(attr.mFormat);
+			element.SemanticName = GetSemanticName(attr.mSemanticType);
+			element.SemanticIndex = attr.mSemanticIndex;
+			element.AlignedByteOffset = attr.mOffset;
 
 			elementDescs.push_back(element);
 		}

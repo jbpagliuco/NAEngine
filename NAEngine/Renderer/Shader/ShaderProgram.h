@@ -10,6 +10,7 @@
 #endif
 
 #include "Base/Util/Util.h"
+#include "Renderer/VertexFormat.h"
 
 namespace na
 {
@@ -24,7 +25,7 @@ namespace na
 	class ShaderProgram
 	{
 	public:
-		virtual bool Initialize(const std::string &filename) = 0;
+		// virtual bool Initialize(const std::string &filename);
 		virtual void Shutdown()
 		{
 			NA_SAFE_RELEASE(mBytecode);
@@ -42,15 +43,20 @@ namespace na
 	class VertexShader : public ShaderProgram<PlatformVertexShader>
 	{
 	public:
-		virtual bool Initialize(const std::string &filename) override;
+		virtual bool Initialize(const std::string &filename, VertexFormatDesc vertexFormatDesc);
 		
 		virtual void Bind();
+
+		inline VertexFormatDesc GetVertexFormatDesc()const { return mVertexFormatDesc; }
+
+	private:
+		VertexFormatDesc mVertexFormatDesc;
 	};
 
 	class PixelShader : public ShaderProgram<PlatformPixelShader>
 	{
 	public:
-		virtual bool Initialize(const std::string &filename) override;
+		virtual bool Initialize(const std::string &filename);
 
 		virtual void Bind();
 	};

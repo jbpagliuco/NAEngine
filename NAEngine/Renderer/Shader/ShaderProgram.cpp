@@ -97,7 +97,7 @@ namespace na
 #endif
 
 	// Vertex Shader ////////////////////////////////////////////////////
-	bool VertexShader::Initialize(const std::string &filename)
+	bool VertexShader::Initialize(const std::string &filename, VertexFormatDesc vertexFormatDesc)
 	{
 #if defined(NA_D3D11)
 		if (!CompileShader(&mBytecode, filename, VERTEX_SHADER_TARGET)) {
@@ -109,6 +109,8 @@ namespace na
 			return false;
 		}
 #endif
+
+		mVertexFormatDesc = vertexFormatDesc;
 
 		return true;
 	}

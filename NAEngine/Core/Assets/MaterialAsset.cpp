@@ -108,25 +108,23 @@ namespace na
 		DeserializationParameterMap params = ParseFile(filename);
 
 		// VERTEX SHADER
-		VertexShader vs;
 		auto vsParams = params["vertexShader"];
-		vs.Initialize(vsParams["file"].AsFilepath());
 
-		std::vector<InputElement> inputElements;
+		VertexFormatDesc vertexFormatDesc;
 		for (auto &elem : vsParams["inputs"].childrenArray) {
-			InputElement ie;
+			VertexAttribute attr;
 
-			ie.mSemantic = elem["semanticName"].AsString();
-			ie.mIndex = elem["index"].AsInt(0);
+			attr.mSemanticType = GetSemanticType(elem["semanticName"].AsString());
+			attr.mSemanticIndex = elem["semanticIndex"].AsInt(0);
 
 			std::string format = elem["type"].AsString();
-			ie.mFormat = GetFormatFromString(format);
+			attr.mFormat = GetFormatFromString(format);
 
-			inputElements.push_back(ie);
+			vertexFormatDesc.mAttributes.push_back(attr);
 		}
 
-		InputLayout inputLayout;
-		inputLayout.Initialize(inputElements, vs);
+		VertexShader vs;
+		vs.Initialize(vsParams["file"].AsFilepath(), vertexFormatDesc);
 
 		// PIXEL SHADER
 		PixelShader ps;
@@ -134,7 +132,7 @@ namespace na
 		ps.Initialize(psParams["file"].AsFilepath());
 
 		// SHADER
-		return pShader->Initialize(vs, ps, inputLayout);
+		return pShader->Initialize(vs, ps);
 	}
 
 	static void OnShaderUnload(const AssetID &id)

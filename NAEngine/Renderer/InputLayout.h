@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "Formats.h"
+#include "VertexFormat.h"
 
 namespace na
 {
@@ -18,17 +19,12 @@ namespace na
 
 	class VertexShader;
 
-	struct InputElement
-	{
-		std::string mSemantic;
-		int mIndex;
-		Format mFormat;
-	};
+	
 
 	class InputLayout
 	{
 	public:
-		bool Initialize(const std::vector<InputElement> &elems, const VertexShader &vertexShader);
+		bool Initialize(const VertexFormatDesc &vertexFormatDesc, const VertexShader &vertexShader);
 		void Shutdown();
 
 		void Bind();

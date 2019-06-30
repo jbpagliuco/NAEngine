@@ -4,6 +4,7 @@
 
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
+#include "VertexFormat.h"
 
 namespace na
 {
@@ -15,6 +16,8 @@ namespace na
 
 		IndexType *indices;
 		size_t numIndices;
+
+		VertexFormatDesc mVertexFormat;
 	};
 
 	class Mesh : public AssetFactory<Mesh>
@@ -25,8 +28,12 @@ namespace na
 
 		void Render();
 
+		inline const VertexFormatDesc& GetVertexFormatDesc()const { return mVertexFormat; }
+
 	private:
 		VertexBuffer mVertexBuffer;
 		IndexBuffer mIndexBuffer;
+
+		VertexFormatDesc mVertexFormat;
 	};
 }

@@ -11,6 +11,27 @@
 #include "Base/Util/String.h"
 #include "Base/Util/Util.h"
 #include "Renderer/Mesh.h"
+#include "Renderer/VertexFormat.h"
+
+
+// MeshX File Format - Version 2
+// Header:
+//		Version - 4 bytes
+//		Num Vertex Attributes - 4 bytes
+//		List of Vertex Attributes - 6 * Num Vertex Attributes bytes
+//			Format - 1 byte
+//			Semantic Type - 1 byte
+//			Semantic Index - 1 byte
+//		Num Vertices - 8 bytes
+//		Num Indices - 8 bytes
+// Data:
+//		Vertices - Vertex Stride * Num Vertices bytes
+//		Indices - sizeof(IndexType) * Num Indices bytes
+
+// Changelog:
+// 2 - Add vertex format description to header.
+
+
 
 namespace na
 {
@@ -23,11 +44,11 @@ namespace na
 
 	bool MeshSystemInit()
 	{
-		AssetType objMeshType;
+		/*AssetType objMeshType;
 		objMeshType.mExt = "objx";
 		objMeshType.mOnLoad = OnMeshOBJLoad;
 		objMeshType.mOnUnload = OnMeshUnload;
-		RegisterAssetType(objMeshType);
+		RegisterAssetType(objMeshType);*/
 
 		AssetType meshxMeshType;
 		meshxMeshType.mExt = "meshx";
@@ -229,14 +250,6 @@ namespace na
 
 	static bool CreateMeshFromMeshx(Mesh *mesh, const std::string &filename)
 	{
-		// File format:
-		// <Version - 4 bytes>
-		// <Vertex Stride - 4 bytes>
-		// <Num Vertices - 8 bytes>
-		// <Num Indices - 8 bytes>
-		// <Vertices - Vertex Stride * Num Vertices>
-		// <Indices - sizeof(IndexType) * Num Indices>
-
 		File file(filename, std::ios::in | std::ios::binary);
 
 		uint32_t version;
@@ -244,10 +257,35 @@ namespace na
 		NA_ASSERT_RETURN_VALUE(version >= MESH_ASSET_MIN_VERSION && version <= MESH_ASSET_MAX_VERSION, 
 			false, 
 			"Trying to load mesh with invalid version number (%d). File: %s", version, filename.c_str());
+		
+		uint32_t numVertexAttributes;
+		bool success = file.Read<uint32_t>(numVertexAttributes);
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to read numVertexAttributes from mesh file: %s", filename.c_str());
 
-		uint32_t vertexStride;
-		bool success = file.Read<uint32_t>(vertexStride);
-		NA_ASSERT_RETURN_VALUE(success, false, "Failed to read vertexStride from mesh file: %s", filename.c_str());
+		VertexFormatDesc vDesc;
+		int vertexStride = 0;
+		for (int i = 0; i < (int)numVertexAttributes; ++i) {
+			uint8_t format;
+			success = file.Read<uint8_t>(format);
+			NA_ASSERT_RETURN_VALUE(success, false, "Failed to read vertex attribute format at index %d from mesh file: %s", i, filename.c_str());
+
+			uint8_t semanticType;
+			success = file.Read<uint8_t>(semanticType);
+			NA_ASSERT_RETURN_VALUE(success, false, "Failed to read vertex attribute semanticType at index %d from mesh file: %s", i, filename.c_str());
+
+			uint8_t semanticIndex;
+			success = file.Read<uint8_t>(semanticIndex);
+			NA_ASSERT_RETURN_VALUE(success, false, "Failed to read vertex attribute semanticIndex at index %d from mesh file: %s", i, filename.c_str());
+
+			VertexAttribute attr;
+			attr.mFormat = (Format)format;
+			attr.mSemanticType = (VertexSemanticType)semanticType;
+			attr.mSemanticIndex = semanticIndex;
+			attr.mOffset = vertexStride;
+			vDesc.mAttributes.push_back(attr);
+
+			vertexStride += (int)GetFormatByteSize(attr.mFormat);
+		}
 
 		uint64_t numVertices;
 		success = file.Read<uint64_t>(numVertices);
@@ -271,6 +309,7 @@ namespace na
 		meshData.vertexStride = vertexStride;
 		meshData.indices = (IndexType*)indexData;
 		meshData.numIndices = numIndices;
+		meshData.mVertexFormat = vDesc;
 		
 		const bool initialized = mesh->Initialize(meshData);
 
@@ -293,9 +332,26 @@ namespace na
 
 #define WRITE(cat, x) if (!(x)) { NA_ASSERT_RETURN_VALUE(false, false, "Failed to write %s", cat); }
 		WRITE("Version", file.Write<uint32_t>(MESH_ASSET_VERSION));
-		WRITE("Vertex Stride", file.Write<uint32_t>((int32_t)meshData.vertexStride));
+
+		// TODO
+		const int numAttributes = 3;
+		WRITE("Num Vertex Attributes", file.Write<uint32_t>(numAttributes));
+
+		WRITE("POSITION Format", file.Write<uint8_t>((uint8_t)Format::R32G32B32_FLOAT));
+		WRITE("POSITION Semantic", file.Write<uint8_t>((uint8_t)VertexSemanticType::POSITION));
+		WRITE("POSITION Semantic Index", file.Write<uint8_t>(0));
+
+		WRITE("NORMAL Format", file.Write<uint8_t>((uint8_t)Format::R32G32B32_FLOAT));
+		WRITE("NORMAL Semantic", file.Write<uint8_t>((uint8_t)VertexSemanticType::NORMAL));
+		WRITE("NORMAL Semantic Index", file.Write<uint8_t>(0));
+
+		WRITE("TEXCOORD Format", file.Write<uint8_t>((uint8_t)Format::R32G32_FLOAT));
+		WRITE("TEXCOORD Semantic", file.Write<uint8_t>((uint8_t)VertexSemanticType::TEXCOORD));
+		WRITE("TEXCOORD Semantic Index", file.Write<uint8_t>(0));
+
 		WRITE("Num Vertices", file.Write<uint64_t>(meshData.numVertices));
 		WRITE("Num Indices", file.Write<uint64_t>(meshData.numIndices));
+
 		WRITE("Vertices", file.WriteBytes((char*)meshData.vertices, meshData.numVertices * meshData.vertexStride));
 		WRITE("Indices", file.WriteBytes((char*)meshData.indices, meshData.numIndices * sizeof(IndexType)));
 #undef WRITE
@@ -303,7 +359,7 @@ namespace na
 		NA_FREE(meshData.vertices);
 		NA_FREE(meshData.indices);
 
-		LogInfo("Mesh", "Successfully converted mesh to meshx. Output file: %s", outFilename);
+		LogInfo("Mesh", "Successfully converted mesh to meshx. Output file: %s", outFilename.c_str());
 
 		return true;
 	}

@@ -230,6 +230,7 @@
     <ClCompile Include="Scene\ForwardRenderer.cpp" />
     <ClCompile Include="Scene\Renderables\MeshInstance.cpp" />
     <ClCompile Include="Scene\SceneEntity.cpp" />
+    <ClCompile Include="VertexFormat.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConstantBuffer.h" />
@@ -259,6 +260,7 @@
     <ClInclude Include="Scene\SceneRenderer.h" />
     <ClInclude Include="Scene\SceneEntity.h" />
     <ClInclude Include="Formats.h" />
+    <ClInclude Include="VertexFormat.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

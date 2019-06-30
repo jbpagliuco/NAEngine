@@ -42,7 +42,7 @@
 				<linearAttenuation>0.5</linearAttenuation>
 			</component>
 			<component type="StaticMeshComponent">
-				<mesh>cube.objx</mesh>
+				<mesh>cube.meshx</mesh>
 				<material>gray.matx</material>
 			</component>
 		</components>
@@ -70,7 +70,7 @@
 				<linearAttenuation>0.5</linearAttenuation>
 			</component>
 			<component type="StaticMeshComponent">
-				<mesh>cube.objx</mesh>
+				<mesh>cube.meshx</mesh>
 				<material>gray.matx</material>
 			</component>
 		</components>
@@ -100,7 +100,7 @@
 				<linearAttenuation>0.5</linearAttenuation>
 			</component>
 			<component type="StaticMeshComponent">
-				<mesh>cube.objx</mesh>
+				<mesh>cube.meshx</mesh>
 				<material>gray.matx</material>
 			</component>
 		</components>
@@ -122,7 +122,7 @@
 		</transform>
 		<components>
 			<component type="StaticMeshComponent">
-				<mesh>cube.objx</mesh>
+				<mesh>cube.meshx</mesh>
 				<material>red.matx</material>
 			</component>
 		</components>
@@ -144,7 +144,7 @@
 		</transform>
 		<components>
 			<component type="StaticMeshComponent">
-				<mesh>cube.objx</mesh>
+				<mesh>cube.meshx</mesh>
 				<material>brick.matx</material>
 			</component>
 		</components>
