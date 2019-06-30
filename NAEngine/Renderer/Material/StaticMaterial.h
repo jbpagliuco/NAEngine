@@ -2,14 +2,18 @@
 
 #include "Material.h"
 
+#include <vector>
+
 #include "Renderer/ConstantBuffer.h"
 
 namespace na
 {
+	class Texture;
+
 	class StaticMaterial : public Material, public AssetFactory<StaticMaterial>
 	{
 	public:
-		bool Initialize(AssetID shaderID, void *parameterData, size_t parameterByteLength);
+		bool Initialize(AssetID shaderID, void *parameterData, size_t parameterByteLength, std::vector<AssetID> textures);
 		
 		virtual void Shutdown() override;
 
@@ -19,5 +23,7 @@ namespace na
 
 	private:
 		ConstantBuffer mConstantBuffer;
+
+		std::vector<Texture*> mTextures;
 	};
 }

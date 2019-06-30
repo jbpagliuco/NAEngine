@@ -42,4 +42,6 @@ namespace na
 	void LTrim(std::string &s);
 	void RTrim(std::string &s);
 	void Trim(std::string &s);
+
+	std::wstring ToWideString(const std::string &s);
 }

@@ -208,6 +208,7 @@
   <ItemGroup>
     <ClCompile Include="Assets\MaterialAsset.cpp" />
     <ClCompile Include="Assets\MeshAsset.cpp" />
+    <ClCompile Include="Assets\TextureAsset.cpp" />
     <ClCompile Include="Components\CameraComponent.cpp" />
     <ClCompile Include="Components\LightComponent.cpp" />
     <ClCompile Include="Components\StaticMeshComponent.cpp" />
@@ -219,6 +220,7 @@
     <ClCompile Include="World\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Assets\TextureAsset.h" />
     <ClInclude Include="Assets\MaterialAsset.h" />
     <ClInclude Include="Assets\MeshAsset.h" />
     <ClInclude Include="Components\CameraComponent.h" />

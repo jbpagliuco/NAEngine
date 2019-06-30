@@ -42,6 +42,7 @@
     <None Include="data\materials\gray.matx" />
     <None Include="data\shaders\normal_debug\normal_debug.shaderx" />
     <None Include="data\materials\tex_map.matx" />
+    <None Include="data\textures\earth2k.texx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Tools.h">

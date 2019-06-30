@@ -10,6 +10,7 @@
 
 #include "Core/Assets/MeshAsset.h"
 #include "Core/Assets/MaterialAsset.h"
+#include "Core/Assets/TextureAsset.h"
 #include "Core/Core.h"
 #include "Core/Components/GameComponent.h"
 #include "Core/Input/Input.h"
@@ -101,6 +102,14 @@ namespace na
 			reg.mSystemName = "Material System";
 			reg.mSystemInit = MaterialSystemInit;
 			reg.mSystemShutdown = MaterialSystemShutdown;
+			SystemRegistry.push_back(reg);
+		}
+
+		{
+			SystemRegistration reg;
+			reg.mSystemName = "Texture System";
+			reg.mSystemInit = TextureAssetSystemInit;
+			reg.mSystemShutdown = TextureAssetSystemShutdown;
 			SystemRegistry.push_back(reg);
 		}
 	}

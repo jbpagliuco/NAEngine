@@ -39,7 +39,8 @@ namespace na
 		auto &lights = scene->GetLights();
 
 		LightsData lightsData;
-		lightsData.globalAmbient = DirectX::XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
+		constexpr float ambient = 0.3f;
+		lightsData.globalAmbient = DirectX::XMFLOAT4(ambient, ambient, ambient, 1.0f);
 		lightsData.eyePosition = NA_Renderer->GetActiveCamera()->mTransform.GetPosition();
 		lightsData.numLights = (int)lights.size();
 		for (int i = 0; i < lightsData.numLights; ++i) {

@@ -225,6 +225,7 @@
     <ClCompile Include="Shader\Shader.cpp" />
     <ClCompile Include="Shader\ShaderProgram.cpp" />
     <ClCompile Include="StateData.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="Scene\ForwardRenderer.cpp" />
     <ClCompile Include="Scene\Renderables\MeshInstance.cpp" />
@@ -249,6 +250,7 @@
     <ClInclude Include="Shader\Shader.h" />
     <ClInclude Include="Shader\ShaderProgram.h" />
     <ClInclude Include="StateData.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="Scene\ForwardRenderer.h" />
     <ClInclude Include="Scene\Renderables\MeshInstance.h" />

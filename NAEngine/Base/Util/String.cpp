@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <cstring>
 #include <cctype>
+#include <codecvt>
+#include <locale>
 
 #include "OS/OSWin32.h"
 
@@ -135,5 +137,11 @@ namespace na
 	{
 		LTrim(s);
 		RTrim(s);
+	}
+
+	std::wstring ToWideString(const std::string &s)
+	{
+		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+		return converter.from_bytes(s);
 	}
 }

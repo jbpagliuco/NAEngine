@@ -63,19 +63,27 @@ namespace na
 		void *parameterData = nullptr;
 		size_t calculatedSize = 0;
 
+		std::vector<AssetID> textures;
+		
 		if (params.Exists("parameters")) {
 			constexpr size_t MAX_MATERIAL_PARAMETER_BYTE_LENGTH = 128;
 			parameterData = NA_ALLOC(MAX_MATERIAL_PARAMETER_BYTE_LENGTH);
 
 			for (auto &parameter : params["parameters"].childrenArray) {
 				std::string type = parameter.meta["type"];
-				parameter.AsHLSLType((unsigned char*)parameterData + calculatedSize, type);
+
+				if (type == "texture") {
+					AssetID texID = RequestAsset(parameter.AsFilepath());
+					textures.push_back(texID);
+				} else {
+					parameter.AsHLSLType((unsigned char*)parameterData + calculatedSize, type);
+				}
 
 				calculatedSize += GetFormatByteSize(GetFormatFromString(type));
 			}
 		}
 
-		const bool success = pMat->Initialize(shaderID, parameterData, calculatedSize);
+		const bool success = pMat->Initialize(shaderID, parameterData, calculatedSize, textures);
 
 		if (parameterData != nullptr) {
 			NA_FREE(parameterData);

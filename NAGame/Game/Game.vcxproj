@@ -268,6 +268,7 @@
     <None Include="data\shaders\normal_debug\normal_debug.shaderx" />
     <None Include="data\shaders\tex_debug\tex_debug.shaderx" />
     <None Include="data\materials\tex_debug.matx" />
+    <None Include="data\textures\earth2k.texx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Tools.h" />

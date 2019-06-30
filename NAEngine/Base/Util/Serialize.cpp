@@ -131,6 +131,8 @@ namespace na
 			std::string temp;
 			GetFullFilepath(temp, value);
 			return temp;
+		} else {
+			NA_ASSERT(false, "Failed to find file %s", value.c_str());
 		}
 
 		return def;
@@ -154,6 +156,7 @@ namespace na
 	{
 		DeserializationParameterMap parentParam;
 		parentParam.value = parent.text().as_string();
+		Trim(parentParam.value);
 
 		// Is array?
 		bool isArray = false;
