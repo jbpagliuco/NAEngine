@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<root>
+    <vertexShader>
+        <file>normal_map_vs.hlsl</file>
+        <inputs>
+            <input>
+                <type>float3</type>
+                <semanticName>POSITION</semanticName>
+            </input>
+            <input>
+                <type>float3</type>
+                <semanticName>NORMAL</semanticName>
+            </input>
+            <input>
+                <type>float2</type>
+                <semanticName>TEXCOORD</semanticName>
+            </input>
+        </inputs>
+    </vertexShader>
+    <pixelShader>
+        <file>normal_map_ps.hlsl</file>
+    </pixelShader>
+</root>

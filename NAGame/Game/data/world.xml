@@ -26,7 +26,7 @@
 			<position>
 				<x>1</x>
 				<y>2</y>
-				<z>1</z>
+				<z>4</z>
 			</position>
 			<scale>
 				<x>0.25</x>
@@ -145,7 +145,7 @@
 		<components>
 			<component type="StaticMeshComponent">
 				<mesh>cube.objx</mesh>
-				<material>red.matx</material>
+				<material>normal_map.matx</material>
 			</component>
 		</components>
 	</gameobject>

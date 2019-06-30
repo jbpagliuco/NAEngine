@@ -264,10 +264,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="data\materials\gray.matx" />
+    <None Include="data\materials\normal_map.matx" />
     <None Include="data\materials\tex_map.matx" />
     <None Include="data\shaders\normal_debug\normal_debug.shaderx" />
     <None Include="data\shaders\tex_debug\tex_debug.shaderx" />
     <None Include="data\materials\tex_debug.matx" />
+    <None Include="data\textures\brick_diff.texx" />
+    <None Include="data\textures\brick_norm.texx" />
     <None Include="data\textures\earth2k.texx" />
   </ItemGroup>
   <ItemGroup>
