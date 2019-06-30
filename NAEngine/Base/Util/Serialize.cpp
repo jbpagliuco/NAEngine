@@ -49,6 +49,7 @@ namespace na
 
 	std::string DeserializationParameterMap::AsString(const std::string &def)
 	{
+		RETURN_DEFAULT_IF_INVALID();
 		return value.c_str();
 	}
 
