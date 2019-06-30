@@ -22,11 +22,13 @@ namespace na
 
 		DeserializationParameterMap& operator[](const std::string &childName);
 		DeserializationParameterMap& operator[](int index);
-
+		
 		void Insert(const std::string &name, DeserializationParameterMap value);
 		void Insert(int index, DeserializationParameterMap value);
 
 		inline bool operator==(const DeserializationParameterMap &rhs) { return value == rhs.value; }
+
+		bool Exists(const std::string &childName);
 
 		std::string AsString(const std::string &def = "");
 		bool AsBool(bool def = false);
@@ -43,7 +45,10 @@ namespace na
 
 		std::string AsFilepath(const std::string &def = "");
 
-		void AsType(void *out, const std::string &type);
+		void AsHLSLType(void *out, const std::string &type);
+
+	private:
+		inline DeserializationParameterMap& GetChild(const std::string &childName) { return this->operator[](childName); }
 	};
 
 	extern DeserializationParameterMap INVALID_DESERIALIZATION_PARAMETER;

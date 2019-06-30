@@ -20,6 +20,5 @@
     </vertexShader>
     <pixelShader>
         <file>red_ps.hlsl</file>
-		<bufferSize>48</bufferSize>
     </pixelShader>
 </root>

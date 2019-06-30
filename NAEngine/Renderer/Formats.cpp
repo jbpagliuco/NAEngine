@@ -18,7 +18,8 @@ namespace na
 		{ "float", Format::R32_FLOAT },
 		{ "float2", Format::R32G32_FLOAT },
 		{ "float3", Format::R32G32B32_FLOAT },
-		{ "float4", Format::R32G32B32A32_FLOAT }
+		{ "float4", Format::R32G32B32A32_FLOAT },
+		{ "color", Format::R32G32B32A32_FLOAT }
 	};
 
 	static DXGI_FORMAT DXGIFormats[] = {

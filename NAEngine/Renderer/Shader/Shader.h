@@ -12,9 +12,6 @@ namespace na
 		bool Initialize(VertexShader vertexShader, PixelShader pixelShader, InputLayout inputLayout);
 		void Shutdown();
 
-		void VSSetBufferData(void *data, size_t size);
-		void PSSetBufferData(void *data, size_t size);
-
 		void Bind();
 
 	private:

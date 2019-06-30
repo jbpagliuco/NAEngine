@@ -97,12 +97,8 @@ namespace na
 #endif
 
 	// Vertex Shader ////////////////////////////////////////////////////
-	bool VertexShader::Initialize(const std::string &filename, size_t constantBufferSize)
+	bool VertexShader::Initialize(const std::string &filename)
 	{
-		if (!ShaderProgram::Initialize(filename, constantBufferSize)) {
-			return false;
-		}
-
 #if defined(NA_D3D11)
 		if (!CompileShader(&mBytecode, filename, VERTEX_SHADER_TARGET)) {
 			return false;
@@ -119,36 +115,14 @@ namespace na
 
 	void VertexShader::Bind()
 	{
-#if defined(NA_D3D11)
 		NA_RContext->VSSetShader(mShader, nullptr, 0);
-
-		if (mCB != nullptr) {
-			NA_RContext->VSSetConstantBuffers(NA_RStateData->GetUserVSConstantBufferIndex(), 1, &mCB);
-		}
-#endif
 	}
-
-	void VertexShader::SetConstantBuffer(void *data, size_t size)
-	{
-#if defined(NA_D3D11)
-		D3D11_MAPPED_SUBRESOURCE res;
-		HRESULT hr = NA_RContext->Map(mCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
-		NA_ASSERT_RETURN(SUCCEEDED(hr));
-
-		memcpy(res.pData, data, size);
-		NA_RContext->Unmap(mCB, 0);
-#endif
-	}
-
+	
 
 
 	// Pixel Shader ////////////////////////////////////////////////////
-	bool PixelShader::Initialize(const std::string &filename, size_t constantBufferSize)
+	bool PixelShader::Initialize(const std::string &filename)
 	{
-		if (!ShaderProgram::Initialize(filename, constantBufferSize)) {
-			return false;
-		}
-
 #if defined(NA_D3D11)
 		if (!CompileShader(&mBytecode, filename, PIXEL_SHADER_TARGET)) {
 			return false;
@@ -160,32 +134,11 @@ namespace na
 		}
 #endif
 
-
-		mCBSize = constantBufferSize;
-
 		return true;
 	}
 
 	void PixelShader::Bind()
 	{
-#if defined(NA_D3D11)
 		NA_RContext->PSSetShader(mShader, nullptr, 0);
-
-		if (mCB != nullptr) {
-			NA_RContext->PSSetConstantBuffers(NA_RStateData->GetUserPSConstantBufferIndex(), 1, &mCB);
-		}
-#endif
-	}
-
-	void PixelShader::SetConstantBuffer(void *data, size_t size)
-	{
-#if defined(NA_D3D11)
-		D3D11_MAPPED_SUBRESOURCE res;
-		HRESULT hr = NA_RContext->Map(mCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
-		NA_ASSERT_RETURN(SUCCEEDED(hr));
-
-		memcpy(res.pData, data, size);
-		NA_RContext->Unmap(mCB, 0);
-#endif
 	}
 }

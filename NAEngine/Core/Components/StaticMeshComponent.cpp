@@ -3,7 +3,7 @@
 #include "Base/Streaming/Stream.h"
 
 #include "Renderer/Scene/Scene.h"
-#include "Renderer/Material.h"
+#include "Renderer/Material/Material.h"
 
 #include "Core/World/GameObject.h"
 

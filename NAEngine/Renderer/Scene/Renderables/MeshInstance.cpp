@@ -3,7 +3,7 @@
 #include <d3d11.h>
 
 #include "Renderer/IndexBuffer.h"
-#include "Renderer/Material.h"
+#include "Renderer/Material/Material.h"
 #include "Renderer/RendererD3D.h"
 #include "Renderer/VertexBuffer.h"
 
@@ -12,7 +12,7 @@ namespace na
 	bool MeshInstance::Initialize(AssetID meshID, AssetID matID)
 	{
 		mMesh = Mesh::Get(meshID);
-		mMaterial = Material::Get(matID);
+		mMaterial = GetMaterialByID(matID);
 
 		return true;
 	}
@@ -20,7 +20,9 @@ namespace na
 	void MeshInstance::Shutdown()
 	{
 		NA_SAFE_RELEASE_ASSET_OBJECT(mMesh);
-		NA_SAFE_RELEASE_ASSET_OBJECT(mMaterial);
+		
+		ReleaseMaterial(mMaterial);
+		mMaterial = nullptr;
 	}
 
 	void MeshInstance::Render()

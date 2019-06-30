@@ -208,9 +208,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="Formats.cpp" />
     <ClCompile Include="Light.cpp" />
-    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Material\Material.cpp" />
+    <ClCompile Include="Material\StaticMaterial.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RendererD3D.cpp" />
@@ -229,11 +231,13 @@
     <ClCompile Include="Scene\SceneEntity.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="Material\StaticMaterial.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Renderer.h" />
-    <ClInclude Include="Material.h" />
+    <ClInclude Include="Material\Material.h" />
     <ClInclude Include="RenderDefs.h" />
     <ClInclude Include="RendererD3D.h" />
     <ClInclude Include="RenderingSystem.h" />

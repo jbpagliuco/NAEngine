@@ -7,17 +7,23 @@ struct PixelInput {
 	float2 texCoord : TEXCOORD0;
 };
 
+cbuffer cbMaterial : register(PS_CB_USER_REGISTER)
+{
+	float4 matDiffuse;
+	float4 matSpecular;
+};
+
 float4 main(PixelInput input) : SV_TARGET
 {
 	float3 P = input.position;
 	float3 N = normalize(input.normal);
 	float3 V = normalize(eyePosition - P).xyz;
 
-	LightingResult lit = ComputeFullLighting(material, V, P, N);
+	LightingResult lit = ComputeFullLighting(matSpecular.w, V, P, N);
 	
-	float4 ambient = material.ambient * globalAmbient;
-	float4 diffuse = material.diffuse * lit.diffuse;
-	float4 specular = float4(material.specular.xyz * lit.specular.xyz, 1.0f);
+	float4 ambient = matDiffuse * globalAmbient;
+	float4 diffuse = matDiffuse * lit.diffuse;
+	float4 specular = float4(matSpecular.xyz * lit.specular.xyz, 1.0f);
 
 	return ambient + diffuse + specular;
 }

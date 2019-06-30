@@ -42,6 +42,11 @@ namespace na
 		childrenArray.insert(childrenArray.begin() + index, map);
 	}
 
+	bool DeserializationParameterMap::Exists(const std::string &childName)
+	{
+		return childrenMap.find(childName) != childrenMap.end();
+	}
+
 	std::string DeserializationParameterMap::AsString(const std::string &def)
 	{
 		return value.c_str();
@@ -69,8 +74,8 @@ namespace na
 	{
 		RETURN_DEFAULT_IF_INVALID();
 		
-		float x = childrenMap["x"].AsFloat(0.0f);
-		float y = childrenMap["y"].AsFloat(0.0f);
+		float x = GetChild("x").AsFloat(0.0f);
+		float y = GetChild("y").AsFloat(0.0f);
 		return DirectX::XMFLOAT2(x, y);
 	}
 
@@ -78,9 +83,9 @@ namespace na
 	{
 		RETURN_DEFAULT_IF_INVALID();
 
-		float x = childrenMap["x"].AsFloat(0.0f);
-		float y = childrenMap["y"].AsFloat(0.0f);
-		float z = childrenMap["z"].AsFloat(0.0f);
+		float x = GetChild("x").AsFloat(0.0f);
+		float y = GetChild("y").AsFloat(0.0f);
+		float z = GetChild("z").AsFloat(0.0f);
 		return DirectX::XMFLOAT3(x, y, z);
 	}
 
@@ -88,10 +93,10 @@ namespace na
 	{
 		RETURN_DEFAULT_IF_INVALID();
 
-		float x = childrenMap["x"].AsFloat(0.0f);
-		float y = childrenMap["y"].AsFloat(0.0f);
-		float z = childrenMap["z"].AsFloat(0.0f);
-		float w = childrenMap["w"].AsFloat(0.0f);
+		float x = GetChild("x").AsFloat(0.0f);
+		float y = GetChild("y").AsFloat(0.0f);
+		float z = GetChild("z").AsFloat(0.0f);
+		float w = GetChild("w").AsFloat(0.0f);
 		return DirectX::XMFLOAT4(x, y, z, w);
 	}
 
@@ -105,10 +110,10 @@ namespace na
 			return DirectX::XMFLOAT4(color.r, color.g, color.b, color.a);
 		}
 
-		float r = childrenMap["r"].AsFloat(0.0f);
-		float g = childrenMap["g"].AsFloat(0.0f);
-		float b = childrenMap["b"].AsFloat(0.0f);
-		float a = childrenMap["a"].AsFloat(0.0f);
+		float r = GetChild("r").AsFloat(0.0f);
+		float g = GetChild("g").AsFloat(0.0f);
+		float b = GetChild("b").AsFloat(0.0f);
+		float a = GetChild("a").AsFloat(1.0f);
 		return DirectX::XMFLOAT4(r, g, b, a);
 	}
 
@@ -131,7 +136,7 @@ namespace na
 		return def;
 	}
 
-	void DeserializationParameterMap::AsType(void *out, const std::string &type)
+	void DeserializationParameterMap::AsHLSLType(void *out, const std::string &type)
 	{
 #define COPY_INTO_BUFFER(s, T, f) if (type == s) { T v = f(); memcpy(out, &v, sizeof(T)); found = true; }
 		bool found = false;
@@ -139,6 +144,7 @@ namespace na
 		COPY_INTO_BUFFER("float2", DirectX::XMFLOAT2, AsFloat2);
 		COPY_INTO_BUFFER("float3", DirectX::XMFLOAT3, AsFloat3);
 		COPY_INTO_BUFFER("float4", DirectX::XMFLOAT4, AsFloat4);
+		COPY_INTO_BUFFER("color", DirectX::XMFLOAT4, AsColor);
 		NA_ASSERT(found, "Type %s is not recognized.", type.c_str());
 #undef COPY_INTO_BUFFER
 	}

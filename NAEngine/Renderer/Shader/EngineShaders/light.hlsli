@@ -33,39 +33,39 @@ struct LightingResult
 	float4 specular;
 };
 
-float4 ComputeDiffuse(Light light, MaterialProperties material, float3 L, float3 N)
+float4 ComputeDiffuse(Light light, float3 L, float3 N)
 {
 	const float NdotL = max(dot(N, L), 0.0f);
 	return light.color * NdotL;
 }
 
-float4 ComputeSpecular(Light light, MaterialProperties material, float3 V, float3 L, float3 N)
+float4 ComputeSpecular(Light light, float specularExp, float3 V, float3 L, float3 N)
 {
 	const float3 R = normalize(reflect(-L, N));
 	const float RdotV = max(dot(R, V), 0.0f);
 
-	return light.color * pow(RdotV, material.specular.w);
+	return light.color * pow(RdotV, specularExp);
 }
 
-float ComputeAttenuation(Light light, MaterialProperties material, float d)
+float ComputeAttenuation(Light light, float d)
 {
 	const float att = light.constantAttenuation + (light.linearAttenuation * d) + (light.quadraticAttenuation * d * d);
 	return 1.0f / att;
 }
 
-LightingResult ComputeDirectionalLight(Light light, MaterialProperties material, float3 V, float3 P, float3 N)
+LightingResult ComputeDirectionalLight(Light light, float specularExp, float3 V, float3 P, float3 N)
 {
 	LightingResult result;
 
 	const float3 L = -light.direction;
 
-	result.diffuse = ComputeDiffuse(light, material, L, N);
-	result.specular = ComputeSpecular(light, material, V, L, N);
+	result.diffuse = ComputeDiffuse(light, L, N);
+	result.specular = ComputeSpecular(light, specularExp, V, L, N);
 
 	return result;
 }
 
-LightingResult ComputePointLight(Light light, MaterialProperties material, float3 V, float3 P, float3 N)
+LightingResult ComputePointLight(Light light, float specularExp, float3 V, float3 P, float3 N)
 {
 	LightingResult result;
 	result.diffuse = float4(0.0f, 0.0f, 0.0f, 1.0f);
@@ -80,10 +80,10 @@ LightingResult ComputePointLight(Light light, MaterialProperties material, float
 
 	L = L / distance;
 
-	float attenuation = ComputeAttenuation(light, material, distance);
+	float attenuation = ComputeAttenuation(light, distance);
 
-	result.diffuse = ComputeDiffuse(light, material, L, N) * attenuation;
-	result.specular = ComputeSpecular(light, material, V, L, N) * attenuation;
+	result.diffuse = ComputeDiffuse(light, L, N) * attenuation;
+	result.specular = ComputeSpecular(light, specularExp, V, L, N) * attenuation;
 
 	return result;
 }
@@ -96,7 +96,7 @@ float ComputeSpotIntensity(Light light, float3 L)
 	return smoothstep(minCos, maxCos, cosAngle);
 }
 
-LightingResult ComputeSpotLight(Light light, MaterialProperties material, float3 V, float3 P, float3 N)
+LightingResult ComputeSpotLight(Light light, float specularExp, float3 V, float3 P, float3 N)
 {
 	LightingResult result;
 	result.diffuse = float4(0.0f, 0.0f, 0.0f, 1.0f);
@@ -112,15 +112,15 @@ LightingResult ComputeSpotLight(Light light, MaterialProperties material, float3
 	L = L / distance;
 
 	float spotIntensity = ComputeSpotIntensity(light, L);
-	float attenuation = ComputeAttenuation(light, material, distance);
+	float attenuation = ComputeAttenuation(light, distance);
 
-	result.diffuse = ComputeDiffuse(light, material, L, N) * attenuation * spotIntensity;
-	result.specular = ComputeSpecular(light, material, V, L, N) * attenuation * spotIntensity;
+	result.diffuse = ComputeDiffuse(light, L, N) * attenuation * spotIntensity;
+	result.specular = ComputeSpecular(light, specularExp, V, L, N) * attenuation * spotIntensity;
 	
 	return result;
 }
 
-LightingResult ComputeLighting(Light light, MaterialProperties material, float3 V, float3 P, float3 N)
+LightingResult ComputeLighting(Light light, float specularExp, float3 V, float3 P, float3 N)
 {
 	LightingResult result;
 	result.diffuse = float4(0.0f, 0.0f, 0.0f, 1.0f);
@@ -132,15 +132,15 @@ LightingResult ComputeLighting(Light light, MaterialProperties material, float3 
 
 	switch (light.type) {
 	case LIGHT_TYPE_DIRECTIONAL:
-		result = ComputeDirectionalLight(light, material, V, P, N);
+		result = ComputeDirectionalLight(light, specularExp, V, P, N);
 		break;
 
 	case LIGHT_TYPE_POINT:
-		result = ComputePointLight(light, material, V, P, N);
+		result = ComputePointLight(light, specularExp, V, P, N);
 		break;
 
 	case LIGHT_TYPE_SPOT:
-		result = ComputeSpotLight(light, material, V, P, N);
+		result = ComputeSpotLight(light, specularExp, V, P, N);
 		break;
 	}
 

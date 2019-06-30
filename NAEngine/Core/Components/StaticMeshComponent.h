@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Renderer/Scene/Renderables/MeshInstance.h"
-#include "Renderer/Material.h"
 
 #include "GameComponent.h"
 
@@ -19,6 +18,5 @@ namespace na
 
 	private:
 		MeshInstance mMeshInstance;
-		Material mat;
 	};
 }

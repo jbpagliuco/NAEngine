@@ -2,24 +2,17 @@
 
 <root>
     <shaderFile>red.shaderx</shaderFile>
-	<properties>
-		<property type="float4" name="ambient">
-			<x>0.1</x>
-			<y>0.1</y>
-			<z>0.1</z>
-			<w>1.0</w>
-		</property>
-		<property type="float4" name="diffuse">
-			<x>0.5</x>
-			<y>0.5</y>
-			<z>0.5</z>
-			<w>1.0</w>
-		</property>
-		<property type="float4" name="specular">
-			<x>0.0</x>
-			<y>0.0</y>
-			<z>0.0</z>
-			<w>1.0</w>
-		</property>
-	</properties>
+	<parameters>
+		<parameter name="diffuse" type="color">
+			<r>0.5</r>
+			<g>0.5</g>
+			<b>0.5</b>
+		</parameter>
+		<parameter name="specular" type="color">
+			<r>0.0</r>
+			<g>0.0</g>
+			<b>0.0</b>
+			<a>1.0</a>
+		</parameter>
+	</parameters>
 </root>
