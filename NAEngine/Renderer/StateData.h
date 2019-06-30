@@ -1,12 +1,14 @@
 #pragma once
 
-#include <DirectXMath.h>
-
+#include "ConstantBuffer.h"
 #include "Light.h"
 #include "Shader/EngineShaders/shader_common.hlsli"
 
-struct ID3D11Buffer;
 struct ID3D11RasterizerState;
+
+namespace DirectX {
+	struct XMMATRIX;
+}
 
 namespace na
 {
@@ -39,10 +41,11 @@ namespace na
 		int GetUserPSConstantBufferIndex()const;
 
 	private:
-		ID3D11Buffer *mViewProjBuffer;
-		ID3D11Buffer *mObjectDataBuffer;
-		ID3D11Buffer *mLightsBuffer;
+		ConstantBuffer mViewProjBuffer;
+		ConstantBuffer mObjectDataBuffer;
 
+		ConstantBuffer mLightsBuffer;
+		
 		ID3D11RasterizerState *mRasterizerState;
 	};
 }

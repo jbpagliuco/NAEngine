@@ -1,9 +1,16 @@
 #include "ConstantBuffer.h"
 
+#if defined(NA_D3D11)
+#include "Renderer/RendererD3D.h"
+#endif
+
 namespace na
 {
 	bool ConstantBuffer::Initialize(BufferUsage usage, void *pData, size_t dataByteLength)
 	{
+		mUsage = usage;
+		mSize = dataByteLength;
+
 		NA_ASSERT(dataByteLength > 0, "Must initialize constant buffer with a positive data byte length.");
 
 		if (usage == BufferUsage::IMMUTABLE) {
@@ -51,7 +58,7 @@ namespace na
 		NA_SAFE_RELEASE(mBuffer);
 	}
 
-	bool ConstantBuffer::Map(void *pData, size_t dataByteLength)
+	bool ConstantBuffer::Map(void *pData)
 	{
 		NA_ASSERT_RETURN_VALUE(mUsage != BufferUsage::IMMUTABLE && mUsage != BufferUsage::DEFAULT, false, "Trying to map data to an immutable buffer.");
 
@@ -60,7 +67,7 @@ namespace na
 		HRESULT hr = NA_RContext->Map(mBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
 		NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false);
 
-		memcpy(res.pData, pData, dataByteLength);
+		memcpy(res.pData, pData, mSize);
 
 		NA_RContext->Unmap(mBuffer, 0);
 

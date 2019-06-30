@@ -4,7 +4,6 @@
 
 #if defined(NA_D3D11)
 #include <d3d11.h>
-#include "Renderer/RendererD3D.h"
 #endif
 
 #include "Renderer/Buffer.h"
@@ -21,10 +20,8 @@ namespace na
 		bool Initialize(BufferUsage usage, void *pData, size_t dataByteLength);
 		void Shutdown();
 
-		bool Map(void *pData, size_t dataByteLength);
-
-		bool Bind();
-
+		bool Map(void *pData);
+		
 		PlatformConstantBuffer* GetBuffer()const;
 		size_t GetSize()const;
 

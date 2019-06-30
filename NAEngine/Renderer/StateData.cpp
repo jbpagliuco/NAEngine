@@ -1,6 +1,7 @@
 #include "StateData.h"
 
 #include <d3d11.h>
+#include <DirectXMath.h>
 
 #include "Rect.h"
 #include "RendererD3D.h"
@@ -35,48 +36,15 @@ namespace na
 
 	bool StateData::Initialize()
 	{
-		{
-			// ViewProj buffer
-			D3D11_BUFFER_DESC desc;
-			desc.Usage = D3D11_USAGE_DYNAMIC;
-			desc.ByteWidth = sizeof(DirectX::XMMATRIX);
-			desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-			desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-			desc.MiscFlags = 0;
-			desc.StructureByteStride = 0;
+		bool success = mViewProjBuffer.Initialize(BufferUsage::DYNAMIC, nullptr, sizeof(DirectX::XMMATRIX));
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize view proj buffer.");
 
-			HRESULT hr = NA_RDevice->CreateBuffer(&desc, nullptr, &mViewProjBuffer);
-			NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "Failed to create view proj buffer");
-		}
+		success = mObjectDataBuffer.Initialize(BufferUsage::DYNAMIC, nullptr, sizeof(PerObjectData));
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize object data buffer.");
 
-		{
-			// Object buffer
-			D3D11_BUFFER_DESC desc;
-			desc.Usage = D3D11_USAGE_DYNAMIC;
-			desc.ByteWidth = sizeof(PerObjectData);
-			desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-			desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-			desc.MiscFlags = 0;
-			desc.StructureByteStride = 0;
-
-			HRESULT hr = NA_RDevice->CreateBuffer(&desc, nullptr, &mObjectDataBuffer);
-			NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "Failed to create object data buffer");
-		}
-
-		{
-			// Lights buffer
-			D3D11_BUFFER_DESC desc;
-			desc.Usage = D3D11_USAGE_DYNAMIC;
-			desc.ByteWidth = sizeof(LightsData);
-			desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-			desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-			desc.MiscFlags = 0;
-			desc.StructureByteStride = 0;
-
-			HRESULT hr = NA_RDevice->CreateBuffer(&desc, nullptr, &mLightsBuffer);
-			NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "Failed to create lights buffer");
-		}
-
+		success = mLightsBuffer.Initialize(BufferUsage::DYNAMIC, nullptr, sizeof(LightsData));
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize lights buffer.");
+		
 		mRasterizerState = nullptr;
 
 		return true;
@@ -84,9 +52,10 @@ namespace na
 
 	void StateData::Shutdown()
 	{
-		NA_SAFE_RELEASE(mViewProjBuffer);
-		NA_SAFE_RELEASE(mObjectDataBuffer);
-		NA_SAFE_RELEASE(mLightsBuffer);
+		mViewProjBuffer.Shutdown();
+		mObjectDataBuffer.Shutdown();
+		mLightsBuffer.Shutdown();
+
 		NA_SAFE_RELEASE(mRasterizerState);
 	}
 
@@ -105,48 +74,31 @@ namespace na
 
 	void StateData::SetViewProjMatrices(const DirectX::XMMATRIX &view, const DirectX::XMMATRIX &proj)
 	{
-		D3D11_MAPPED_SUBRESOURCE res;
-
-		HRESULT hr = NA_RContext->Map(mViewProjBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
-		NA_ASSERT_RETURN(SUCCEEDED(hr));
-
 		DirectX::XMMATRIX viewProj = DirectX::XMMatrixMultiplyTranspose(view, proj);
-		memcpy(res.pData, &viewProj, sizeof(DirectX::XMMATRIX));
+		mViewProjBuffer.Map(&viewProj);
 
-		NA_RContext->Unmap(mViewProjBuffer, 0);
-
-		NA_RContext->VSSetConstantBuffers((int)VSConstantBuffers::VIEWPROJ, 1, &mViewProjBuffer);
+		PlatformConstantBuffer *cb = mViewProjBuffer.GetBuffer();
+		NA_RContext->VSSetConstantBuffers((int)VSConstantBuffers::VIEWPROJ, 1, &cb);
 	}
 
 	void StateData::SetObjectTransform(const DirectX::XMMATRIX &transform)
 	{
-		D3D11_MAPPED_SUBRESOURCE res;
-
-		HRESULT hr = NA_RContext->Map(mObjectDataBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
-		NA_ASSERT_RETURN(SUCCEEDED(hr));
-
 		PerObjectData data;
 		data.world = DirectX::XMMatrixTranspose(transform);
 		data.worldInverseTranspose = DirectX::XMMatrixInverse(nullptr, transform); // ^T ^T
-		memcpy(res.pData, &data, sizeof(PerObjectData));
 
-		NA_RContext->Unmap(mObjectDataBuffer, 0);
+		mObjectDataBuffer.Map(&data);
 
-		NA_RContext->VSSetConstantBuffers((int)VSConstantBuffers::OBJECTDATA, 1, &mObjectDataBuffer);
+		PlatformConstantBuffer *cb = mObjectDataBuffer.GetBuffer();
+		NA_RContext->VSSetConstantBuffers((int)VSConstantBuffers::OBJECTDATA, 1, &cb);
 	}
 
 	void StateData::SetLightsData(const LightsData &lights)
 	{
-		D3D11_MAPPED_SUBRESOURCE res;
+		mLightsBuffer.Map((void*)&lights);
 
-		HRESULT hr = NA_RContext->Map(mLightsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
-		NA_ASSERT_RETURN(SUCCEEDED(hr));
-
-		memcpy(res.pData, &lights, sizeof(LightsData));
-
-		NA_RContext->Unmap(mLightsBuffer, 0);
-
-		NA_RContext->PSSetConstantBuffers((int)PSConstantBuffers::LIGHTS, 1, &mLightsBuffer);
+		PlatformConstantBuffer *cb = mLightsBuffer.GetBuffer();
+		NA_RContext->PSSetConstantBuffers((int)PSConstantBuffers::LIGHTS, 1, &cb);
 	}
 
 	void StateData::SetRasterizerState()
