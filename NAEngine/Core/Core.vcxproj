@@ -114,7 +114,7 @@
     <TargetName>NA$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)\..\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\..\Vendor\DirectXTK\Include;$(ProjectDir)\..\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)\..\Output\$(Platform)\$(Configuration)\</OutDir>
     <TargetName>NA$(ProjectName)</TargetName>
