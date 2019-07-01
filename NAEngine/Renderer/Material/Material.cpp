@@ -2,11 +2,17 @@
 
 #include "StaticMaterial.h"
 
+#include "Renderer/Texture.h"
+
 namespace na
 {
-	bool Material::Initialize(AssetID shaderID)
+	bool Material::Initialize(AssetID shaderID, const std::vector<AssetID> &textures)
 	{
 		mShader = Shader::Get(shaderID);
+
+		for (auto &texID : textures) {
+			mTextures.push_back(Texture::Get(texID));
+		}
 
 		return true;
 	}
@@ -14,11 +20,30 @@ namespace na
 	void Material::Shutdown()
 	{
 		NA_SAFE_RELEASE_ASSET_OBJECT(mShader);
+
+		mConstantBuffer.Shutdown();
+
+		for (auto &texture : mTextures) {
+			ReleaseAsset(texture->GetID());
+		}
 	}
 
 	void Material::Bind()
 	{
 		mShader->Bind();
+
+		// Bind constant data
+		PlatformConstantBuffer *cb = mConstantBuffer.GetBuffer();
+		NA_RContext->PSSetConstantBuffers(NA_RStateData->GetUserPSConstantBufferIndex(), 1, &cb);
+
+		// Bind textures
+		for (int i = 0; i < mTextures.size(); ++i) {
+			PlatformShaderResourceView *srv = mTextures[i]->GetShaderResourceView();
+			NA_RContext->PSSetShaderResources(i, 1, &srv);
+
+			PlatformSamplerState *sampler = mTextures[i]->GetSampler();
+			NA_RContext->PSSetSamplers(i, 1, &sampler);
+		}
 	}
 
 

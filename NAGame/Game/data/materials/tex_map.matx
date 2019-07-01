@@ -15,7 +15,7 @@
 			<a>1.0</a>
 		</parameter>
 		<parameter name="DiffuseTexture" type="texture">
-			earth2k.texx
+			earth2k.dds
 		</parameter>
 	</parameters>
 </root>
