@@ -22,10 +22,9 @@ namespace na
 
 		inline Shader* GetShader()const { return mShader; }
 
-	protected:
+	private:
 		Shader *mShader;
 
-		ConstantBuffer mConstantBuffer;
 		std::vector<Texture*> mTextures;
 	};
 

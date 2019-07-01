@@ -21,8 +21,6 @@ namespace na
 	{
 		NA_SAFE_RELEASE_ASSET_OBJECT(mShader);
 
-		mConstantBuffer.Shutdown();
-
 		for (auto &texture : mTextures) {
 			ReleaseAsset(texture->GetID());
 		}
@@ -31,11 +29,7 @@ namespace na
 	void Material::Bind()
 	{
 		mShader->Bind();
-
-		// Bind constant data
-		PlatformConstantBuffer *cb = mConstantBuffer.GetBuffer();
-		NA_RContext->PSSetConstantBuffers(NA_RStateData->GetUserPSConstantBufferIndex(), 1, &cb);
-
+		
 		// Bind textures
 		for (int i = 0; i < mTextures.size(); ++i) {
 			PlatformShaderResourceView *srv = mTextures[i]->GetShaderResourceView();

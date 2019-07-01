@@ -20,5 +20,16 @@ namespace na
 	void StaticMaterial::Shutdown()
 	{
 		Material::Shutdown();
+
+		mConstantBuffer.Shutdown();
+	}
+
+	void StaticMaterial::Bind()
+	{
+		Material::Bind();
+
+		// Bind constant data
+		PlatformConstantBuffer *cb = mConstantBuffer.GetBuffer();
+		NA_RContext->PSSetConstantBuffers(NA_RStateData->GetUserPSConstantBufferIndex(), 1, &cb);
 	}
 }
