@@ -35,21 +35,92 @@
 
 namespace na
 {
-	static bool OnMeshOBJLoad(const AssetID &id, const std::string &filename);
+#if defined(_NA_TOOLS)
+	struct VertexType {
+		DirectX::XMFLOAT3 mPosition;
+		DirectX::XMFLOAT3 mNormal;
+		DirectX::XMFLOAT3 mBinormal;
+		DirectX::XMFLOAT3 mTangent;
+		DirectX::XMFLOAT2 mTexCoord;
+	};
+	struct VertexArray {
+		std::vector<VertexType> mVertices;
+
+		bool mHasNormal = false;
+		bool mHasTexCoord = false;
+		bool mHasBinormal = false;
+		bool mHasTangent = false;
+
+#define HAS_ATTR(b, length) ((b) ? length : 0)
+		size_t CalculateStride()const { 
+			return sizeof(float) * 
+				(3 + HAS_ATTR(mHasNormal, 3) + HAS_ATTR(mHasTexCoord, 2) + HAS_ATTR(mHasBinormal, 3) + HAS_ATTR(mHasTangent, 3));
+		}
+#undef HAS_ATTR
+
+#define HAS_ATTR(b) ((b) ? 1 : 0)
+		int GetAttrCount()const {
+			return 1 + HAS_ATTR(mHasNormal) + HAS_ATTR(mHasTexCoord) + HAS_ATTR(mHasBinormal) + HAS_ATTR(mHasTangent);
+		}
+#undef HAS_ATTR
+
+		void* CreateVertexData()
+		{
+			size_t stride = CalculateStride();
+			size_t numVertices = mVertices.size();
+			float* vertexData = (float*)NA_ALLOC(sizeof(float) * numVertices * stride);
+
+			for (int i = 0; i < numVertices; ++i) {
+				VertexType v = mVertices[i];
+				size_t offset = i * (stride / sizeof(float));
+
+				size_t o = 0;
+#define WRITE(value) vertexData[offset + o] = value; ++o
+
+				WRITE(v.mPosition.x);
+				WRITE(v.mPosition.y);
+				WRITE(v.mPosition.z);
+
+				if (mHasNormal) {
+					WRITE(v.mNormal.x);
+					WRITE(v.mNormal.y);
+					WRITE(v.mNormal.z);
+				}
+
+				if (mHasTexCoord) {
+					WRITE(v.mTexCoord.x);
+					WRITE(v.mTexCoord.y);
+				}
+
+				if (mHasBinormal) {
+					WRITE(v.mBinormal.x);
+					WRITE(v.mBinormal.y);
+					WRITE(v.mBinormal.z);
+				}
+
+				if (mHasTangent) {
+					WRITE(v.mTangent.x);
+					WRITE(v.mTangent.y);
+					WRITE(v.mTangent.z);
+				}
+
+#undef WRITE
+			}
+
+			return vertexData;
+		}
+	};
+
+	static bool LoadMeshFromOBJ(VertexArray &vertices, std::vector<IndexType> &indices, const std::string &filename);
+#endif
+
 	static bool OnMeshxLoad(const AssetID &id, const std::string &filename);
 	static void OnMeshUnload(const AssetID &id);
 
-	static bool CreateMeshFromOBJ(Mesh *mesh, const std::string &filename);
 	static bool CreateMeshFromMeshx(Mesh *mesh, const std::string &filename);
 
 	bool MeshSystemInit()
 	{
-		/*AssetType objMeshType;
-		objMeshType.mExt = "objx";
-		objMeshType.mOnLoad = OnMeshOBJLoad;
-		objMeshType.mOnUnload = OnMeshUnload;
-		RegisterAssetType(objMeshType);*/
-
 		AssetType meshxMeshType;
 		meshxMeshType.mExt = "meshx";
 		meshxMeshType.mOnLoad = OnMeshxLoad;
@@ -64,15 +135,7 @@ namespace na
 		NA_ASSERT(Mesh::NumInstances() == 0, "There were still meshes allocated during shutdown!");
 		Mesh::ReleaseAll();
 	}
-
-	static bool OnMeshOBJLoad(const AssetID &id, const std::string &filename)
-	{
-		Mesh *pMesh = Mesh::Create(id);
-		NA_ASSERT_RETURN_VALUE(pMesh != nullptr, false, "Failed to allocate mesh.");
-
-		return CreateMeshFromOBJ(pMesh, filename);
-	}
-
+	
 	static bool OnMeshxLoad(const AssetID &id, const std::string &filename)
 	{
 		Mesh *pMesh = Mesh::Create(id);
@@ -87,7 +150,80 @@ namespace na
 	}
 
 
-	static bool CreateMeshFromOBJ(MeshData &meshData, const std::string &filename)
+	static bool CreateMeshFromMeshx(Mesh *mesh, const std::string &filename)
+	{
+		File file(filename, std::ios::in | std::ios::binary);
+
+		uint32_t version;
+		file.Read<uint32_t>(version);
+		NA_ASSERT_RETURN_VALUE(version >= MESH_ASSET_MIN_VERSION && version <= MESH_ASSET_MAX_VERSION, 
+			false, 
+			"Trying to load mesh with invalid version number (%d). File: %s", version, filename.c_str());
+		
+		uint32_t numVertexAttributes;
+		bool success = file.Read<uint32_t>(numVertexAttributes);
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to read numVertexAttributes from mesh file: %s", filename.c_str());
+
+		VertexFormatDesc vDesc;
+		int vertexStride = 0;
+		for (int i = 0; i < (int)numVertexAttributes; ++i) {
+			uint8_t format;
+			success = file.Read<uint8_t>(format);
+			NA_ASSERT_RETURN_VALUE(success, false, "Failed to read vertex attribute format at index %d from mesh file: %s", i, filename.c_str());
+
+			uint8_t semanticType;
+			success = file.Read<uint8_t>(semanticType);
+			NA_ASSERT_RETURN_VALUE(success, false, "Failed to read vertex attribute semanticType at index %d from mesh file: %s", i, filename.c_str());
+
+			uint8_t semanticIndex;
+			success = file.Read<uint8_t>(semanticIndex);
+			NA_ASSERT_RETURN_VALUE(success, false, "Failed to read vertex attribute semanticIndex at index %d from mesh file: %s", i, filename.c_str());
+
+			VertexAttribute attr;
+			attr.mFormat = (Format)format;
+			attr.mSemanticType = (VertexSemanticType)semanticType;
+			attr.mSemanticIndex = semanticIndex;
+			attr.mOffset = vertexStride;
+			vDesc.mAttributes.push_back(attr);
+
+			vertexStride += (int)GetFormatByteSize(attr.mFormat);
+		}
+
+		uint64_t numVertices;
+		success = file.Read<uint64_t>(numVertices);
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to read numVertices from mesh file: %s", filename.c_str());
+
+		uint64_t numIndices;
+		success = file.Read<uint64_t>(numIndices);
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to read numIndices from mesh file: %s", filename.c_str());
+
+		void *vertexData = NA_ALLOC(vertexStride * numVertices);
+		success = file.ReadBytes((char*)vertexData, vertexStride * numVertices);
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to read vertexData from mesh file: %s", filename.c_str());
+
+		void *indexData = NA_ALLOC(sizeof(IndexType) * numIndices);
+		success = file.ReadBytes((char*)indexData, sizeof(IndexType) * numIndices);
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to read indexData from mesh file: %s", filename.c_str());
+
+		MeshData meshData;
+		meshData.vertices = vertexData;
+		meshData.numVertices = numVertices;
+		meshData.vertexStride = vertexStride;
+		meshData.indices = (IndexType*)indexData;
+		meshData.numIndices = numIndices;
+		meshData.mVertexFormat = vDesc;
+		
+		const bool initialized = mesh->Initialize(meshData);
+
+		NA_FREE(vertexData);
+		NA_FREE(indexData);
+
+		return initialized;
+	}
+
+
+#if defined(_NA_TOOLS)
+	static bool LoadMeshFromOBJ(VertexArray &vertices, std::vector<IndexType> &indices, const std::string &filename)
 	{
 		struct FaceIndexData
 		{
@@ -184,33 +320,28 @@ namespace na
 
 		// Remove duplicates and create mesh
 		std::map<std::string, uint32_t> vertexIds;
-		struct Vertex
-		{
-			DirectX::XMFLOAT3 pos;
-			DirectX::XMFLOAT3 norm;
-			DirectX::XMFLOAT2 tex;
-		};
-		std::vector<Vertex> vertices;
-		std::vector<IndexType> indices;
 
 		for (auto &face : faces) {
 			std::string faceString = std::to_string(face.pos) + "/" + std::to_string(face.norm) + "/" + std::to_string(face.tex);
 
+			vertices.mHasNormal = true;
+			vertices.mHasTexCoord = true;
+
 			if (vertexIds.find(faceString) == vertexIds.end()) {
-				Vertex vertex;
+				VertexType vertex;
 
 				Position &pos = positions[face.pos];
-				vertex.pos = DirectX::XMFLOAT3(pos.vArray);
+				vertex.mPosition = DirectX::XMFLOAT3(pos.vArray);
 
 				Normal &norm = normals[face.norm];
-				vertex.norm = DirectX::XMFLOAT3(norm.vArray);
+				vertex.mNormal = DirectX::XMFLOAT3(norm.vArray);
 
 				TexCoord &texCoord = texCoords[face.tex];
-				vertex.tex = DirectX::XMFLOAT2(texCoord.vArray);
+				vertex.mTexCoord = DirectX::XMFLOAT2(texCoord.vArray);
 
-				vertices.push_back(vertex);
+				vertices.mVertices.push_back(vertex);
 
-				IndexType index = (IndexType)(vertices.size() - 1);
+				IndexType index = (IndexType)(vertices.mVertices.size() - 1);
 				vertexIds[faceString] = index;
 				indices.push_back(index);
 			} else {
@@ -219,113 +350,81 @@ namespace na
 			}
 		}
 
-		
-		meshData.numVertices = vertices.size();
-		meshData.vertexStride = sizeof(Vertex);
-		meshData.numIndices = indices.size();
-
-		// The caller must free these.
-		meshData.vertices = NA_ALLOC(meshData.numVertices * meshData.vertexStride);
-		memcpy(meshData.vertices, vertices.data(), meshData.numVertices * meshData.vertexStride);
-
-		meshData.indices = (IndexType*)NA_ALLOC(meshData.numIndices * sizeof(IndexType));
-		memcpy(meshData.indices, indices.data(), meshData.numIndices * sizeof(IndexType));
-
 		return true;
 	}
 
-	static bool CreateMeshFromOBJ(Mesh *mesh, const std::string &filename)
+	
+	static void CalculateTangentSpaceTVector(VertexArray &vertices, const std::vector<IndexType> &indices)
 	{
-		MeshData meshData;
-		bool success = CreateMeshFromOBJ(meshData, filename);
-		NA_ASSERT_RETURN_VALUE(success, false, "Failed to create mesh from file %s", filename.c_str());
+		vertices.mHasTangent = true;
 
-		success = mesh->Initialize(meshData);
-		
-		NA_FREE(meshData.vertices);
-		NA_FREE(meshData.indices);
-
-		return success;
-	}
-
-	static bool CreateMeshFromMeshx(Mesh *mesh, const std::string &filename)
-	{
-		File file(filename, std::ios::in | std::ios::binary);
-
-		uint32_t version;
-		file.Read<uint32_t>(version);
-		NA_ASSERT_RETURN_VALUE(version >= MESH_ASSET_MIN_VERSION && version <= MESH_ASSET_MAX_VERSION, 
-			false, 
-			"Trying to load mesh with invalid version number (%d). File: %s", version, filename.c_str());
-		
-		uint32_t numVertexAttributes;
-		bool success = file.Read<uint32_t>(numVertexAttributes);
-		NA_ASSERT_RETURN_VALUE(success, false, "Failed to read numVertexAttributes from mesh file: %s", filename.c_str());
-
-		VertexFormatDesc vDesc;
-		int vertexStride = 0;
-		for (int i = 0; i < (int)numVertexAttributes; ++i) {
-			uint8_t format;
-			success = file.Read<uint8_t>(format);
-			NA_ASSERT_RETURN_VALUE(success, false, "Failed to read vertex attribute format at index %d from mesh file: %s", i, filename.c_str());
-
-			uint8_t semanticType;
-			success = file.Read<uint8_t>(semanticType);
-			NA_ASSERT_RETURN_VALUE(success, false, "Failed to read vertex attribute semanticType at index %d from mesh file: %s", i, filename.c_str());
-
-			uint8_t semanticIndex;
-			success = file.Read<uint8_t>(semanticIndex);
-			NA_ASSERT_RETURN_VALUE(success, false, "Failed to read vertex attribute semanticIndex at index %d from mesh file: %s", i, filename.c_str());
-
-			VertexAttribute attr;
-			attr.mFormat = (Format)format;
-			attr.mSemanticType = (VertexSemanticType)semanticType;
-			attr.mSemanticIndex = semanticIndex;
-			attr.mOffset = vertexStride;
-			vDesc.mAttributes.push_back(attr);
-
-			vertexStride += (int)GetFormatByteSize(attr.mFormat);
+		for (auto &it : vertices.mVertices) {
+			it.mTangent = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 		}
 
-		uint64_t numVertices;
-		success = file.Read<uint64_t>(numVertices);
-		NA_ASSERT_RETURN_VALUE(success, false, "Failed to read numVertices from mesh file: %s", filename.c_str());
+		for (int i = 0; i < indices.size(); i += 3) {
+			IndexType i1 = indices[i];
+			IndexType i2 = indices[i + 1];
+			IndexType i3 = indices[i + 2];
 
-		uint64_t numIndices;
-		success = file.Read<uint64_t>(numIndices);
-		NA_ASSERT_RETURN_VALUE(success, false, "Failed to read numIndices from mesh file: %s", filename.c_str());
+			VertexType &vertex1 = vertices.mVertices[i1];
+			VertexType &vertex2 = vertices.mVertices[i2];
+			VertexType &vertex3 = vertices.mVertices[i3];
 
-		void *vertexData = NA_ALLOC(vertexStride * numVertices);
-		success = file.ReadBytes((char*)vertexData, vertexStride * numVertices);
-		NA_ASSERT_RETURN_VALUE(success, false, "Failed to read vertexData from mesh file: %s", filename.c_str());
+			DirectX::XMFLOAT3 v1 = vertex1.mPosition;
+			DirectX::XMFLOAT3 v2 = vertex2.mPosition;
+			DirectX::XMFLOAT3 v3 = vertex3.mPosition;
 
-		void *indexData = NA_ALLOC(sizeof(IndexType) * numIndices);
-		success = file.ReadBytes((char*)indexData, sizeof(IndexType) * numIndices);
-		NA_ASSERT_RETURN_VALUE(success, false, "Failed to read indexData from mesh file: %s", filename.c_str());
+			DirectX::XMFLOAT2 w1 = vertex1.mTexCoord;
+			DirectX::XMFLOAT2 w2 = vertex2.mTexCoord;
+			DirectX::XMFLOAT2 w3 = vertex3.mTexCoord;
 
-		MeshData meshData;
-		meshData.vertices = vertexData;
-		meshData.numVertices = numVertices;
-		meshData.vertexStride = vertexStride;
-		meshData.indices = (IndexType*)indexData;
-		meshData.numIndices = numIndices;
-		meshData.mVertexFormat = vDesc;
-		
-		const bool initialized = mesh->Initialize(meshData);
+			float x1 = v2.x - v1.x;
+			float x2 = v3.x - v1.x;
+			float y1 = v2.y - v1.y;
+			float y2 = v3.y - v1.y;
+			float z1 = v2.z - v1.z;
+			float z2 = v3.z - v1.z;
 
-		NA_FREE(vertexData);
-		NA_FREE(indexData);
+			float s1 = w2.x - w1.x;
+			float s2 = w3.x - w1.x;
+			float t1 = w2.y - w1.y;
+			float t2 = w3.y - w1.y;
 
-		return initialized;
+			float r = 1.0F / (s1 * t2 - s2 * t1);
+			DirectX::XMFLOAT3 sdir((t2 * x1 - t1 * x2) * r, (t2 * y1 - t1 * y2) * r,
+				(t2 * z1 - t1 * z2) * r);
+			DirectX::XMFLOAT3 tdir((s1 * x2 - s2 * x1) * r, (s1 * y2 - s2 * y1) * r,
+				(s1 * z2 - s2 * z1) * r);
+
+#define FLOAT3_ADD(f1, f2) f1.x += f2.x; f1.y += f2.y; f1.z += f2.z
+			FLOAT3_ADD(vertex1.mTangent, sdir);
+			FLOAT3_ADD(vertex2.mTangent, sdir);
+			FLOAT3_ADD(vertex3.mTangent, sdir);
+#undef FLOAT3_ADD
+		}
+
+		for (auto &vertex : vertices.mVertices) {
+			DirectX::XMVECTOR n = DirectX::XMLoadFloat3(&vertex.mNormal);
+			DirectX::XMVECTOR t = DirectX::XMLoadFloat3(&vertex.mTangent);
+			DirectX::XMVECTOR b = DirectX::XMLoadFloat3(&vertex.mBinormal);
+
+			t = DirectX::XMVectorSubtract(t, DirectX::XMVectorMultiply(n, DirectX::XMVector3Dot(n, t)));
+			t = DirectX::XMVector3Normalize(t);
+			DirectX::XMStoreFloat3(&vertex.mTangent, t);
+		}
 	}
 
-
-#if defined(_NA_TOOLS)
-	bool ConvertMeshObjToMeshx(const std::string &filename)
+	bool ConvertMeshObjToMeshx(const std::string &filename, bool calculateTangentSpaceBasicVectors)
 	{
-		MeshData meshData;
-		const bool success = CreateMeshFromOBJ(meshData, filename);
+		VertexArray vertices;
+		std::vector<IndexType> indices;
+		const bool success = LoadMeshFromOBJ(vertices, indices, filename);
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to create mesh from %s", filename.c_str());
+
+		if (calculateTangentSpaceBasicVectors) {
+			CalculateTangentSpaceTVector(vertices, indices);
+		}
 
 		const std::string outFilename = DropFileExt(filename) + ".meshx";
 		File file(outFilename, std::ios::out | std::ios::binary);
@@ -333,31 +432,47 @@ namespace na
 #define WRITE(cat, x) if (!(x)) { NA_ASSERT_RETURN_VALUE(false, false, "Failed to write %s", cat); }
 		WRITE("Version", file.Write<uint32_t>(MESH_ASSET_VERSION));
 
-		// TODO
-		const int numAttributes = 3;
+		const int numAttributes = vertices.GetAttrCount();
 		WRITE("Num Vertex Attributes", file.Write<uint32_t>(numAttributes));
 
+		// Always write position
 		WRITE("POSITION Format", file.Write<uint8_t>((uint8_t)Format::R32G32B32_FLOAT));
 		WRITE("POSITION Semantic", file.Write<uint8_t>((uint8_t)VertexSemanticType::POSITION));
 		WRITE("POSITION Semantic Index", file.Write<uint8_t>(0));
 
-		WRITE("NORMAL Format", file.Write<uint8_t>((uint8_t)Format::R32G32B32_FLOAT));
-		WRITE("NORMAL Semantic", file.Write<uint8_t>((uint8_t)VertexSemanticType::NORMAL));
-		WRITE("NORMAL Semantic Index", file.Write<uint8_t>(0));
+		if (vertices.mHasNormal) {
+			WRITE("NORMAL Format", file.Write<uint8_t>((uint8_t)Format::R32G32B32_FLOAT));
+			WRITE("NORMAL Semantic", file.Write<uint8_t>((uint8_t)VertexSemanticType::NORMAL));
+			WRITE("NORMAL Semantic Index", file.Write<uint8_t>(0));
+		}
 
-		WRITE("TEXCOORD Format", file.Write<uint8_t>((uint8_t)Format::R32G32_FLOAT));
-		WRITE("TEXCOORD Semantic", file.Write<uint8_t>((uint8_t)VertexSemanticType::TEXCOORD));
-		WRITE("TEXCOORD Semantic Index", file.Write<uint8_t>(0));
+		if (vertices.mHasTexCoord) {
+			WRITE("TEXCOORD Format", file.Write<uint8_t>((uint8_t)Format::R32G32_FLOAT));
+			WRITE("TEXCOORD Semantic", file.Write<uint8_t>((uint8_t)VertexSemanticType::TEXCOORD));
+			WRITE("TEXCOORD Semantic Index", file.Write<uint8_t>(0));
+		}
 
-		WRITE("Num Vertices", file.Write<uint64_t>(meshData.numVertices));
-		WRITE("Num Indices", file.Write<uint64_t>(meshData.numIndices));
+		if (vertices.mHasTangent) {
+			WRITE("TANGENT Format", file.Write<uint8_t>((uint8_t)Format::R32G32B32_FLOAT));
+			WRITE("TANGENT Semantic", file.Write<uint8_t>((uint8_t)VertexSemanticType::TANGENT));
+			WRITE("TANGENT Semantic Index", file.Write<uint8_t>(0));
+		}
 
-		WRITE("Vertices", file.WriteBytes((char*)meshData.vertices, meshData.numVertices * meshData.vertexStride));
-		WRITE("Indices", file.WriteBytes((char*)meshData.indices, meshData.numIndices * sizeof(IndexType)));
+		if (vertices.mHasBinormal) {
+			WRITE("BINORMAL Format", file.Write<uint8_t>((uint8_t)Format::R32G32B32_FLOAT));
+			WRITE("BINORMAL Semantic", file.Write<uint8_t>((uint8_t)VertexSemanticType::BINORMAL));
+			WRITE("BINORMAL Semantic Index", file.Write<uint8_t>(0));
+		}
+
+		WRITE("Num Vertices", file.Write<uint64_t>(vertices.mVertices.size()));
+		WRITE("Num Indices", file.Write<uint64_t>(indices.size()));
+
+		void *vertexData = vertices.CreateVertexData();
+		WRITE("Vertices", file.WriteBytes((char*)vertexData, vertices.mVertices.size() * vertices.CalculateStride()));
+		WRITE("Indices", file.WriteBytes((char*)indices.data(), indices.size() * sizeof(IndexType)));
 #undef WRITE
 
-		NA_FREE(meshData.vertices);
-		NA_FREE(meshData.indices);
+		NA_FREE(vertexData);
 
 		LogInfo("Mesh", "Successfully converted mesh to meshx. Output file: %s", outFilename.c_str());
 

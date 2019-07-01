@@ -12,6 +12,6 @@ namespace na
 	void MeshSystemShutdown();
 
 #if defined(_NA_TOOLS)
-	bool ConvertMeshObjToMeshx(const std::string &objFilename);
+	bool ConvertMeshObjToMeshx(const std::string &objFilename, bool calculateTangentSpaceBasicVectors);
 #endif
 }

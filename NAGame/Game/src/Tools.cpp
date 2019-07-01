@@ -10,6 +10,7 @@
 #include <Windows.h>
 
 #include "Base/File/File.h"
+#include "Base/Util/String.h"
 #include "Core/Engine/Engine.h"
 #include "Core/Assets/MeshAsset.h"
 
@@ -73,7 +74,11 @@ static int CreateMeshX()
 {
 	std::string inFile = na::OpenFileDialog("X:\\projects\\NAEngine\\NAGame\\Game\\data\\meshes");
 
-	const bool success = na::ConvertMeshObjToMeshx(inFile);
+	std::string calculateTangent;
+	std::cout << "Calculate tangent vector (Y/N)?: ";
+	std::cin >> calculateTangent;
+	
+	const bool success = na::ConvertMeshObjToMeshx(inFile, calculateTangent == "y");
 
 	return success ? 0 : 1;
 }

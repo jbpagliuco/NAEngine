@@ -26,7 +26,7 @@
 			<position>
 				<x>1</x>
 				<y>2</y>
-				<z>4</z>
+				<z>3</z>
 			</position>
 			<scale>
 				<x>0.25</x>
@@ -52,8 +52,8 @@
 		<name>PointLight2</name>
 		<transform>
 			<position>
-				<x>-1</x>
-				<y>2</y>
+				<x>-3</x>
+				<y>3</y>
 				<z>-1</z>
 			</position>
 			<scale>
@@ -80,7 +80,7 @@
 		<name>DirectionalLight</name>
 		<transform>
 			<position>
-				<x>-3</x>
+				<x>1</x>
 				<y>3</y>
 				<z>-10</z>
 			</position>
@@ -136,6 +136,31 @@
 				<y>0</y>
 				<z>4</z>
 			</position>
+			<scale>
+				<x>10</x>
+				<y>8</y>
+				<z>1</z>
+			</scale>
+		</transform>
+		<components>
+			<component type="StaticMeshComponent">
+				<mesh>cube.meshx</mesh>
+				<material>brick.matx</material>
+			</component>
+		</components>
+	</gameobject>
+
+	<gameobject>
+		<name>Wall2</name>
+		<transform>
+			<position>
+				<x>0</x>
+				<y>4</y>
+				<z>0</z>
+			</position>
+			<rotation>
+				<x>90</x>
+			</rotation>
 			<scale>
 				<x>10</x>
 				<y>8</y>

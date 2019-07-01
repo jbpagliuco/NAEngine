@@ -46,6 +46,7 @@
     <None Include="data\textures\brick_diff.texx" />
     <None Include="data\textures\brick_norm.texx" />
     <None Include="data\materials\brick.matx" />
+    <None Include="data\materials\normal_debug.matx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Tools.h">

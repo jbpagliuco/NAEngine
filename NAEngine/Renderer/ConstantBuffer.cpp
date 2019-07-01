@@ -11,46 +11,54 @@ namespace na
 		mUsage = usage;
 		mSize = dataByteLength;
 
-		NA_ASSERT(dataByteLength > 0, "Must initialize constant buffer with a positive data byte length.");
+		NA_SAFE_RELEASE(mBuffer);
 
-		if (usage == BufferUsage::IMMUTABLE) {
-			NA_ASSERT(pData != nullptr, "You must set constant buffer immutable data at the time of creation.");
+		if (dataByteLength > 0) {
+			if (pData != nullptr) {
+				NA_ASSERT(dataByteLength > 0, "Must initialize constant buffer with a positive data byte length.");
+			}
+
+			if (usage == BufferUsage::IMMUTABLE) {
+				NA_ASSERT(pData != nullptr, "You must set constant buffer immutable data at the time of creation.");
+			}
+
+			// ViewProj buffer
+			D3D11_BUFFER_DESC desc;
+			desc.Usage = (D3D11_USAGE)usage;
+			desc.ByteWidth = RoundToNearestMultiple((int)dataByteLength, 16);
+			desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+			desc.MiscFlags = 0;
+			desc.StructureByteStride = 0;
+
+			switch (usage) {
+			case BufferUsage::DEFAULT:
+			case BufferUsage::IMMUTABLE:
+				desc.CPUAccessFlags = 0;
+				break;
+
+			case BufferUsage::DYNAMIC:
+				desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+				break;
+
+			case BufferUsage::STAGING:
+				desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ;
+				break;
+			};
+
+			HRESULT hr;
+			if (pData != nullptr) {
+				D3D11_SUBRESOURCE_DATA srData{};
+				srData.pSysMem = pData;
+
+				hr = NA_RDevice->CreateBuffer(&desc, &srData, &mBuffer);
+			} else {
+				hr = NA_RDevice->CreateBuffer(&desc, nullptr, &mBuffer);
+			}
+
+			return SUCCEEDED(hr);
 		}
 
-		// ViewProj buffer
-		D3D11_BUFFER_DESC desc;
-		desc.Usage = (D3D11_USAGE)usage;
-		desc.ByteWidth = RoundToNearestMultiple((int)dataByteLength, 16);
-		desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		desc.MiscFlags = 0;
-		desc.StructureByteStride = 0;
-		
-		switch (usage) {
-		case BufferUsage::DEFAULT:
-		case BufferUsage::IMMUTABLE:
-			desc.CPUAccessFlags = 0;
-			break;
-
-		case BufferUsage::DYNAMIC:
-			desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-			break;
-
-		case BufferUsage::STAGING:
-			desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ;
-			break;
-		};
-
-		HRESULT hr;
-		if (pData != nullptr) {
-			D3D11_SUBRESOURCE_DATA srData{};
-			srData.pSysMem = pData;
-
-			hr = NA_RDevice->CreateBuffer(&desc, &srData, &mBuffer);
-		} else {
-			hr = NA_RDevice->CreateBuffer(&desc, nullptr, &mBuffer);
-		}
-
-		return SUCCEEDED(hr);
+		return true;
 	}
 
 	void ConstantBuffer::Shutdown()

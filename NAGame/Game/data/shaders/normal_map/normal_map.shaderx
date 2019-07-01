@@ -16,6 +16,10 @@
                 <type>float2</type>
                 <semanticName>TEXCOORD</semanticName>
             </input>
+			<input>
+				<type>float3</type>
+				<semanticName>TANGENT</semanticName>
+			</input>
         </inputs>
     </vertexShader>
     <pixelShader>

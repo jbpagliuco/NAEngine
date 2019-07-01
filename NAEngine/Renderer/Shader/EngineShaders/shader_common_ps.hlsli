@@ -34,4 +34,13 @@ LightingResult ComputeFullLighting(float specularExp, float3 V, float3 P, float3
 	return lit;
 }
 
+float3 ComputeNormalFromMap(float4 normalMapTexel, float3 T, float3 B, float3 N)
+{
+	normalMapTexel = (normalMapTexel * 2.0f) - 1.0f;
+	
+	float3x3 TBN = float3x3(T, B, N);
+	float3 bumpNormal = mul(normalMapTexel, TBN);
+	return normalize(bumpNormal);
+}
+
 #endif // defined(SHADER_COMMON_PS_HLSLI)

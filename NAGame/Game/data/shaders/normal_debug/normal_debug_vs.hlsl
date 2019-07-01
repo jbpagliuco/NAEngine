@@ -9,9 +9,7 @@ struct VertexInput {
 
 struct PixelInput {
 	float4 svpos : SV_POSITION;
-	float3 position : POSITION0;
 	float3 normal : NORMAL0;
-	float2 texCoord : TEXCOORD0;
 };
 
 PixelInput main(VertexInput input)
@@ -19,14 +17,10 @@ PixelInput main(VertexInput input)
 	float4 pos = float4(input.position, 1.0f);
 
 	PixelInput output;
-
 	output.svpos = mul(pos, mul(world, viewProj));
-	output.position = mul(pos, world);
 
 	float4 normal = float4(normalize(input.normal), 0.0f);
-	output.normal = mul(worldInverseTranspose, normal).xyz;
-
-	output.texCoord = input.texCoord;
+	output.normal = mul(normal, worldInverseTranspose).xyz;
 
 	return output;
 }
