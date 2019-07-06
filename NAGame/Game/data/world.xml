@@ -124,6 +124,12 @@
 			<component type="StaticMeshComponent">
 				<mesh>cube.meshx</mesh>
 				<material>red.matx</material>
+				<material>
+					tex_dyn.matx
+					<overrides>
+						<override name="DiffuseTexture" type="texture">ice.dds</override>
+					</overrides>
+				</material>
 			</component>
 		</components>
 	</gameobject>
@@ -138,7 +144,7 @@
 			</position>
 			<scale>
 				<x>10</x>
-				<y>8</y>
+				<y>10</y>
 				<z>1</z>
 			</scale>
 		</transform>
@@ -154,16 +160,14 @@
 		<name>Wall2</name>
 		<transform>
 			<position>
-				<x>0</x>
-				<y>4</y>
-				<z>0</z>
+				<x>-4</x>
 			</position>
 			<rotation>
-				<x>90</x>
+				<y>90</y>
 			</rotation>
 			<scale>
 				<x>10</x>
-				<y>8</y>
+				<y>10</y>
 				<z>1</z>
 			</scale>
 		</transform>

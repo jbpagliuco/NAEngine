@@ -211,6 +211,7 @@
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="Formats.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="Material\DynamicMaterial.cpp" />
     <ClCompile Include="Material\Material.cpp" />
     <ClCompile Include="Material\StaticMaterial.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -235,6 +236,7 @@
   <ItemGroup>
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="Material\DynamicMaterial.h" />
     <ClInclude Include="Material\StaticMaterial.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Rect.h" />

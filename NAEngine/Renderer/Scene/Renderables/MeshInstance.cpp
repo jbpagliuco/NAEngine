@@ -4,6 +4,8 @@
 
 #include "Renderer/IndexBuffer.h"
 #include "Renderer/Material/Material.h"
+#include "Renderer/Material/DynamicMaterial.h"
+#include "Renderer/Mesh.h"
 #include "Renderer/RendererD3D.h"
 #include "Renderer/VertexBuffer.h"
 
@@ -50,16 +52,42 @@ namespace na
 	void MeshInstance::Shutdown()
 	{
 		NA_SAFE_RELEASE_ASSET_OBJECT(mMesh);
-		
+
+		if (mDynMaterialInst) {
+			mDynMaterialInst->Shutdown();
+			DestroyDynamicMaterialInstance(mDynMaterialInst);
+			mDynMaterialInst = nullptr;
+		}
+
 		ReleaseMaterial(mMaterial);
 		mMaterial = nullptr;
 
 		mInputLayout.Shutdown();
 	}
 
+	DynamicMaterialInstance* MeshInstance::CreateDynamicMaterialInstance()
+	{
+		NA_ASSERT_RETURN_VALUE(mMaterial->GetMaterialType() == MATERIAL_TYPE_DYNAMIC, nullptr);
+
+		mDynMaterialInst = na::CreateDynamicMaterialInstance(static_cast<DynamicMaterial*>(mMaterial));
+		NA_ASSERT(mDynMaterialInst != nullptr, "Failed to create dynamic material instance");
+
+		return mDynMaterialInst;
+	}
+
+	DynamicMaterialInstance* MeshInstance::GetDynamicMaterialInstance()
+	{
+		return mDynMaterialInst;
+	}
+
 	void MeshInstance::Render()
 	{
 		mMaterial->Bind();
+
+		if (mDynMaterialInst) {
+			mDynMaterialInst->BindData();
+		}
+
 		mInputLayout.Bind();
 		mMesh->Render();
 	}

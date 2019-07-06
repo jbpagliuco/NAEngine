@@ -4,6 +4,7 @@
 #include "Base/File/File.h"
 #include "Base/Util/Serialize.h"
 #include "Renderer/Material/StaticMaterial.h"
+#include "Renderer/Material/DynamicMaterial.h"
 
 namespace na
 {
@@ -53,9 +54,6 @@ namespace na
 
 	static bool OnMaterialLoad(const AssetID &id, const std::string &filename)
 	{
-		StaticMaterial *pMat = StaticMaterial::Create(id);
-		NA_ASSERT_RETURN_VALUE(pMat != nullptr, false, "Failed to allocate material.");
-
 		DeserializationParameterMap params = ParseFile(filename);
 
 		const AssetID shaderID = RequestAsset(params["shaderFile"].AsFilepath());
@@ -65,7 +63,7 @@ namespace na
 
 		std::vector<AssetID> textures;
 		
-		if (params.Exists("parameters")) {
+		if (params.HasChild("parameters")) {
 			constexpr size_t MAX_MATERIAL_PARAMETER_BYTE_LENGTH = 128;
 			parameterData = NA_ALLOC(MAX_MATERIAL_PARAMETER_BYTE_LENGTH);
 
@@ -83,7 +81,16 @@ namespace na
 			}
 		}
 
-		const bool success = pMat->Initialize(shaderID, parameterData, calculatedSize, textures);
+		bool success = false;
+		if (params["dynamic"].AsBool(false)) {
+			DynamicMaterial *pMat = DynamicMaterial::Create(id);
+			NA_ASSERT_RETURN_VALUE(pMat != nullptr, false, "Failed to allocate dynamic material.");
+			success = pMat->Initialize(shaderID, calculatedSize, params["parameters"], parameterData, textures);
+		} else {
+			StaticMaterial *pMat = StaticMaterial::Create(id);
+			NA_ASSERT_RETURN_VALUE(pMat != nullptr, false, "Failed to allocate static material.");
+			success = pMat->Initialize(shaderID, parameterData, calculatedSize, textures);
+		}
 
 		if (parameterData != nullptr) {
 			NA_FREE(parameterData);
@@ -94,7 +101,13 @@ namespace na
 
 	static void OnMaterialUnload(const AssetID &id)
 	{
-		StaticMaterial::Release(id);
+		if (StaticMaterial::Exists(id)) {
+			return StaticMaterial::Release(id);
+		} else if (DynamicMaterial::Exists(id)) {
+			return DynamicMaterial::Release(id);
+		} else {
+			NA_ASSERT(false, "Unknown material type for material %s", GetAssetFilename(id));
+		}
 	}
 
 

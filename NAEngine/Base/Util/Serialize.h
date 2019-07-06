@@ -28,7 +28,7 @@ namespace na
 
 		inline bool operator==(const DeserializationParameterMap &rhs) { return value == rhs.value; }
 
-		bool Exists(const std::string &childName);
+		bool HasChild(const std::string &childName);
 
 		std::string AsString(const std::string &def = "");
 		bool AsBool(bool def = false);
@@ -46,6 +46,8 @@ namespace na
 		std::string AsFilepath(const std::string &def = "");
 
 		void AsHLSLType(void *out, const std::string &type);
+
+		bool HasAttribute(const std::string &name);
 
 	private:
 		inline DeserializationParameterMap& GetChild(const std::string &childName) { return this->operator[](childName); }

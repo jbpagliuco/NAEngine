@@ -130,6 +130,14 @@ namespace na
 		return id;
 	}
 
+	void AddAssetRef(const AssetID &id)
+	{
+		AssetRecord &record = GetAssetRecord(id);
+		NA_ASSERT_RETURN(record != INVALID_ASSET_RECORD, "Failed to find asset record for id %llu", id);
+
+		record.AddRef();
+	}
+
 	void ReleaseAsset(const AssetID &id)
 	{
 		NA_ASSERT_RETURN(id != INVALID_ASSET_ID);

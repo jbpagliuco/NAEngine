@@ -42,7 +42,7 @@ namespace na
 		childrenArray.insert(childrenArray.begin() + index, map);
 	}
 
-	bool DeserializationParameterMap::Exists(const std::string &childName)
+	bool DeserializationParameterMap::HasChild(const std::string &childName)
 	{
 		return childrenMap.find(childName) != childrenMap.end();
 	}
@@ -151,6 +151,14 @@ namespace na
 		NA_ASSERT(found, "Type %s is not recognized.", type.c_str());
 #undef COPY_INTO_BUFFER
 	}
+
+
+	bool DeserializationParameterMap::HasAttribute(const std::string &name)
+	{
+		return meta.find(name) != meta.end();
+	}
+
+
 
 
 	static DeserializationParameterMap ParseParameterXML(pugi::xml_node &parent)

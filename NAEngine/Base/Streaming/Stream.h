@@ -42,6 +42,7 @@ namespace na
 	AssetRecord& GetAssetRecord(const AssetID &id);
 
 	AssetID RequestAsset(const std::string &filename);
+	void AddAssetRef(const AssetID &id);
 
 	void ReleaseAsset(const AssetID &id);
 	void ReleaseAsset(const std::string &filename);

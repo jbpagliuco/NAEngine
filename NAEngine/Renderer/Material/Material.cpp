@@ -1,18 +1,13 @@
 #include "Material.h"
 
 #include "StaticMaterial.h"
-
-#include "Renderer/Texture.h"
+#include "DynamicMaterial.h"
 
 namespace na
 {
-	bool Material::Initialize(AssetID shaderID, const std::vector<AssetID> &textures)
+	bool Material::Initialize(AssetID shaderID)
 	{
 		mShader = Shader::Get(shaderID);
-
-		for (auto &texID : textures) {
-			mTextures.push_back(Texture::Get(texID));
-		}
 
 		return true;
 	}
@@ -20,24 +15,11 @@ namespace na
 	void Material::Shutdown()
 	{
 		NA_SAFE_RELEASE_ASSET_OBJECT(mShader);
-
-		for (auto &texture : mTextures) {
-			ReleaseAsset(texture->GetID());
-		}
 	}
 
 	void Material::Bind()
 	{
 		mShader->Bind();
-		
-		// Bind textures
-		for (int i = 0; i < mTextures.size(); ++i) {
-			PlatformShaderResourceView *srv = mTextures[i]->GetShaderResourceView();
-			NA_RContext->PSSetShaderResources(i, 1, &srv);
-
-			PlatformSamplerState *sampler = mTextures[i]->GetSampler();
-			NA_RContext->PSSetSamplers(i, 1, &sampler);
-		}
 	}
 
 
@@ -45,6 +27,10 @@ namespace na
 	{
 		if (StaticMaterial::Exists(matID)) {
 			return StaticMaterial::Get(matID);
+		} else if (DynamicMaterial::Exists(matID)) {
+			return DynamicMaterial::Get(matID);
+		} else {
+			NA_ASSERT(false, "Unknown material type for material %s", GetAssetFilename(matID));
 		}
 
 		return nullptr;
@@ -55,6 +41,8 @@ namespace na
 		const int matType = pMaterial->GetMaterialType();
 		if (matType == MATERIAL_TYPE_STATIC) {
 			ReleaseAsset(static_cast<StaticMaterial*>(pMaterial)->GetID());
+		} else if (matType == MATERIAL_TYPE_DYNAMIC) {
+			ReleaseAsset(static_cast<DynamicMaterial*>(pMaterial)->GetID());
 		} else {
 			NA_ASSERT(false, "Unknown material type %d", matType);
 		}

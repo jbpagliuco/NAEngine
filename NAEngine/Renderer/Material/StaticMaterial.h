@@ -20,5 +20,7 @@ namespace na
 
 	private:
 		ConstantBuffer mConstantBuffer;
+
+		std::vector<Texture*> mTextures;
 	};
 }

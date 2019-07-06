@@ -2,18 +2,15 @@
 
 #include "Renderer/Shader/Shader.h"
 
-#include "Renderer/ConstantBuffer.h"
-
 namespace na
 {
 #define MATERIAL_TYPE_STATIC 0
-
-	class Texture;
-
+#define MATERIAL_TYPE_DYNAMIC 1
+	
 	class Material
 	{
 	public:
-		bool Initialize(AssetID shaderID, const std::vector<AssetID> &textures);
+		bool Initialize(AssetID shaderID);
 		virtual void Shutdown();
 
 		virtual void Bind();
@@ -24,8 +21,6 @@ namespace na
 
 	private:
 		Shader *mShader;
-
-		std::vector<Texture*> mTextures;
 	};
 
 	Material* GetMaterialByID(AssetID matID);
