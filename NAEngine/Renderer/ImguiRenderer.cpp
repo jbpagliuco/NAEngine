@@ -1,5 +1,7 @@
 #include "ImguiRenderer.h"
 
+#include "Base/OS/OSWin32.h"
+
 #include "RendererD3D.h"
 
 #include "Vendor/imgui/imgui.h"
@@ -11,6 +13,15 @@
 namespace na
 {
 	static bool IsFocused = false;
+
+	bool ImguiRendererWndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+	{
+		if (IsFocused && ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)) {
+			return true;
+		}
+		
+		return false;
+	}
 
 	bool ImguiRendererSystemInit()
 	{
@@ -25,6 +36,8 @@ namespace na
 		if (!ImGui_ImplDX11_Init(NA_RDevice, NA_RContext)) {
 			return false;
 		}
+
+		RegisterWndProcCallback(ImguiRendererWndProc);
 
 		ImguiRendererSetFocus(IsFocused);
 
