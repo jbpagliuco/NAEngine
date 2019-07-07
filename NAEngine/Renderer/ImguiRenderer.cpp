@@ -10,6 +10,8 @@
 
 namespace na
 {
+	static bool IsFocused = false;
+
 	bool ImguiRendererSystemInit()
 	{
 		IMGUI_CHECKVERSION();
@@ -23,6 +25,8 @@ namespace na
 		if (!ImGui_ImplDX11_Init(NA_RDevice, NA_RContext)) {
 			return false;
 		}
+
+		ImguiRendererSetFocus(IsFocused);
 
 		return true;
 	}
@@ -39,11 +43,30 @@ namespace na
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
+
+		static bool b = true;
+		ImGui::ShowDemoWindow(&b);
 	}
 
 	void ImguiRendererEndFrame()
 	{
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	}
+
+	void ImguiRendererSetFocus(bool focus)
+	{
+		IsFocused = focus;
+
+		if (focus) {
+			ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 1.0f);
+		} else {
+			ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.5f);
+		}
+	}
+
+	bool ImguiRendererGetFocus()
+	{
+		return IsFocused;
 	}
 }

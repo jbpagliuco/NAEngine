@@ -7,4 +7,7 @@ namespace na
 
 	void ImguiRendererBeginFrame();
 	void ImguiRendererEndFrame();
+
+	void ImguiRendererSetFocus(bool focus);
+	bool ImguiRendererGetFocus();
 }

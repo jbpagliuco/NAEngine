@@ -6,6 +6,7 @@
 #include "Base/BaseSystem.h"
 #include "Base/Debug/Assert.h"
 #include "Base/Debug/Log.h"
+#include "Renderer/ImguiRenderer.h"
 #include "Renderer/RenderingSystem.h"
 
 #include "Core/Assets/MeshAsset.h"
@@ -44,6 +45,10 @@ namespace na
 	};
 
 	std::vector<SystemRegistration> SystemRegistry;
+
+	////////////////////////////////////////////////////////////////
+
+	static void CheckDebugRendererSwitch();
 
 	////////////////////////////////////////////////////////////////
 	
@@ -157,6 +162,8 @@ namespace na
 	{
 		auto start = std::chrono::high_resolution_clock::now();
 
+		CheckDebugRendererSwitch();
+
 		for (auto &sys : SystemRegistry) {
 			if (sys.mDoFrame != nullptr) {
 				sys.mDoFrame();
@@ -171,5 +178,17 @@ namespace na
 
 		auto diff = std::chrono::high_resolution_clock::now() - start;
 		Frametime = std::chrono::duration_cast<std::chrono::duration<float>>(diff).count();
+	}
+
+	
+
+
+	static void CheckDebugRendererSwitch()
+	{
+		if (IsSystemKeyPressed(VK_F11)) {
+			const bool newFocus = !ImguiRendererGetFocus();
+			ForceShowCursor(newFocus);
+			ImguiRendererSetFocus(newFocus);
+		}
 	}
 }
