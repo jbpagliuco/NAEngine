@@ -123,7 +123,6 @@
 		<components>
 			<component type="StaticMeshComponent">
 				<mesh>cube.meshx</mesh>
-				<material>red.matx</material>
 				<material>
 					tex_dyn.matx
 					<overrides>
