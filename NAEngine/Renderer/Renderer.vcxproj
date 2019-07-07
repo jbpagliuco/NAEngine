@@ -210,6 +210,7 @@
   <ItemGroup>
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="Formats.cpp" />
+    <ClCompile Include="ImguiRenderer.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Material\DynamicMaterial.cpp" />
     <ClCompile Include="Material\Material.cpp" />
@@ -235,6 +236,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConstantBuffer.h" />
+    <ClInclude Include="ImguiRenderer.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material\DynamicMaterial.h" />
     <ClInclude Include="Material\StaticMaterial.h" />

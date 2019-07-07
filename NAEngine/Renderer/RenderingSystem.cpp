@@ -3,6 +3,7 @@
 #include "Base/Debug/Assert.h"
 #include "Base/OS/OS.h"
 
+#include "ImguiRenderer.h"
 #include "RendererD3D.h"
 #include "Scene/Scene.h"
 #include "Scene/ForwardRenderer.h"
@@ -14,18 +15,23 @@ namespace na
 
 	bool RenderingSystemInit()
 	{
-		int width = 800;
-		int height = 600;
+		constexpr int width = 1600;
+		constexpr int height = 900;
 
 		RendererInitParams p;
 		p.mWidth = width;
 		p.mHeight = height;
-		p.mWindow = CreateAndShowWindow(-1, -1, 800, 600, L"NA Game LUL");
+		p.mWindow = CreateAndShowWindow(-1, -1, width, height, L"NA Game LUL");
 
 		NA_FATAL_ERROR(p.mWindow != INVALID_WINDOW, "Failed to create main window.");
 		
 		bool success = NA_Renderer->Initialize(p);
 		NA_FATAL_ERROR(success, "Failed to initialize renderer.");
+
+		if (!ImguiRendererSystemInit()) {
+			// Not really fatal
+			NA_ASSERT(false, "Failed to initialize ImGui renderer.");
+		}
 
 		FRenderer.Initialize();
 
@@ -36,6 +42,8 @@ namespace na
 	{
 		FRenderer.Shutdown();
 
+		ImguiRendererSystemShutdown();
+
 		NA_Renderer->Shutdown();
 	}
 
@@ -43,9 +51,13 @@ namespace na
 	{
 		NA_Renderer->BeginRender();
 
+		ImguiRendererBeginFrame();
+
 		FRenderer.BeginRender();
 		FRenderer.RenderScene(Scene::Get());
 		FRenderer.EndRender();
+
+		ImguiRendererEndFrame();
 
 		NA_Renderer->EndRender();
 	}

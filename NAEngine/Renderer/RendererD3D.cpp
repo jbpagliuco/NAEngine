@@ -20,7 +20,11 @@ namespace na
 	{
 		NA_FATAL_ERROR(InitDevice(params), "Failed to initialize Direct3D device.");
 
-		return Renderer::Initialize(params);
+		if (!Renderer::Initialize(params)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	void RendererD3D::Shutdown()
