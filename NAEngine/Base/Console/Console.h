@@ -5,10 +5,17 @@
 
 namespace na
 {
-#define CONSOLE_COMMAND(name				)																				\
+#define CONSOLE_COMMAND(name)																								\
 	static void __console_command_ ## name (const std::vector<ConsoleCommandParameter> &parameters);						\
 	static ConsoleCommandRegistration __console_command_ ## name ## _registration(#name, __console_command_ ## name);		\
 	static void __console_command_ ## name (const std::vector<ConsoleCommandParameter> &parameters)
+
+#define CONSOLE_BOOL(name, varName, defaultValue)																			\
+	static bool varName = defaultValue;																						\
+	CONSOLE_COMMAND(name) {																									\
+		if (parameters.size() > 0) { varName = parameters[0].AsBool(); }													\
+		else { varName = !varName; }																						\
+	}
 	
 	struct ConsoleCommandParameter
 	{

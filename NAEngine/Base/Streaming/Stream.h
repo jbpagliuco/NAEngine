@@ -50,4 +50,6 @@ namespace na
 
 	bool StreamSystemInit();
 	void StreamSystemShutdown();
+
+	void StreamSystemDebugRender();
 }

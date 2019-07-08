@@ -204,7 +204,7 @@ namespace na
 			ImguiRendererSetFocus(newFocus);
 		}
 
-		if (IsSystemKeyPressed(VK_OEM_3)) {
+		if (IsSystemKeyPressed(VK_F1)) {
 			ConsoleSystemActivate(!ConsoleSystemIsActive());
 			ForceShowCursor(true);
 			ImguiRendererSetFocus(true);

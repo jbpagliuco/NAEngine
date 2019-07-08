@@ -35,5 +35,6 @@ namespace na
 	void BaseSystemDebugRender()
 	{
 		ConsoleSystemDebugRender();
+		StreamSystemDebugRender();
 	}
 }

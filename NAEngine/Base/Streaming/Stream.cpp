@@ -7,6 +7,8 @@
 #include "Debug/Assert.h"
 #include "File/File.h"
 
+#include "Vendor/imgui/imgui.h"
+
 namespace na
 {
 	AssetID INVALID_ASSET_ID = 0;
@@ -17,6 +19,9 @@ namespace na
 	static std::map<AssetID, AssetRecord> AssetRecords;
 	static std::map<std::string, AssetID> AssetIDs;
 	static AssetID NextAssetID = 1;
+
+
+	CONSOLE_BOOL(resources, Resources_debug, false);
 
 
 	static AssetID CreateOrGetAssetID(const std::string &filename)
@@ -173,30 +178,34 @@ namespace na
 		NA_ASSERT(AssetIDs.size() == 0, "There were left over streaming asset ids at shutdown!");
 	}
 
-
-
-	CONSOLE_COMMAND(resources)
+	void StreamSystemDebugRender()
 	{
-		std::vector<AssetRecord> sortedRecords;
-		for (auto &it : AssetRecords) {
-			// If we were given a parameter, use it to cull our list of resources
-			if (parameters.size() > 0) {
-				if (strstr(GetAssetFilename(it.first), parameters[0].AsString().c_str()) == nullptr) {
-					continue;
-				}
-			}
-
-			sortedRecords.push_back(it.second);
+		if (!Resources_debug) {
+			return;
 		}
 
-		std::sort(sortedRecords.begin(), sortedRecords.end(), [](const AssetRecord &a, const AssetRecord &b) {
-			return strcmp(GetAssetFilename(a.mID), GetAssetFilename(b.mID)) < 0;
-		});
+		if (ImGui::Begin("Resources", &Resources_debug)) {
+			std::vector<AssetRecord> sortedRecords;
+			for (auto &it : AssetRecords) {
+				// If we were given a parameter, use it to cull our list of resources
+				/*if (parameters.size() > 0) {
+					if (strstr(GetAssetFilename(it.first), parameters[0].AsString().c_str()) == nullptr) {
+						continue;
+					}
+				}*/
 
-		for (auto &it : sortedRecords) {
-			if (it.mRefCount > 0) {
-				ConsolePrintf("%s - Ref Count: %d", GetAssetFilename(it.mID), it.mRefCount);
+				sortedRecords.push_back(it.second);
+			}
+
+			std::sort(sortedRecords.begin(), sortedRecords.end(), [](const AssetRecord &a, const AssetRecord &b) {
+				return strcmp(GetAssetFilename(a.mID), GetAssetFilename(b.mID)) < 0;
+			});
+
+			for (auto &it : sortedRecords) {
+				ImGui::Text("%s - Ref Count: %d", GetAssetFilename(it.mID), it.mRefCount);
 			}
 		}
+
+		ImGui::End();
 	}
 }
