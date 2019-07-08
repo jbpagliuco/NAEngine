@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Base/BaseSystem.h"
+#include "Base/Console/Console.h"
 #include "Base/Debug/Assert.h"
 #include "Base/Debug/Log.h"
 #include "Renderer/ImguiRenderer.h"
@@ -48,6 +49,7 @@ namespace na
 
 	////////////////////////////////////////////////////////////////
 
+	static void DebugRender();
 	static void CheckDebugRendererSwitch();
 
 	////////////////////////////////////////////////////////////////
@@ -59,6 +61,7 @@ namespace na
 			reg.mSystemName = "Base System";
 			reg.mSystemInit = BaseSystemInit;
 			reg.mSystemShutdown = BaseSystemShutdown;
+			reg.mDoFrame = BaseSystemDoFrame;
 			SystemRegistry.push_back(reg);
 		}
 
@@ -67,7 +70,6 @@ namespace na
 			reg.mSystemName = "Rendering System";
 			reg.mSystemInit = RenderingSystemInit;
 			reg.mSystemShutdown = RenderingSystemShutdown;
-			reg.mDoFrame = RenderingSystemDoFrame;
 			SystemRegistry.push_back(reg);
 		}
 
@@ -176,12 +178,23 @@ namespace na
 			}
 		}
 
+		RenderingSystemBeginFrame();
+		RenderingSystemDoFrame();
+
+		DebugRender();
+
+		RenderingSystemEndFrame();
+
 		auto diff = std::chrono::high_resolution_clock::now() - start;
 		Frametime = std::chrono::duration_cast<std::chrono::duration<float>>(diff).count();
 	}
 
 	
 
+	static void DebugRender()
+	{
+		BaseSystemDebugRender();
+	}
 
 	static void CheckDebugRendererSwitch()
 	{
@@ -189,6 +202,12 @@ namespace na
 			const bool newFocus = !ImguiRendererGetFocus();
 			ForceShowCursor(newFocus);
 			ImguiRendererSetFocus(newFocus);
+		}
+
+		if (IsSystemKeyPressed(VK_OEM_3)) {
+			ConsoleSystemActivate(!ConsoleSystemIsActive());
+			ForceShowCursor(true);
+			ImguiRendererSetFocus(true);
 		}
 	}
 }

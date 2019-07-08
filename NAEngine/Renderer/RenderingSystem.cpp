@@ -47,18 +47,23 @@ namespace na
 		NA_Renderer->Shutdown();
 	}
 
-	void RenderingSystemDoFrame()
+	void RenderingSystemBeginFrame()
 	{
 		NA_Renderer->BeginRender();
-
 		ImguiRendererBeginFrame();
+	}
 
+	void RenderingSystemDoFrame()
+	{
 		FRenderer.BeginRender();
 		FRenderer.RenderScene(Scene::Get());
 		FRenderer.EndRender();
+	}
 
+	void RenderingSystemEndFrame()
+	{
 		ImguiRendererEndFrame();
-
 		NA_Renderer->EndRender();
 	}
+
 }

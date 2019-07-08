@@ -205,6 +205,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BaseSystem.cpp" />
+    <ClCompile Include="Console\Console.cpp" />
     <ClCompile Include="Debug\Assert.cpp" />
     <ClCompile Include="Debug\Log.cpp" />
     <ClCompile Include="File\File.cpp" />
@@ -220,6 +221,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseSystem.h" />
+    <ClInclude Include="Console\Console.h" />
     <ClInclude Include="DataStructures\Singleton.h" />
     <ClInclude Include="Debug\Assert.h" />
     <ClInclude Include="Debug\Log.h" />

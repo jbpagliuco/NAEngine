@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <map>
 
+#include "Console/Console.h"
 #include "Debug/Assert.h"
 #include "File/File.h"
 
@@ -170,5 +171,32 @@ namespace na
 	{
 		NA_ASSERT(AssetRecords.size() == 0, "There were left over streaming asset records at shutdown!");
 		NA_ASSERT(AssetIDs.size() == 0, "There were left over streaming asset ids at shutdown!");
+	}
+
+
+
+	CONSOLE_COMMAND(resources)
+	{
+		std::vector<AssetRecord> sortedRecords;
+		for (auto &it : AssetRecords) {
+			// If we were given a parameter, use it to cull our list of resources
+			if (parameters.size() > 0) {
+				if (strstr(GetAssetFilename(it.first), parameters[0].AsString().c_str()) == nullptr) {
+					continue;
+				}
+			}
+
+			sortedRecords.push_back(it.second);
+		}
+
+		std::sort(sortedRecords.begin(), sortedRecords.end(), [](const AssetRecord &a, const AssetRecord &b) {
+			return strcmp(GetAssetFilename(a.mID), GetAssetFilename(b.mID)) < 0;
+		});
+
+		for (auto &it : sortedRecords) {
+			if (it.mRefCount > 0) {
+				ConsolePrintf("%s - Ref Count: %d", GetAssetFilename(it.mID), it.mRefCount);
+			}
+		}
 	}
 }

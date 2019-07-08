@@ -6,4 +6,7 @@ namespace na
 {
 	bool BaseSystemInit();
 	void BaseSystemShutdown();
+	void BaseSystemDoFrame();
+
+	void BaseSystemDebugRender();
 }

@@ -1,5 +1,6 @@
 #include "BaseSystem.h"
 
+#include "Console/Console.h"
 #include "Debug/Assert.h"
 #include "Debug/Log.h"
 #include "OS/OS.h"
@@ -25,5 +26,14 @@ namespace na
 		SYSTEM_SHUTDOWN("Streaming system", StreamSystemShutdown);
 		SYSTEM_SHUTDOWN("Memory system", MemorySystemShutdown);
 #undef SYSTEM_SHUTDOWN
+	}
+
+	void BaseSystemDoFrame()
+	{
+	}
+
+	void BaseSystemDebugRender()
+	{
+		ConsoleSystemDebugRender();
 	}
 }

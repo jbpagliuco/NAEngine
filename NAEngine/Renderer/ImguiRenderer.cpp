@@ -56,9 +56,6 @@ namespace na
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
-
-		static bool b = true;
-		ImGui::ShowDemoWindow(&b);
 	}
 
 	void ImguiRendererEndFrame()
