@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include "Debug/Assert.h"
+#include "Util/String.h"
 #include "Util/Util.h"
 #include "Vendor/imgui/imgui.h"
 
@@ -49,6 +50,39 @@ namespace na
 		}
 
 		return nullptr;
+	}
+
+	static std::string GetBestAutocomplete(const std::string &input)
+	{
+		// Find the longest common prefix between all command names that start with our input.
+
+		std::vector<std::string> strings;
+		for (int i = 0; i < NumCommands; ++i) {
+			InternalCommand &pCmd = CONSOLE_COMMANDS[i];
+			if (StartsWith(pCmd.mName, input)) {
+				strings.push_back(pCmd.mName);
+			}
+		}
+
+		if (strings.empty()) {
+			return input;
+		}
+
+		size_t minLength = strings[0].size();
+		for (int i = 1; i < strings.size(); ++i) {
+			minLength = Min(minLength, strings[i].size());
+		}
+
+		for (int i = 0; i < minLength; ++i) {
+			char c = strings[0][i];
+			for (int j = 1; j < strings.size(); ++j) {
+				if (strings[j][i] != c) {
+					return strings[0].substr(0, i);
+				}
+			}
+		}
+
+		return strings[0];
 	}
 
 
@@ -165,39 +199,35 @@ namespace na
 		if (ImGui::Begin("Console System", &ConsoleDebug)) {
 			static char commandLine[1024] = { 0 };
 
-			auto historyCallback = [](ImGuiInputTextCallbackData *pData) {
+			auto inputCallback = [](ImGuiInputTextCallbackData *pData) {
 				if (ConsoleHistoryIndex == -1) {
 					ConsoleHistoryIndex = (int)ConsoleHistory.size();
 				}
 
-				bool writeHistory = false;
 				if (pData->EventKey == ImGuiKey_UpArrow) {
 					ConsoleHistoryIndex = Max(0, ConsoleHistoryIndex - 1);
-					writeHistory = true;
+					strncpy_s(pData->Buf, pData->BufSize - 1, ConsoleHistory[ConsoleHistoryIndex].c_str(), pData->BufSize - 1);
 				} else if (pData->EventKey == ImGuiKey_DownArrow) {
 					ConsoleHistoryIndex = Min((int)ConsoleHistory.size(), ConsoleHistoryIndex + 1);
-					writeHistory = true;
-				}
-
-				if (writeHistory) {
-					char buf[1024];
 					if (ConsoleHistoryIndex < ConsoleHistory.size()) {
-						strncpy_s(buf, 1024, ConsoleHistory[ConsoleHistoryIndex].c_str(), 1024);
+						strncpy_s(pData->Buf, pData->BufSize - 1, ConsoleHistory[ConsoleHistoryIndex].c_str(), pData->BufSize - 1);
 					} else {
-						buf[0] = 0;
+						pData->Buf[0] = 0;
 					}
-
-					strncpy_s(pData->Buf, pData->BufSize - 1, buf, pData->BufSize - 1);
-					pData->BufDirty = true;
-					pData->BufTextLen = (int)strlen(pData->Buf);
-					pData->CursorPos = pData->BufTextLen;
+				} else if (pData->EventKey == ImGuiKey_Tab) {
+					const std::string bestMatch = GetBestAutocomplete(pData->Buf);
+					strncpy_s(pData->Buf, pData->BufSize - 1, bestMatch.c_str(), pData->BufSize - 1);
 				}
+
+				pData->BufDirty = true;
+				pData->BufTextLen = (int)strlen(pData->Buf);
+				pData->CursorPos = pData->BufTextLen;
 
 				return 0;
 			};
 
 			ImGui::SetKeyboardFocusHere();
-			if (ImGui::InputText("Command Line", commandLine, 1024, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CallbackHistory, historyCallback)) {
+			if (ImGui::InputText("Command Line", commandLine, 1024, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CallbackHistory | ImGuiInputTextFlags_CallbackCompletion, inputCallback)) {
 				if (commandLine[0] != 0) {
 					ConsoleHistory.push_back(commandLine);
 					ConsoleHistoryIndex = -1;
