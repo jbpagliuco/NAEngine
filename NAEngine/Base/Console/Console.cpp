@@ -29,6 +29,9 @@ namespace na
 	static std::vector<std::string> ConsoleOutput[MAX_OUTPUT_GROUPS];
 	static int ConsoleOutputStart = 0;
 	static int NumConsoleOutputGroups = 0;
+
+	static std::vector<std::string> ConsoleHistory;
+	static int ConsoleHistoryIndex = -1;
 	
 
 	static InternalCommand* ConsoleCommands()
@@ -156,20 +159,58 @@ namespace na
 			return;
 		}
 
+		ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
 		ImGui::SetNextWindowSize(ImVec2(800.0f, -1.0f));
 
 		if (ImGui::Begin("Console System", &ConsoleDebug)) {
 			static char commandLine[1024] = { 0 };
+
+			auto historyCallback = [](ImGuiInputTextCallbackData *pData) {
+				if (ConsoleHistoryIndex == -1) {
+					ConsoleHistoryIndex = (int)ConsoleHistory.size();
+				}
+
+				bool writeHistory = false;
+				if (pData->EventKey == ImGuiKey_UpArrow) {
+					ConsoleHistoryIndex = Max(0, ConsoleHistoryIndex - 1);
+					writeHistory = true;
+				} else if (pData->EventKey == ImGuiKey_DownArrow) {
+					ConsoleHistoryIndex = Min((int)ConsoleHistory.size(), ConsoleHistoryIndex + 1);
+					writeHistory = true;
+				}
+
+				if (writeHistory) {
+					char buf[1024];
+					if (ConsoleHistoryIndex < ConsoleHistory.size()) {
+						strncpy_s(buf, 1024, ConsoleHistory[ConsoleHistoryIndex].c_str(), 1024);
+					} else {
+						buf[0] = 0;
+					}
+
+					strncpy_s(pData->Buf, pData->BufSize - 1, buf, pData->BufSize - 1);
+					pData->BufDirty = true;
+					pData->BufTextLen = (int)strlen(pData->Buf);
+					pData->CursorPos = pData->BufTextLen;
+				}
+
+				return 0;
+			};
+
 			ImGui::SetKeyboardFocusHere();
-			if (ImGui::InputText("Command Line", commandLine, 1024, ImGuiInputTextFlags_EnterReturnsTrue)) {
-				AddConsoleOutput("---- " + std::string(commandLine));
+			if (ImGui::InputText("Command Line", commandLine, 1024, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CallbackHistory, historyCallback)) {
+				if (commandLine[0] != 0) {
+					ConsoleHistory.push_back(commandLine);
+					ConsoleHistoryIndex = -1;
 
-				DispatchConsoleCommand(commandLine);
-				commandLine[0] = 0;
+					if (DispatchConsoleCommand(commandLine)) {
+						AddConsoleOutput("---- " + std::string(commandLine));
+					} else {
+						AddConsoleOutput("---- '" + std::string(commandLine) + "' command not found!");
+					}
 
-				AddConsoleOutput("");
-
-				StartNewGroup();
+					commandLine[0] = 0;
+					StartNewGroup();
+				}
 			}
 
 			ImGui::NewLine();
