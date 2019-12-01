@@ -12,6 +12,7 @@
 
 namespace na
 {
+	static bool StylePushed = false;
 	static bool IsFocused = false;
 
 	bool ImguiRendererWndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -68,11 +69,17 @@ namespace na
 	{
 		IsFocused = focus;
 
+		if (StylePushed) {
+			ImGui::PopStyleVar(ImGuiStyleVar_Alpha);
+		}
+
 		if (focus) {
 			ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 1.0f);
 		} else {
 			ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.5f);
 		}
+
+		StylePushed = true;
 	}
 
 	bool ImguiRendererGetFocus()

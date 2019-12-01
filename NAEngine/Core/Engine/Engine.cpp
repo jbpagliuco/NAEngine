@@ -198,16 +198,19 @@ namespace na
 
 	static void CheckDebugRendererSwitch()
 	{
+		// Toggle the debug renderer when F11 is pressed.
 		if (IsSystemKeyPressed(VK_F11)) {
 			const bool newFocus = !ImguiRendererGetFocus();
 			ForceShowCursor(newFocus);
 			ImguiRendererSetFocus(newFocus);
 		}
 
+		// Toggle the console when F1 is pressed.
 		if (IsSystemKeyPressed(VK_F1)) {
-			ConsoleSystemActivate(!ConsoleSystemIsActive());
-			ForceShowCursor(true);
-			ImguiRendererSetFocus(true);
+			const bool newFocus = !ConsoleSystemIsActive();
+			ConsoleSystemActivate(newFocus);
+			ForceShowCursor(newFocus);
+			ImguiRendererSetFocus(newFocus);
 		}
 	}
 }
