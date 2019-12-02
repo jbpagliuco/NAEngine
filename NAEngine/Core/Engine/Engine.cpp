@@ -3,6 +3,8 @@
 #include <chrono>
 #include <vector>
 
+#include "Vendor/imgui/imgui.h"
+
 #include "Base/BaseSystem.h"
 #include "Base/Console/Console.h"
 #include "Base/Debug/Assert.h"
@@ -54,13 +56,16 @@ namespace na
 
 #if defined(_NA_DEBUG)
 	// Debug timing stats
-	CONSOLE_BOOL(show_frametime, Frametime_debug, false);
+	CONSOLE_BOOL(show_frametime, FrameTimeDebug, false);
+	CONSOLE_BOOL(show_frametime_log, FrameTimeDebugLog, false);
 #endif
 
 	////////////////////////////////////////////////////////////////
 
 	static void DebugRender();
 	static void CheckDebugRendererSwitch();
+
+	static void DebugRenderFrameTime();
 
 	////////////////////////////////////////////////////////////////
 	
@@ -201,10 +206,10 @@ namespace na
 		FrameTime = std::chrono::duration<float>(TIME_NOW() - LastFrameEnd).count();
 
 #if defined(_NA_DEBUG)
-		if (Frametime_debug) {
+		if (FrameTimeDebugLog) {
 			const uint64_t newElapsedTime = (uint64_t)(ElapsedTime + FrameTime);
 			if (newElapsedTime - (uint64_t)ElapsedTime >= 1) {
-				LogInfo(CORE_LOG_FILTER, "Frame Time: %.3f", FrameTime);
+				LogInfo(CORE_LOG_FILTER, "Frame Time: %.5f", FrameTime);
 			}
 		}
 #endif
@@ -227,6 +232,8 @@ namespace na
 	static void DebugRender()
 	{
 		BaseSystemDebugRender();
+
+		DebugRenderFrameTime();
 	}
 
 	static void CheckDebugRendererSwitch()
@@ -244,6 +251,19 @@ namespace na
 			ConsoleSystemActivate(newFocus);
 			ForceShowCursor(newFocus);
 			ImguiRendererSetFocus(newFocus);
+		}
+	}
+
+
+	static void DebugRenderFrameTime()
+	{
+		if (FrameTimeDebug) {
+			if (ImGui::Begin("Frame Time Debug", &FrameTimeDebug)) {
+				ImGui::Text("Frame Time: %.5f", FrameTime);
+				ImGui::Text("Total Elapsed Time: %.1f", ElapsedTime);
+			}
+
+			ImGui::End();
 		}
 	}
 }
