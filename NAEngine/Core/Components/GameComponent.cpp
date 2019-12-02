@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "Base/Debug/Assert.h"
+#include "Core/Engine/Engine.h"
 #include "Core/World/GameObject.h"
 
 #include "CameraComponent.h"
@@ -58,24 +59,25 @@ namespace na
 	{
 	}
 
-	void GameComponent::UpdateEarly()
+	void GameComponent::UpdateEarly(float deltaTime)
 	{
 	}
 
-	void GameComponent::Update()
+	void GameComponent::Update(float deltaTime)
 	{
 	}
 
-	void GameComponent::UpdateLate()
+	void GameComponent::UpdateLate(float deltaTime)
 	{
 	}
 
 
 	void GameComponentDoFrame()
 	{
-		FOREACH_COMPONENT(UpdateEarly);
-		FOREACH_COMPONENT(Update);
-		FOREACH_COMPONENT(UpdateLate);
+		const float deltaTime = GetDeltaFrameTime();
+		FOREACH_COMPONENT(UpdateEarly, deltaTime);
+		FOREACH_COMPONENT(Update, deltaTime);
+		FOREACH_COMPONENT(UpdateLate, deltaTime);
 	}
 
 	void GameComponentShutdown()

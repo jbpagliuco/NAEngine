@@ -12,7 +12,7 @@ namespace na
 		DestroyLight(mLight);
 	}
 
-	void LightComponent::UpdateLate()
+	void LightComponent::UpdateLate(float deltaTime)
 	{
 		// Update some of the light properties from our transform.
 		mLight->mPosition = mTransform->GetPosition();

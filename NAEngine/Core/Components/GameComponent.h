@@ -21,9 +21,9 @@ namespace na
 		virtual void Activate();
 		virtual void Deactivate();
 		
-		virtual void UpdateEarly();
-		virtual void Update();
-		virtual void UpdateLate();
+		virtual void UpdateEarly(float deltaTime);
+		virtual void Update(float deltaTime);
+		virtual void UpdateLate(float deltaTime);
 
 	protected:
 		GameObject *mOwner;

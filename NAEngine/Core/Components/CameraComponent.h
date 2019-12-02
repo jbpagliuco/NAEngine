@@ -14,11 +14,11 @@ namespace na
 		virtual void Activate() override;
 		virtual void Deactivate() override;
 
-		virtual void Update() override;
-		virtual void UpdateLate() override;
+		virtual void Update(float deltaTime) override;
+		virtual void UpdateLate(float deltaTime) override;
 
 	private:
-		void HandleMovementInput();
+		void HandleMovementInput(float deltaTime);
 
 	private:
 		Camera mCamera;

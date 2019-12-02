@@ -20,7 +20,7 @@
 
 namespace na
 {
-	float Frametime = 0.0f;
+#define TIME_NOW() std::chrono::high_resolution_clock::now()
 
 	struct SystemRegistration
 	{
@@ -45,7 +45,17 @@ namespace na
 		}
 	};
 
-	std::vector<SystemRegistration> SystemRegistry;
+	static std::vector<SystemRegistration> SystemRegistry;
+
+	// Time stats
+	static float FrameTime = 0.0f;
+	static double ElapsedTime = 0.0f;
+	static std::chrono::time_point<std::chrono::steady_clock> LastFrameEnd;
+
+#if defined(_NA_DEBUG)
+	// Debug timing stats
+	CONSOLE_BOOL(show_frametime, Frametime_debug, false);
+#endif
 
 	////////////////////////////////////////////////////////////////
 
@@ -138,6 +148,8 @@ namespace na
 		LogInfo(CORE_LOG_FILTER, "=============================================");
 		LogLineBreak();
 
+		LastFrameEnd = TIME_NOW();
+
 		return true;
 	}
 
@@ -185,10 +197,31 @@ namespace na
 
 		RenderingSystemEndFrame();
 
-		auto diff = std::chrono::high_resolution_clock::now() - start;
-		Frametime = std::chrono::duration_cast<std::chrono::duration<float>>(diff).count();
+		// Update frametime stats
+		auto d = TIME_NOW() - LastFrameEnd;
+		FrameTime = std::chrono::duration<float>(TIME_NOW() - LastFrameEnd).count();
+
+#if defined(_NA_DEBUG)
+		if (Frametime_debug) {
+			const uint64_t newElapsedTime = (uint64_t)(ElapsedTime + FrameTime);
+			if (newElapsedTime - (uint64_t)ElapsedTime >= 1) {
+				LogInfo(CORE_LOG_FILTER, "Frame Time: %.3f", FrameTime);
+			}
+		}
+#endif
+
+		ElapsedTime += FrameTime;
 	}
 
+	float GetDeltaFrameTime()
+	{
+		return FrameTime;
+	}
+
+	double GetElapsedTime()
+	{
+		return ElapsedTime;
+	}
 	
 
 	static void DebugRender()

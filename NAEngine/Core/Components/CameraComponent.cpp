@@ -30,32 +30,32 @@ namespace na
 		}
 	}
 
-	void CameraComponent::Update()
+	void CameraComponent::Update(float deltaTime)
 	{
-		HandleMovementInput();
+		HandleMovementInput(deltaTime);
 	}
 
-	void CameraComponent::UpdateLate()
+	void CameraComponent::UpdateLate(float deltaTime)
 	{
 		mCamera.mTransform = *mTransform;
 	}
 
-	void CameraComponent::HandleMovementInput()
+	void CameraComponent::HandleMovementInput(float deltaTime)
 	{
-		mYaw += GetMouseDelta().x * Frametime * mSensitivity;
-		mPitch += GetMouseDelta().y * Frametime * mSensitivity;
+		mYaw += GetMouseDelta().x * deltaTime * mSensitivity;
+		mPitch += GetMouseDelta().y * deltaTime * mSensitivity;
 
 		DirectX::XMVECTOR newRotation = DirectX::XMQuaternionRotationRollPitchYaw(mPitch, mYaw, mRoll);
 		mTransform->SetRotation(newRotation);
 
 		const float baseSpeed = 3.0f;
 		const float fastSpeed = 3.0f;
-		float fastModifier = (IsShiftDown() || IsKeyDown('F')) ? fastSpeed : 1.0f;
+		const float fastModifier = (IsShiftDown() || IsKeyDown('F')) ? fastSpeed : 1.0f;
 
 		DirectX::XMFLOAT3 delta;
-		delta.x = (IsKeyDown('D') - IsKeyDown('A')) * Frametime * baseSpeed * fastModifier;
-		delta.y = (IsKeyDown('E') - IsKeyDown('Q')) * Frametime * baseSpeed * fastModifier;
-		delta.z = (IsKeyDown('W') - IsKeyDown('S')) * Frametime * baseSpeed * fastModifier;
+		delta.x = (IsKeyDown('D') - IsKeyDown('A')) * deltaTime * baseSpeed * fastModifier;
+		delta.y = (IsKeyDown('E') - IsKeyDown('Q')) * deltaTime * baseSpeed * fastModifier;
+		delta.z = (IsKeyDown('W') - IsKeyDown('S')) * deltaTime * baseSpeed * fastModifier;
 
 		DirectX::XMVECTOR vDelta = DirectX::XMVector3Rotate(DirectX::XMLoadFloat3(&delta), newRotation);
 		DirectX::XMStoreFloat3(&delta, vDelta);

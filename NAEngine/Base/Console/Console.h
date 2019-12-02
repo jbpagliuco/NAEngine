@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "Base/Debug/Assert.h"
+
 namespace na
 {
 #define CONSOLE_COMMAND(name)																								\
@@ -15,6 +17,13 @@ namespace na
 	CONSOLE_COMMAND(name) {																									\
 		if (parameters.size() > 0) { varName = parameters[0].AsBool(); }													\
 		else { varName = !varName; }																						\
+	}
+
+#define CONSOLE_FLOAT(name, varName, defaultValue)																			\
+	static float varName = defaultValue;																					\
+	CONSOLE_COMMAND(name) {																									\
+		NA_ASSERT_RETURN(parameters.size() > 0, "Console command requires 1 positional argument!");							\
+		varName = parameters[0].AsFloat();																					\
 	}
 	
 	struct ConsoleCommandParameter

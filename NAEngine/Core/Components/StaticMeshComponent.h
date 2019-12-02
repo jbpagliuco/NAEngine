@@ -14,7 +14,7 @@ namespace na
 		virtual void Activate() override;
 		virtual void Deactivate() override;
 
-		virtual void UpdateLate() override;
+		virtual void UpdateLate(float deltaTime) override;
 
 	private:
 		MeshInstance mMeshInstance;

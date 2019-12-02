@@ -45,7 +45,7 @@ namespace na
 		mMeshInstance.Shutdown();
 	}
 
-	void StaticMeshComponent::UpdateLate()
+	void StaticMeshComponent::UpdateLate(float deltaTime)
 	{
 		mMeshInstance.SetWorldTransform(GetOwner()->mTransform.GetMatrix());
 	}

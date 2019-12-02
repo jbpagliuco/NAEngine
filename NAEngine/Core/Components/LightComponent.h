@@ -11,7 +11,7 @@ namespace na
 	public:
 		virtual void Deactivate() override;
 
-		virtual void UpdateLate() override;
+		virtual void UpdateLate(float deltaTime) override;
 
 	protected:
 		void SetLight(Light *pLight);

@@ -204,15 +204,19 @@ namespace na
 					ConsoleHistoryIndex = (int)ConsoleHistory.size();
 				}
 
-				if (pData->EventKey == ImGuiKey_UpArrow) {
-					ConsoleHistoryIndex = Max(0, ConsoleHistoryIndex - 1);
-					strncpy_s(pData->Buf, pData->BufSize - 1, ConsoleHistory[ConsoleHistoryIndex].c_str(), pData->BufSize - 1);
-				} else if (pData->EventKey == ImGuiKey_DownArrow) {
-					ConsoleHistoryIndex = Min((int)ConsoleHistory.size(), ConsoleHistoryIndex + 1);
-					if (ConsoleHistoryIndex < ConsoleHistory.size()) {
+				if (ConsoleHistory.size() > 0) {
+					if (pData->EventKey == ImGuiKey_UpArrow) {
+						ConsoleHistoryIndex = Max(0, ConsoleHistoryIndex - 1);
 						strncpy_s(pData->Buf, pData->BufSize - 1, ConsoleHistory[ConsoleHistoryIndex].c_str(), pData->BufSize - 1);
-					} else {
-						pData->Buf[0] = 0;
+					}
+					else if (pData->EventKey == ImGuiKey_DownArrow) {
+						ConsoleHistoryIndex = Min((int)ConsoleHistory.size(), ConsoleHistoryIndex + 1);
+						if (ConsoleHistoryIndex < ConsoleHistory.size()) {
+							strncpy_s(pData->Buf, pData->BufSize - 1, ConsoleHistory[ConsoleHistoryIndex].c_str(), pData->BufSize - 1);
+						}
+						else {
+							pData->Buf[0] = 0;
+						}
 					}
 				} else if (pData->EventKey == ImGuiKey_Tab) {
 					const std::string bestMatch = GetBestAutocomplete(pData->Buf);
