@@ -2,6 +2,8 @@
 
 #include <stdint.h>
 
+#define ENGINE_LOG_FILTER "Engine"
+
 namespace na
 {
 	bool InitializeEngine();

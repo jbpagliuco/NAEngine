@@ -2,8 +2,8 @@
 
 #include <Windows.h>
 
-#include "Core/Engine/Engine.h"
-#include "Core/World/World.h"
+#include "Engine/Engine.h"
+#include "Engine/World/World.h"
 
 #if defined(_NA_TOOLS)
 #include "Tools.h"

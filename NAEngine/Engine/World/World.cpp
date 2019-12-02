@@ -6,8 +6,8 @@
 #include "Base/Debug/Assert.h"
 #include "Base/Util/Serialize.h"
 
-#include "Core/World/GameObject.h"
-#include "Core/Components/GameComponent.h"
+#include "Engine/World/GameObject.h"
+#include "Engine/Components/GameComponent.h"
 
 #include "Vendor/pugixml-1.9/pugixml.hpp"
 

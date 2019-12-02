@@ -1,7 +1,7 @@
 #include "GameObject.h"
 
 #include "Base/Util/Util.h"
-#include "Core/Components/GameComponent.h"
+#include "Engine/Components/GameComponent.h"
 
 namespace na
 {

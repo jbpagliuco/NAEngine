@@ -6,7 +6,7 @@
 #include "Renderer/Material/Material.h"
 #include "Renderer/Material/DynamicMaterial.h"
 
-#include "Core/World/GameObject.h"
+#include "Engine/World/GameObject.h"
 
 namespace na
 {

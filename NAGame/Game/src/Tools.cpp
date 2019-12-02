@@ -11,8 +11,8 @@
 
 #include "Base/File/File.h"
 #include "Base/Util/String.h"
-#include "Core/Engine/Engine.h"
-#include "Core/Assets/MeshAsset.h"
+#include "Engine/Engine/Engine.h"
+#include "Engine/Assets/MeshAsset.h"
 
 static int CreateMeshX();
 

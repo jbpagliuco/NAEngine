@@ -1,7 +1,7 @@
 #include "CameraComponent.h"
 
-#include "Core/Input/Input.h"
-#include "Core/World/GameObject.h"
+#include "Engine/Input/Input.h"
+#include "Engine/World/GameObject.h"
 #include "Renderer/RendererD3D.h"
 
 namespace na

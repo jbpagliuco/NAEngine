@@ -5,8 +5,8 @@
 #include <vector>
 
 #include "Base/Debug/Assert.h"
-#include "Core/Engine/Engine.h"
-#include "Core/World/GameObject.h"
+#include "Engine/Engine.h"
+#include "Engine/World/GameObject.h"
 
 #include "CameraComponent.h"
 #include "LightComponent.h"

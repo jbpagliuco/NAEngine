@@ -12,13 +12,12 @@
 #include "Renderer/ImguiRenderer.h"
 #include "Renderer/RenderingSystem.h"
 
-#include "Core/Assets/MeshAsset.h"
-#include "Core/Assets/MaterialAsset.h"
-#include "Core/Assets/TextureAsset.h"
-#include "Core/Core.h"
-#include "Core/Components/GameComponent.h"
-#include "Core/Input/Input.h"
-#include "Core/World/World.h"
+#include "Engine/Assets/MeshAsset.h"
+#include "Engine/Assets/MaterialAsset.h"
+#include "Engine/Assets/TextureAsset.h"
+#include "Engine/Components/GameComponent.h"
+#include "Engine/Input/Input.h"
+#include "Engine/World/World.h"
 
 namespace na
 {
@@ -140,17 +139,17 @@ namespace na
 	{
 		RegisterSystems();
 
-		LogInfo(CORE_LOG_FILTER, "=============================================");
+		LogInfo(ENGINE_LOG_FILTER, "=============================================");
 		for (auto &sys : SystemRegistry)
 		{
-			LogInfo(CORE_LOG_FILTER, "Initializing %s", sys.mSystemName.c_str());
+			LogInfo(ENGINE_LOG_FILTER, "Initializing %s", sys.mSystemName.c_str());
 			if (sys.mSystemInit != nullptr) {
 				bool ret = sys.mSystemInit();
 				NA_ASSERT_RETURN_VALUE(ret, false, "Failed to initialize system '%s'.", sys.mSystemName.c_str());
 			}
 		}
-		LogInfo(CORE_LOG_FILTER, "System initialization complete.");
-		LogInfo(CORE_LOG_FILTER, "=============================================");
+		LogInfo(ENGINE_LOG_FILTER, "System initialization complete.");
+		LogInfo(ENGINE_LOG_FILTER, "=============================================");
 		LogLineBreak();
 
 		LastFrameEnd = TIME_NOW();
@@ -164,17 +163,17 @@ namespace na
 		WorldSystemShutdown();
 
 		LogLineBreak();
-		LogInfo(CORE_LOG_FILTER, "=============================================");
+		LogInfo(ENGINE_LOG_FILTER, "=============================================");
 		for (auto it = SystemRegistry.rbegin(); it != SystemRegistry.rend(); ++it) {
 			auto &sys = *it;
-			LogInfo(CORE_LOG_FILTER, "Shutting down %s", sys.mSystemName.c_str());
+			LogInfo(ENGINE_LOG_FILTER, "Shutting down %s", sys.mSystemName.c_str());
 
 			if (sys.mSystemShutdown != nullptr) {
 				sys.mSystemShutdown();
 			}
 		}
-		LogInfo(CORE_LOG_FILTER, "System shutdown complete.");
-		LogInfo(CORE_LOG_FILTER, "=============================================");
+		LogInfo(ENGINE_LOG_FILTER, "System shutdown complete.");
+		LogInfo(ENGINE_LOG_FILTER, "=============================================");
 	}
 
 	void DoFrame()
@@ -209,7 +208,7 @@ namespace na
 		if (FrameTimeDebugLog) {
 			const uint64_t newElapsedTime = (uint64_t)(ElapsedTime + FrameTime);
 			if (newElapsedTime - (uint64_t)ElapsedTime >= 1) {
-				LogInfo(CORE_LOG_FILTER, "Frame Time: %.5f", FrameTime);
+				LogInfo(ENGINE_LOG_FILTER, "Frame Time: %.5f", FrameTime);
 			}
 		}
 #endif
