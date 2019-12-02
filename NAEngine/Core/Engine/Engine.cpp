@@ -198,7 +198,6 @@ namespace na
 		RenderingSystemEndFrame();
 
 		// Update frametime stats
-		auto d = TIME_NOW() - LastFrameEnd;
 		FrameTime = std::chrono::duration<float>(TIME_NOW() - LastFrameEnd).count();
 
 #if defined(_NA_DEBUG)
@@ -211,6 +210,7 @@ namespace na
 #endif
 
 		ElapsedTime += FrameTime;
+		LastFrameEnd = TIME_NOW();
 	}
 
 	float GetDeltaFrameTime()
