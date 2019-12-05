@@ -226,12 +226,12 @@ namespace na
 		LastFrameEnd = TIME_NOW();
 	}
 
-	float GetDeltaFrameTime()
+	float GetEngineDeltaFrameTime()
 	{
 		return FrameTime;
 	}
 
-	double GetElapsedTime()
+	double GetEngineElapsedTime()
 	{
 		return ElapsedTime;
 	}

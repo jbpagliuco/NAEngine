@@ -74,7 +74,7 @@ namespace na
 
 	void GameComponentDoFrame()
 	{
-		const float deltaTime = GetDeltaFrameTime();
+		const float deltaTime = GetEngineDeltaFrameTime();
 		FOREACH_COMPONENT(UpdateEarly, deltaTime);
 		FOREACH_COMPONENT(Update, deltaTime);
 		FOREACH_COMPONENT(UpdateLate, deltaTime);

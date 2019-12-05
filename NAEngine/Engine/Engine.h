@@ -11,6 +11,6 @@ namespace na
 
 	void DoFrame();
 
-	float GetDeltaFrameTime();
-	double GetElapsedTime();
+	float GetEngineDeltaFrameTime();
+	double GetEngineElapsedTime();
 }
