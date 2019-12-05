@@ -218,6 +218,7 @@
     <ClCompile Include="Util\Color.cpp" />
     <ClCompile Include="Util\Serialize.cpp" />
     <ClCompile Include="Util\String.cpp" />
+    <ClCompile Include="Util\Timer.cpp" />
     <ClCompile Include="Util\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -235,6 +236,7 @@
     <ClInclude Include="Util\Color.h" />
     <ClInclude Include="Util\Serialize.h" />
     <ClInclude Include="Util\String.h" />
+    <ClInclude Include="Util\Timer.h" />
     <ClInclude Include="Util\Util.h" />
     <ClInclude Include="OS\OSWin32.h" />
   </ItemGroup>

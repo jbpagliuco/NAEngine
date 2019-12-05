@@ -9,6 +9,7 @@
 #include "Base/Console/Console.h"
 #include "Base/Debug/Assert.h"
 #include "Base/Debug/Log.h"
+#include "Base/Util/Timer.h"
 #include "Renderer/ImguiRenderer.h"
 #include "Renderer/RenderingSystem.h"
 
@@ -22,8 +23,6 @@
 
 namespace na
 {
-#define TIME_NOW() std::chrono::high_resolution_clock::now()
-
 	struct SystemRegistration
 	{
 		typedef bool(*InitFunc)();
@@ -52,7 +51,7 @@ namespace na
 	// Time stats
 	static float FrameTime = 0.0f;
 	static double ElapsedTime = 0.0f;
-	static std::chrono::time_point<std::chrono::steady_clock> LastFrameEnd;
+	static Timestamp LastFrameEnd;
 
 #if defined(_NA_DEBUG)
 	// Debug timing stats
@@ -161,7 +160,7 @@ namespace na
 		LogInfo(ENGINE_LOG_FILTER, "=============================================");
 		LogLineBreak();
 
-		LastFrameEnd = TIME_NOW();
+		LastFrameEnd = Timestamp::Now();
 
 		return true;
 	}
@@ -211,7 +210,7 @@ namespace na
 		RenderingSystemEndFrame();
 
 		// Update frametime stats
-		FrameTime = std::chrono::duration<float>(TIME_NOW() - LastFrameEnd).count();
+		FrameTime = (Timestamp::Now() - LastFrameEnd).AsSeconds();
 
 #if defined(_NA_DEBUG)
 		if (FrameTimeDebugLog) {
@@ -223,7 +222,7 @@ namespace na
 #endif
 
 		ElapsedTime += FrameTime;
-		LastFrameEnd = TIME_NOW();
+		LastFrameEnd = Timestamp::Now();
 	}
 
 	float GetEngineDeltaFrameTime()
