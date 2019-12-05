@@ -72,8 +72,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(ProjectDir)\..\Output\$(Platform)\$(Configuration)\</OutDir>
     <TargetName>NA$(ProjectName)</TargetName>
-    <IncludePath>$(ProjectDir)\..\Vendor\DirectXTK\Include;$(ProjectDir)\..\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\..\Vendor\PhysX\include;$(ProjectDir)\..\Vendor\DirectXTK\Include;$(ProjectDir)\..\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\..\Vendor\PhysX\bin\win.x86_64.vc141.mt\checked;$(SolutionDir)\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(ProjectDir)\..\Output\$(Platform)\$(Configuration)\</OutDir>
+    <TargetName>NA$(ProjectName)</TargetName>
+    <IncludePath>$(ProjectDir)\..\Vendor\PhysX\include;$(ProjectDir)\..\Vendor\DirectXTK\Include;$(ProjectDir)\..\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\..\Vendor\PhysX\bin\win.x86_64.vc141.mt\release;$(SolutionDir)\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -135,6 +141,8 @@
     <ClCompile Include="Components\TestComponent.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Input\Input.cpp" />
+    <ClCompile Include="Physics\Physics.cpp" />
+    <ClCompile Include="Physics\PhysicsPhysX.cpp" />
     <ClCompile Include="World\GameObject.cpp" />
     <ClCompile Include="World\World.cpp" />
   </ItemGroup>
@@ -149,6 +157,8 @@
     <ClInclude Include="Components\TestComponent.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Input\Input.h" />
+    <ClInclude Include="Physics\PhysicsPhysX.h" />
+    <ClInclude Include="Physics\Physics.h" />
     <ClInclude Include="World\GameObject.h" />
     <ClInclude Include="World\World.h" />
   </ItemGroup>

@@ -17,6 +17,9 @@
 #endif
 #endif
 
+#if defined(_NA_DEBUG)
+#define NA_TRACK_MEMORY
+#endif
 
 
 #define NA_ALLOC(size) na::AllocateUnalignedMemory(size, __FILE__, __LINE__)
@@ -32,7 +35,7 @@ namespace na
 	// Allocates memory on the heap.
 	// @param sizeInBytes - The number of bytes to allocate.
 	// @return A pointer to the beginning of the memory.
-	void * AllocateUnalignedMemory(size_t sizeInBytes, const char *filename, int line);
+	void * AllocateUnalignedMemory(size_t sizeInBytes, const char *filename, int line, bool track = true, bool staticMemory = false);
 
 	// Frees memory allocated by AllocateUnalignedMemory.
 	// @param pMem - A pointer returned by AllocateUnalignedMemory.
@@ -42,9 +45,13 @@ namespace na
 	// @param sizeInBytes - The number of bytes to allocate.
 	// @param alignment - The alignment value, must be a power of two.
 	// @return A pointer to the beginning of the aligned memory.
-	void * AllocateAlignedMemory(size_t sizeInBytes, size_t alignment, const char *filename, int line);
+	void * AllocateAlignedMemory(size_t sizeInBytes, size_t alignment, const char *filename, int line, bool track = true, bool staticMemory = false);
 
 	// Frees memory allocated by AllocateAlignedMemory.
 	// @param pMem - A pointer returned by AllocateAlignedMemory.
 	void FreeAlignedMemory(void * pMem);
+
+#if defined(NA_TRACK_MEMORY)
+	size_t GetAllocationSize(void *pMem);
+#endif
 }

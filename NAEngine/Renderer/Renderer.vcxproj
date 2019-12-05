@@ -133,7 +133,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ReferencePath>$(ReferencePath)</ReferencePath>
     <IncludePath>$(ProjectDir)\..\;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)\Output\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(ProjectDir)\..\Output\$(Platform)\$(Configuration)\</OutDir>
     <LibraryPath>$(SolutionDir)\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <TargetName>NA$(ProjectName)</TargetName>
   </PropertyGroup>

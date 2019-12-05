@@ -2,6 +2,9 @@
 
 #include <stdlib.h>
 
+// Always defined, doesn't cost anything at runtime.
+#define NA_COMPILE_TIME_ASSERT(cond, msg) static_assert(cond, msg)
+
 #if defined(_NA_DEBUG)
 
 #define DEBUG_BREAK __debugbreak
@@ -51,14 +54,12 @@ void NAPrintErrorMessage(const char *assert, const char *file, int ilne, const c
 		exit(EXIT_FAILURE);												\
 	}																	
 
-#define NA_COMPILE_TIME_ASSERT(cond, msg) static_assert(cond, msg)
-
 #else
 
 #define NA_ASSERT(...)
 #define NA_ASSERT_RETURN(cond, ...)					if (!(cond)) { return; }
 #define NA_ASSERT_RETURN_VALUE(cond, rv, ...)		if (!(cond)) { return rv; }
 #define NA_ASSERT_CONTINUE(cond, ...)				if (!(cond)) { continue; }
-#define NA_ASSERT_FATAL_ERROR(cond, ...)			if (!(cond)) { exit(EXIT_FAILURE); }
+#define NA_FATAL_ERROR(cond, ...)					if (!(cond)) { exit(EXIT_FAILURE); }
 
 #endif // defined(_NA_DEBUG)

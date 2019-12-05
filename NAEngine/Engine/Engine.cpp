@@ -17,6 +17,7 @@
 #include "Engine/Assets/TextureAsset.h"
 #include "Engine/Components/GameComponent.h"
 #include "Engine/Input/Input.h"
+#include "Engine/Physics/Physics.h"
 #include "Engine/World/World.h"
 
 namespace na
@@ -93,6 +94,14 @@ namespace na
 			reg.mSystemInit = InputSystemInit;
 			reg.mSystemShutdown = InputSystemShutdown;
 			reg.mDoFrameLate = InputSystemDoFrameLate;
+			SystemRegistry.push_back(reg);
+		}
+
+		{
+			SystemRegistration reg;
+			reg.mSystemName = "Physics System";
+			reg.mSystemInit = PhysicsSystemInit;
+			reg.mSystemShutdown = PhysicsSystemShutdown;
 			SystemRegistry.push_back(reg);
 		}
 
@@ -256,6 +265,7 @@ namespace na
 
 	static void DebugRenderFrameTime()
 	{
+#if defined(_NA_DEBUG)
 		if (FrameTimeDebug) {
 			if (ImGui::Begin("Frame Time Debug", &FrameTimeDebug)) {
 				ImGui::Text("Frame Time: %.5f", FrameTime);
@@ -264,5 +274,6 @@ namespace na
 
 			ImGui::End();
 		}
+#endif
 	}
 }

@@ -1,13 +1,10 @@
 #include "Memory.h"
 
+#include "Console/Console.h"
 #include "Debug/Assert.h"
 #include "Debug/Log.h"
 
 #define MEMORY_LOG_FILTER "Memory"
-
-#if defined(_NA_DEBUG)
-#define NA_TRACK_MEMORY
-#endif
 
 #if defined(NA_TRACK_MEMORY)
 #include <map>
@@ -16,6 +13,7 @@ struct MemoryAllocation
 	size_t size;
 	const char *filename;
 	int line;
+	bool staticMemory;
 };
 
 static std::map<void*, MemoryAllocation> MemoryAllocations;
@@ -26,25 +24,41 @@ static size_t TotalBytesAllocatedExtra = 0;
 
 namespace na
 {
+#if defined(NA_TRACK_MEMORY)
+	CONSOLE_COMMAND(show_memory)
+	{
+		for (auto &alloc : MemoryAllocations) {
+			bool t = true;
+		}
+	}
+#endif
+
 	void MemorySystemShutdown()
 	{
 #if defined(NA_TRACK_MEMORY)
+		bool complain = false;
 		for (auto &alloc : MemoryAllocations) {
-			LogError(MEMORY_LOG_FILTER, "Allocation of '%zu' bytes from '%s line %d' was never freed.", alloc.second.size, alloc.second.filename, alloc.second.line);
+			// Only complain if this isn't static memory (i.e. memory that's allocated once and then never deallocated)
+			if (!alloc.second.staticMemory) {
+				complain = true;
+				LogError(MEMORY_LOG_FILTER, "Allocation of '%zu' bytes from '%s line %d' was never freed.", alloc.second.size, alloc.second.filename, alloc.second.line);
+			}
 		}
-		NA_ASSERT_RETURN(MemoryAllocations.size() == 0, "Memory was leaked. Check logs.");
+		NA_ASSERT_RETURN(!complain, "Memory was leaked. Check logs.");
 
 		NA_ASSERT_RETURN(TotalBytesAllocated == 0);
 		NA_ASSERT_RETURN(TotalBytesAllocatedExtra == 0);
 #endif
 	}
 
-	void * AllocateUnalignedMemory(size_t sizeInBytes, const char *filename, int line)
+	void * AllocateUnalignedMemory(size_t sizeInBytes, const char *filename, int line, bool track, bool staticMemory)
 	{
 		void *p = new unsigned char[sizeInBytes];
 #if defined(NA_TRACK_MEMORY)
-		MemoryAllocations[p] = { sizeInBytes, filename, line };
-		TotalBytesAllocated += sizeInBytes;
+		if (track) {
+			MemoryAllocations[p] = { sizeInBytes, filename, line, staticMemory };
+			TotalBytesAllocated += sizeInBytes;
+		}
 #endif
 		return p;
 	}
@@ -60,7 +74,7 @@ namespace na
 
 
 
-	void * AllocateAlignedMemory(size_t sizeInBytes, size_t alignment, const char *filename, int line)
+	void * AllocateAlignedMemory(size_t sizeInBytes, size_t alignment, const char *filename, int line, bool track, bool staticMemory)
 	{
 		NA_ASSERT_RETURN_VALUE(alignment >= 1, nullptr);
 		NA_ASSERT_RETURN_VALUE(alignment <= 128, nullptr);
@@ -68,7 +82,7 @@ namespace na
 
 		size_t totalMemoryToAllocate = sizeInBytes + alignment;
 
-		uintptr_t rawAddress = reinterpret_cast<uintptr_t>(AllocateUnalignedMemory(totalMemoryToAllocate, filename, line));
+		uintptr_t rawAddress = reinterpret_cast<uintptr_t>(AllocateUnalignedMemory(totalMemoryToAllocate, filename, line, track, staticMemory));
 
 		size_t mask = (alignment - 1);
 		uintptr_t offset = (rawAddress & mask);
@@ -88,21 +102,44 @@ namespace na
 		return static_cast<void*>(pAlignedMemory);
 	}
 
-	void FreeAlignedMemory(void * pMem)
+
+	static void* CalculateRawAddressFromAlignedMemory(void *pMem, ptrdiff_t &extra)
 	{
 		const unsigned char * pAlignedMem = reinterpret_cast<unsigned char*>(pMem);
 		uintptr_t pAlignedAddress = reinterpret_cast<uintptr_t>(pMem);
 		ptrdiff_t adjustment = static_cast<ptrdiff_t>(pAlignedMem[-1]);
 
 		uintptr_t rawAddress = pAlignedAddress - adjustment;
-		void * pRawMem = reinterpret_cast<void*>(rawAddress);
+
+		extra = pAlignedAddress - rawAddress;
+		return reinterpret_cast<void*>(rawAddress);
+	}
+
+	void FreeAlignedMemory(void * pMem)
+	{
+		ptrdiff_t extra;
+		void * pRawMem = CalculateRawAddressFromAlignedMemory(pMem, extra);
 
 #if defined(NA_TRACK_MEMORY)
-		ptrdiff_t extra = pAlignedAddress - rawAddress;
 		TotalBytesAllocatedExtra -= extra;
 #endif
 
 		FreeUnalignedMemory(pRawMem);
 	}
-#pragma endregion
+
+#if defined(NA_TRACK_MEMORY)
+	size_t GetAllocationSize(void *pMem)
+	{
+		// Is the raw address being tracked?
+		if (MemoryAllocations.find(pMem) != MemoryAllocations.end()) {
+			return MemoryAllocations[pMem].size;
+		}
+
+		ptrdiff_t extra;
+		void * pRawMem = CalculateRawAddressFromAlignedMemory(pMem, extra);
+		NA_ASSERT_RETURN_VALUE(MemoryAllocations.find(pRawMem) != MemoryAllocations.end(), 0, "Failed to find allocation at 0x%p", pMem);
+
+		return MemoryAllocations[pRawMem].size;
+	}
+#endif
 }
