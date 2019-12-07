@@ -15,6 +15,8 @@ bool NAPrintAssertMessage(const char *assert, const char *file, int line, const 
 void NAPrintErrorMessage(const char *assert, const char *file, int line);
 void NAPrintErrorMessage(const char *assert, const char *file, int ilne, const char *format, ...);
 
+bool NAIsDebuggerPresent();
+
 #define NA_PRINT_ASSERT_MESSAGE(cond, ...) NAPrintAssertMessage(#cond, __FILE__, __LINE__, __VA_ARGS__)
 
 #define NA_ASSERT(cond, ...)											\
@@ -51,6 +53,7 @@ void NAPrintErrorMessage(const char *assert, const char *file, int ilne, const c
 #define NA_FATAL_ERROR(cond, ...)										\
 	if (!(cond)) {														\
 		NAPrintErrorMessage(#cond, __FILE__, __LINE__, __VA_ARGS__);	\
+		if (NAIsDebuggerPresent()) { DEBUG_BREAK(); }					\
 		exit(EXIT_FAILURE);												\
 	}																	
 

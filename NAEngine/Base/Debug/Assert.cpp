@@ -83,3 +83,12 @@ void NAPrintErrorMessage(const char *assert, const char *file, int line, const c
 
 	MessageBoxA(nullptr, message, "Fatal Error", MB_OK);
 }
+
+bool NAIsDebuggerPresent()
+{
+#if defined(_NA_WIN32)
+	return IsDebuggerPresent();
+#endif
+
+	return false;
+}
