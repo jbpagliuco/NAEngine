@@ -29,8 +29,10 @@
     <FxCompile Include="data\shaders\normal_debug\normal_debug_ps.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="data\world.xml" />
     <Xml Include="data\materials\red.matx" />
+    <Xml Include="config.xml" />
+    <Xml Include="data\worlds\world.xml" />
+    <Xml Include="data\worlds\test_physics.xml" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="data\cube.obj" />

@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 
+#include "Base/Util/Serialize.h"
 #include "Engine/Engine.h"
 #include "Engine/World/World.h"
 
@@ -13,12 +14,14 @@
 
 static int GameMain()
 {
+	na::DeserializationParameterMap config = na::ParseFile("config.xml");
+
 	// Initialize
 	if (na::InitializeEngine() == false) {
 		return EXIT_FAILURE;
 	}
-
-	na::LoadWorldFromFile("data\\world.xml");
+	
+	na::LoadWorldFromFile(config["world"].AsString());
 
 	// Run
 	MSG msg;
