@@ -47,7 +47,7 @@ namespace na
 		static constexpr int INVALID_INTERVAL = -1;
 		int mInterval = INVALID_INTERVAL;
 
-		bool mValid;
+		bool mValid = false;
 		Timestamp mStart;
 	};
 }
