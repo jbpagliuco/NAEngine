@@ -47,6 +47,8 @@ namespace na
 	static physx::PxFoundation *PXFoundation;
 	static physx::PxPhysics *PXPhysics;
 
+	static physx::PxDefaultCpuDispatcher *PXCPUDispatcher;
+	static physx::PxScene *PXScene;
 
 	////////////////////////////////
 	// Console Functions
@@ -67,13 +69,32 @@ namespace na
 		PXPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *PXFoundation, physx::PxTolerancesScale(), true, nullptr);
 		NA_FATAL_ERROR(PXPhysics, "PxCreatePhysics failed!");
 
+		PXCPUDispatcher = physx::PxDefaultCpuDispatcherCreate(2);
+		NA_FATAL_ERROR(PXCPUDispatcher, "Failed to create PhysX CPU Dispatcher!");
+
+		physx::PxSceneDesc sceneDesc(PXPhysics->getTolerancesScale());
+		sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
+		sceneDesc.cpuDispatcher	= PXCPUDispatcher;
+		sceneDesc.filterShader	= physx::PxDefaultSimulationFilterShader;
+		PXScene = PXPhysics->createScene(sceneDesc);
+		NA_FATAL_ERROR(PXScene, "Failed to create PhysX scene!");
+
 		return true;
 	}
 
 	void PhysicsPhysXShutdown()
 	{
+		NA_PX_SAFE_RELEASE(PXCPUDispatcher);
+		NA_PX_SAFE_RELEASE(PXScene);
+
 		NA_PX_SAFE_RELEASE(PXPhysics);
 		NA_PX_SAFE_RELEASE(PXFoundation);
+	}
+
+	void PhysicsPhysXSimulate(float timeStep)
+	{
+		PXScene->simulate(timeStep);
+		PXScene->fetchResults(true);
 	}
 
 

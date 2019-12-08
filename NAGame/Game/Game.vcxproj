@@ -112,7 +112,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)\..\NAEngine\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\..\NAEngine\Vendor\PhysX\bin\win.x86_64.vc141.mt\checked;$(SolutionDir)\..\NAEngine\Vendor\DirectXTK\Lib\$(Platform)\;$(SolutionDir)\..\NAEngine\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)\..\NAEngine\Vendor\PhysX\bin\win.x86_64.vc141.mt\debug;$(SolutionDir)\..\NAEngine\Vendor\DirectXTK\Lib\$(Platform)\;$(SolutionDir)\..\NAEngine\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)\Output\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugTools|x64'">
@@ -162,7 +162,7 @@
       <AdditionalOptions>/analyze %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>NABase.lib;NAEngine.lib;NARenderer.lib;Vendor.lib;directxtk.lib;PhysX_64.lib;PhysXCommon_64.lib;PhysXFoundation_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>NABase.lib;NAEngine.lib;NARenderer.lib;Vendor.lib;directxtk.lib;PhysX_64.lib;PhysXCommon_64.lib;PhysXFoundation_64.lib;PhysXExtensions_static_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugTools|x64'">

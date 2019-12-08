@@ -101,6 +101,7 @@ namespace na
 			reg.mSystemName = "Physics System";
 			reg.mSystemInit = PhysicsSystemInit;
 			reg.mSystemShutdown = PhysicsSystemShutdown;
+			reg.mDoFrame = PhysicsSystemDoFrame;
 			SystemRegistry.push_back(reg);
 		}
 

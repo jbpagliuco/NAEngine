@@ -6,4 +6,6 @@ namespace na
 {
 	bool PhysicsSystemInit();
 	void PhysicsSystemShutdown();
+
+	void PhysicsSystemDoFrame();
 }
