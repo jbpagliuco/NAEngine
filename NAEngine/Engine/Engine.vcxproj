@@ -147,7 +147,6 @@
     <ClCompile Include="Physics\PhysicsMemory.cpp" />
     <ClCompile Include="Physics\PhysicsRigidBody.cpp" />
     <ClCompile Include="Physics\PhysicsMaterial.cpp" />
-    <ClCompile Include="Physics\PhysicsPhysX.cpp" />
     <ClCompile Include="Physics\PhysicsUtil.cpp" />
     <ClCompile Include="World\GameObject.cpp" />
     <ClCompile Include="World\World.cpp" />
@@ -169,7 +168,6 @@
     <ClInclude Include="Physics\PhysicsRigidBody.h" />
     <ClInclude Include="Physics\PhysicsDefs.h" />
     <ClInclude Include="Physics\PhysicsMaterial.h" />
-    <ClInclude Include="Physics\PhysicsPhysX.h" />
     <ClInclude Include="Physics\Physics.h" />
     <ClInclude Include="Physics\PhysicsShape.h" />
     <ClInclude Include="Physics\PhysicsUtil.h" />

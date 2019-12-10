@@ -210,7 +210,10 @@
     <ClCompile Include="Debug\Assert.cpp" />
     <ClCompile Include="Debug\Log.cpp" />
     <ClCompile Include="File\File.cpp" />
+    <ClCompile Include="Math\Matrix.cpp" />
+    <ClCompile Include="Math\Quaternion.cpp" />
     <ClCompile Include="Math\Transform.cpp" />
+    <ClCompile Include="Math\Vector.cpp" />
     <ClCompile Include="Memory\Memory.cpp" />
     <ClCompile Include="OS\OS.cpp" />
     <ClCompile Include="OS\OSWin32.cpp" />
@@ -228,7 +231,11 @@
     <ClInclude Include="Debug\Assert.h" />
     <ClInclude Include="Debug\Log.h" />
     <ClInclude Include="File\File.h" />
+    <ClInclude Include="Math\MathUtil.h" />
+    <ClInclude Include="Math\Matrix.h" />
+    <ClInclude Include="Math\Quaternion.h" />
     <ClInclude Include="Math\Transform.h" />
+    <ClInclude Include="Math\Vector.h" />
     <ClInclude Include="Memory\Memory.h" />
     <ClInclude Include="OS\OS.h" />
     <ClInclude Include="Streaming\AssetFactory.h" />

@@ -1,21 +1,19 @@
 #pragma once
 
 // Alignment
-#ifndef ALIGN_MS
 #if _MSC_VER && !__INTEL_COMPILER
-#define ALIGN_MS(alignment) __declspec(align(alignment))
+#define NA_ALIGN_MS(alignment) __declspec(align(alignment))
 #else
-#define ALIGN_MS(alignment)
-#endif
+#define NA_ALIGN_MS(alignment)
 #endif
 
-#ifndef ALIGN_GCC
 #if __GNUC__
-#define ALIGN_GCC(alignment) __attribute__((aligned(alignment)))
+#define NA_ALIGN_GCC(alignment) __attribute__((aligned(alignment)))
 #else
-#define ALIGN_GCC(alignment)
+#define NA_ALIGN_GCC(alignment)
 #endif
-#endif
+
+#define NA_ALIGN(dec, align) NA_ALIGN_MS(align) dec NA_ALIGN_GCC(align)
 
 #if defined(_NA_DEBUG)
 #define NA_TRACK_MEMORY

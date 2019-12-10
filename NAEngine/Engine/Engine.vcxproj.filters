@@ -54,9 +54,6 @@
     <ClCompile Include="Physics\Physics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Physics\PhysicsPhysX.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Components\RigidbodyComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -114,9 +111,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Physics\Physics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\PhysicsPhysX.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Components\RigidbodyComponent.h">

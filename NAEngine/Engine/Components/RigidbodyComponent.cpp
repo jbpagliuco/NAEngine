@@ -6,10 +6,7 @@
 #include "Vendor/PhysX/include/PxActor.h"
 #include "Vendor/PhysX/include/PxRigidDynamic.h"
 
-#include "Engine/Input/Input.h"
-#include "Engine/Physics/PhysicsPhysX.h"
-#include "Engine/World/GameObject.h"
-#include "Renderer/RendererD3D.h"
+#include "Base/Debug/Assert.h"
 
 namespace na
 {
