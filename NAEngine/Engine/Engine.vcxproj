@@ -137,12 +137,18 @@
     <ClCompile Include="Components\CameraComponent.cpp" />
     <ClCompile Include="Components\GameComponent.cpp" />
     <ClCompile Include="Components\LightComponent.cpp" />
+    <ClCompile Include="Components\RigidbodyComponent.cpp" />
     <ClCompile Include="Components\StaticMeshComponent.cpp" />
     <ClCompile Include="Components\TestComponent.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="Physics\Physics.cpp" />
+    <ClCompile Include="Physics\PhysicsErrorHandler.cpp" />
+    <ClCompile Include="Physics\PhysicsMemory.cpp" />
+    <ClCompile Include="Physics\PhysicsRigidBody.cpp" />
+    <ClCompile Include="Physics\PhysicsMaterial.cpp" />
     <ClCompile Include="Physics\PhysicsPhysX.cpp" />
+    <ClCompile Include="Physics\PhysicsUtil.cpp" />
     <ClCompile Include="World\GameObject.cpp" />
     <ClCompile Include="World\World.cpp" />
   </ItemGroup>
@@ -153,12 +159,20 @@
     <ClInclude Include="Components\CameraComponent.h" />
     <ClInclude Include="Components\GameComponent.h" />
     <ClInclude Include="Components\LightComponent.h" />
+    <ClInclude Include="Components\RigidbodyComponent.h" />
     <ClInclude Include="Components\StaticMeshComponent.h" />
     <ClInclude Include="Components\TestComponent.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Input\Input.h" />
+    <ClInclude Include="Physics\PhysicsErrorHandler.h" />
+    <ClInclude Include="Physics\PhysicsMemory.h" />
+    <ClInclude Include="Physics\PhysicsRigidBody.h" />
+    <ClInclude Include="Physics\PhysicsDefs.h" />
+    <ClInclude Include="Physics\PhysicsMaterial.h" />
     <ClInclude Include="Physics\PhysicsPhysX.h" />
     <ClInclude Include="Physics\Physics.h" />
+    <ClInclude Include="Physics\PhysicsShape.h" />
+    <ClInclude Include="Physics\PhysicsUtil.h" />
     <ClInclude Include="World\GameObject.h" />
     <ClInclude Include="World\World.h" />
   </ItemGroup>

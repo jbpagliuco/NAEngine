@@ -11,6 +11,7 @@
 #include "CameraComponent.h"
 #include "LightComponent.h"
 #include "StaticMeshComponent.h"
+#include "RigidbodyComponent.h"
 
 #define FOREACH_COMPONENT(func, ...) for (auto &iter : ComponentTable) { for (auto &component : iter.second) { component->func(__VA_ARGS__); } }
 
@@ -30,7 +31,8 @@ namespace na
 		GENERATE_INSTANTIATOR(StaticMeshComponent),
 		GENERATE_INSTANTIATOR(DirectionalLightComponent),
 		GENERATE_INSTANTIATOR(PointLightComponent),
-		GENERATE_INSTANTIATOR(SpotLightComponent)
+		GENERATE_INSTANTIATOR(SpotLightComponent),
+		GENERATE_INSTANTIATOR(RigidbodyComponent)
 	};
 
 	typedef std::vector<GameComponent*> ComponentList;
@@ -71,6 +73,9 @@ namespace na
 	{
 	}
 
+	void GameComponent::UpdatePhysicsPost()
+	{
+	}
 
 	void GameComponentDoFrame()
 	{
@@ -88,6 +93,11 @@ namespace na
 				NA_FREE(component);
 			}
 		}
+	}
+
+	void GameComponentPhysicsPost()
+	{
+		FOREACH_COMPONENT(UpdatePhysicsPost);
 	}
 
 	GameComponent* CreateComponentFromType(const std::string &type)

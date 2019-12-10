@@ -1,6 +1,12 @@
 #pragma once
 
-#define NA_PHYSICS_LOG_FILTER "Physics"
+#include "PhysicsDefs.h"
+
+namespace physx
+{
+	class PxPhysics;
+	class PxScene;
+}
 
 namespace na
 {
@@ -8,4 +14,7 @@ namespace na
 	void PhysicsSystemShutdown();
 
 	void PhysicsSystemDoFrame();
+
+	physx::PxPhysics* PhysicsGetDevice();
+	physx::PxScene* PhysicsGetScene();
 }

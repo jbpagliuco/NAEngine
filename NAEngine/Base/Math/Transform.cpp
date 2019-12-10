@@ -27,6 +27,11 @@ namespace na
 		SetPosition(0.0f, 0.0f, 0.0f);
 	}
 
+	DirectX::XMFLOAT3 Transform::CopyPosition()const
+	{
+		return mPosition;
+	}
+
 	XMFLOAT3& Transform::GetPosition()
 	{
 		mDirty = true;
@@ -67,6 +72,11 @@ namespace na
 	{
 		mRotation = XMQuaternionIdentity();
 		mDirty = true;
+	}
+	
+	DirectX::XMVECTOR Transform::CopyRotation()const
+	{
+		return mRotation;
 	}
 
 	XMVECTOR& Transform::GetRotation()

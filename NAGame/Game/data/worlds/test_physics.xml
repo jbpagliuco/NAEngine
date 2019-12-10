@@ -7,7 +7,7 @@
 			<position>
 				<x>0</x>
 				<y>2</y>
-				<z>-5</z>
+				<z>-10</z>
 			</position>
 			<rotation type="lookat"/>
 		</transform>
@@ -29,6 +29,9 @@
 				<y>0</y>
 				<z>0</z>
 			</position>
+			<rotation>
+				<x>-2</x>
+			</rotation>
 			<scale>
 				<x>10</x>
 				<y>0.2</y>
@@ -44,6 +47,20 @@
 						<override name="DiffuseTexture" type="texture">ice.dds</override>
 					</overrides>
 				</material>
+			</component>
+			<component type="RigidbodyComponent">
+				<motionType>static</motionType>
+				<collisionType>box</collisionType>
+				<min>
+					<x>-5</x>
+					<y>-0.1</y>
+					<z>-5</z>
+				</min>
+				<max>
+					<x>5</x>
+					<y>0.1</y>
+					<z>5</z>
+				</max>
 			</component>
 		</components>
 	</gameobject>
@@ -66,6 +83,27 @@
 			<component type="StaticMeshComponent">
 				<mesh>cube.meshx</mesh>
 				<material>brick.matx</material>
+			</component>
+		</components>
+	</gameobject>
+	
+	<gameobject>
+		<name>Sphere</name>
+		<transform>
+			<position>
+				<x>0</x>
+				<y>3</y>
+			</position>
+		</transform>
+		<components>
+			<component type="StaticMeshComponent">
+				<mesh>sphere.meshx</mesh>
+				<material>tex_map.matx</material>
+			</component>
+			<component type="RigidbodyComponent">
+				<motionType>dynamic</motionType>
+				<collisionType>sphere</collisionType>
+				<radius>1.0</radius>
 			</component>
 		</components>
 	</gameobject>

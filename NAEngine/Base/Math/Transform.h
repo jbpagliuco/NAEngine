@@ -11,6 +11,7 @@ namespace na
 		Transform(const DirectX::XMFLOAT3 &position, const DirectX::XMVECTOR &qRotation, const DirectX::XMFLOAT3 &scale);
 
 		void ResetPosition();
+		DirectX::XMFLOAT3 CopyPosition()const;
 		DirectX::XMFLOAT3& GetPosition();
 		void SetPosition(const DirectX::XMFLOAT3 &position);
 		void SetPosition(float x, float y, float z);
@@ -18,6 +19,7 @@ namespace na
 		void Translate(float x, float y, float z);
 
 		void ResetRotation();
+		DirectX::XMVECTOR CopyRotation()const;
 		DirectX::XMVECTOR& GetRotation();
 		void SetRotation(const DirectX::XMVECTOR &qRotation);
 		void SetRotation(const DirectX::XMFLOAT3 &axis, float angle);

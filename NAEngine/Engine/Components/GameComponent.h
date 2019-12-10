@@ -25,6 +25,8 @@ namespace na
 		virtual void Update(float deltaTime);
 		virtual void UpdateLate(float deltaTime);
 
+		virtual void UpdatePhysicsPost();
+
 	protected:
 		GameObject *mOwner;
 		Transform *mTransform;
@@ -33,6 +35,8 @@ namespace na
 	// System Callbacks
 	void GameComponentDoFrame();
 	void GameComponentShutdown();
+
+	void GameComponentPhysicsPost();
 
 	GameComponent* CreateComponentFromType(const std::string &type);
 }
