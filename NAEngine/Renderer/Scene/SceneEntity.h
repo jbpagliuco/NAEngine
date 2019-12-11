@@ -1,6 +1,8 @@
 #pragma once
 
-#include <DirectXMath.h>
+#include "Base/Math/Vector.h"
+#include "Base/Math/Matrix.h"
+#include "Base/Math/Quaternion.h"
 
 namespace na
 {
@@ -9,22 +11,20 @@ namespace na
 	public:
 		SceneEntity();
 
-		void SetPosition(const DirectX::XMFLOAT3 &position);
-		DirectX::XMFLOAT3 GetPosition()const;
+		void SetPosition(const Vector3f &position);
+		Vector3f GetPosition()const;
 
-		void SetRotation(const DirectX::XMVECTOR &rotation);
-		DirectX::XMVECTOR GetRotation()const;
+		void SetRotation(const Quaternion &rotation);
+		Quaternion GetRotation()const;
 
-		void SetWorldTransform(const DirectX::XMMATRIX &worldTransform);
-		DirectX::XMMATRIX GetWorldTransform()const;
+		void SetWorldTransform(const Matrix &worldTransform);
+		Matrix GetWorldTransform();
 
 	private:
-		void CalculateWorldTransform();
-
-		DirectX::XMFLOAT3 mPosition;
-		DirectX::XMVECTOR mRotation;
+		Vector3f mPosition;
+		Quaternion mRotation;
 
 		bool mDirty;
-		DirectX::XMMATRIX mWorldTransform;
+		Matrix mWorldTransform;
 	};
 }

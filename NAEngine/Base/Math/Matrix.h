@@ -37,6 +37,7 @@ namespace na
 		static Matrix OrthoLH(float width, float height, float near, float far);
 
 		// Creates a translation matrix.
+		static Matrix Translation(const Vector3f &translation);
 		static Matrix Translation(const Vector &translation);
 		// Creates a scaling matrix.
 		static Matrix Scaling(const Vector &scaling);
@@ -100,12 +101,15 @@ namespace na
 
 		// Attempts to invert the matrix. pOutOptDet is an optional pointer to a Vector to hold the determinant of the matrix.
 		// Note: If the determinant is equal to zero, the inverse does not exist, and thus the matrix will not change.
-		void Invert(Vector * pOutOptDet);
+		void Invert(Vector *pOutOptDet = nullptr);
+		Matrix Inverted(Vector *pOutOptDet = nullptr)const;
+
 		// Caculates the determinant and broadcasts the value into each component.
 		Vector Determinant()const;
 
 		// Transposes this matrix.
 		void Transpose();
+		Matrix Transposed()const;
 
 	private:
 		// Returns true if det != 0.

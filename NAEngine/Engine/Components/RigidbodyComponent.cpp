@@ -54,7 +54,7 @@ namespace na
 	{
 		Transform newTr = mBody.GetTransform();
 
-		mTransform->SetPosition(newTr.CopyPosition());
-		mTransform->SetRotation(newTr.CopyRotation());
+		mTransform->mPosition = newTr.mPosition;
+		mTransform->mRotation = newTr.mRotation;
 	}
 }

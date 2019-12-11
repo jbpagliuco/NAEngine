@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Vector.h"
+#include "Matrix.h"
+#include "Quaternion.h"
 #include <DirectXMath.h>
 
 namespace na
@@ -8,42 +11,18 @@ namespace na
 	{
 	public:
 		Transform();
-		Transform(const DirectX::XMFLOAT3 &position, const DirectX::XMVECTOR &qRotation, const DirectX::XMFLOAT3 &scale);
+		Transform(const Vector3f &position, const Quaternion &rotation, const Vector3f &scale);
+		Transform(const Vector &position, const Quaternion &rotation, const Vector &scale);
 
-		void ResetPosition();
-		DirectX::XMFLOAT3 CopyPosition()const;
-		DirectX::XMFLOAT3& GetPosition();
-		void SetPosition(const DirectX::XMFLOAT3 &position);
-		void SetPosition(float x, float y, float z);
-		void Translate(const DirectX::XMFLOAT3 &delta);
-		void Translate(float x, float y, float z);
+		static Transform Identity();
+		static Transform LookAt(const Vector3f &position, const Vector3f &target);
 
-		void ResetRotation();
-		DirectX::XMVECTOR CopyRotation()const;
-		DirectX::XMVECTOR& GetRotation();
-		void SetRotation(const DirectX::XMVECTOR &qRotation);
-		void SetRotation(const DirectX::XMFLOAT3 &axis, float angle);
-		void SetLookAt(const DirectX::XMFLOAT3 &target);
-		void Rotate(float pitch, float yaw, float roll);
+	public:
+		Matrix GetMatrix()const;
 
-		void ResetScale();
-		DirectX::XMFLOAT3& GetScale();
-		void SetScale(const DirectX::XMFLOAT3 &scale);
-		void SetScale(float x, float y, float z);
-
-		const DirectX::XMMATRIX& GetMatrix();
-
-	private:
-		DirectX::XMFLOAT3 mPosition;
-		DirectX::XMVECTOR mRotation;
-		DirectX::XMFLOAT3 mScale;
-
-		DirectX::XMMATRIX mMatrix;
-
-		bool mDirty;
-
-		void Make();
+	public:
+		Vector mPosition;
+		Quaternion mRotation;
+		Vector mScale;
 	};
-
-	extern Transform IDENTITY_TRANSFORM;
 }

@@ -19,12 +19,12 @@ PixelInput main(VertexInput input)
 	float4 pos = float4(input.position, 1.0f);
 
 	PixelInput output;
-	
-	output.svpos = mul(pos, mul(world, viewProj));
-	output.position = mul(pos, world);
-	
+
+	output.svpos = mul(mul(viewProj, world), pos);
+	output.position = mul(world, pos);
+
 	float4 normal = float4(normalize(input.normal), 0.0f);
-	output.normal = mul(worldInverseTranspose, normal).xyz;
+	output.normal = mul(normal, worldInverseTranspose).xyz;
 	
 	output.texCoord = input.texCoord;
 	

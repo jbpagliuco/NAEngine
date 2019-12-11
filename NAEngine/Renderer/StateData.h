@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Base/Math/Matrix.h"
+
 #include "ConstantBuffer.h"
 #include "Light.h"
 #include "Shader/EngineShaders/shader_common.hlsli"
@@ -30,8 +32,8 @@ namespace na
 		
 		void SetViewport(const Rect &rect);
 		
-		void SetViewProjMatrices(const DirectX::XMMATRIX &view, const DirectX::XMMATRIX &proj);
-		void SetObjectTransform(const DirectX::XMMATRIX &transform);
+		void SetViewProjMatrices(const Matrix &view, const Matrix &proj);
+		void SetObjectTransform(const Matrix &transform);
 
 		void SetLightsData(const LightsData &lights);
 

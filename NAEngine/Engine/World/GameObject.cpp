@@ -7,7 +7,7 @@ namespace na
 {
 	GameObject::GameObject()
 	{
-		mTransform = IDENTITY_TRANSFORM;
+		mTransform = Transform::Identity();
 	}
 
 	void GameObject::SetName(const std::string &name)

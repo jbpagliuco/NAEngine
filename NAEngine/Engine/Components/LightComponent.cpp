@@ -15,10 +15,11 @@ namespace na
 	void LightComponent::UpdateLate(float deltaTime)
 	{
 		// Update some of the light properties from our transform.
-		mLight->mPosition = mTransform->GetPosition();
+		mLight->mPosition = DirectX::XMFLOAT3(mTransform->mPosition.GetX(), mTransform->mPosition.GetY(), mTransform->mPosition.GetZ());
 		static const DirectX::XMFLOAT4 zAxis(0.0f, 0.0f, 1.0f, 0.0f);
 		static const DirectX::XMVECTOR zAxisVector = DirectX::XMLoadFloat4(&zAxis);
-		const DirectX::XMVECTOR vForward = DirectX::XMVector3Rotate(zAxisVector, mTransform->GetRotation());
+		DirectX::XMVECTOR rot = DirectX::XMVectorSet(mTransform->mRotation.x, mTransform->mRotation.y, mTransform->mRotation.z, mTransform->mRotation.w);
+		const DirectX::XMVECTOR vForward = DirectX::XMVector3Rotate(zAxisVector, rot);
 		DirectX::XMStoreFloat3(&mLight->mDirection, vForward);
 	}
 

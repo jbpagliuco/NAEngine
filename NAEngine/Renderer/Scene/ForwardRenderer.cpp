@@ -41,7 +41,8 @@ namespace na
 		LightsData lightsData;
 		constexpr float ambient = 0.3f;
 		lightsData.globalAmbient = DirectX::XMFLOAT4(ambient, ambient, ambient, 1.0f);
-		lightsData.eyePosition = NA_Renderer->GetActiveCamera()->mTransform.GetPosition();
+		Vector3f cameraPos = NA_Renderer->GetActiveCamera()->mTransform.mPosition.AsVector3();
+		lightsData.eyePosition = DirectX::XMFLOAT3(cameraPos.x, cameraPos.y, cameraPos.z);
 		lightsData.numLights = (int)lights.size();
 		for (int i = 0; i < lightsData.numLights; ++i) {
 			lightsData.lights[i] = *lights[i];

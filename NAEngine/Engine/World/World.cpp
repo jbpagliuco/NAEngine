@@ -45,7 +45,7 @@ namespace na
 	static Transform ParseTransformFromXML(const pugi::xml_node &transformXML)
 	{
 		auto positionXML = transformXML.child("position");
-		DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+		Vector3f position(0.0f, 0.0f, 0.0f);
 		if (positionXML) {
 			position.x = positionXML.child("x") ? positionXML.child("x").text().as_float() : 0.0f;
 			position.y = positionXML.child("y") ? positionXML.child("y").text().as_float() : 0.0f;
@@ -53,7 +53,7 @@ namespace na
 		}
 
 		auto rotationXML = transformXML.child("rotation");
-		DirectX::XMVECTOR rotation = DirectX::XMQuaternionIdentity();
+		Quaternion rotation = Quaternion::Identity();
 		if (rotationXML) {
 			float x = rotationXML.child("x") ? rotationXML.child("x").text().as_float() : 0.0f;
 			float y = rotationXML.child("y") ? rotationXML.child("y").text().as_float() : 0.0f;
@@ -61,33 +61,33 @@ namespace na
 
 			if (strcmp(rotationXML.attribute("type").as_string(), "lookat") == 0) {
 				// Special case. (X, Y, Z) is the point we are looking at.
-				static const DirectX::XMVECTOR forwardAxis = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
-				const DirectX::XMVECTOR lookAt = DirectX::XMVector3Normalize(DirectX::XMVectorSet(x - position.x, y - position.y, z - position.z, 0.0f));
+				const Vector forwardAxis(0.0f, 0.0f, 1.0f, 0.0f);
+				const Vector lookAt = Vector(x - position.x, y - position.y, z - position.z, 0.0f).V3Normalize();
 
-				const float dot = DirectX::XMVectorGetX(DirectX::XMVector3Dot(forwardAxis, lookAt));
+				const float dot = forwardAxis.V3Dot(lookAt);
 				if (fabs(dot + 1.0f) < 0.000001f) {
-					rotation = DirectX::XMQuaternionRotationNormal(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), DirectX::XM_PI);
+					rotation = Quaternion(Vector3f(0.0f, 1.0f, 0.0f), PI);
 				} else if (fabs(dot - 1.0f) < 0.000001f) {
-					rotation = DirectX::XMQuaternionIdentity();
+					rotation = Quaternion::Identity();
 				} else {
 					const float rotAngle = acos(dot);
-					const DirectX::XMVECTOR rotAxis = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(forwardAxis, lookAt));
-					rotation = DirectX::XMQuaternionRotationAxis(rotAxis, rotAngle);
+					const Vector rotAxis = forwardAxis.V3Cross(lookAt).V3Normalize();
+					rotation = Quaternion(rotAxis.AsVector3(), rotAngle);
 				}
 			} else {
-				rotation = DirectX::XMQuaternionRotationRollPitchYaw(DirectX::XMConvertToRadians(x), DirectX::XMConvertToRadians(y), DirectX::XMConvertToRadians(z));
+				rotation = Quaternion::FromEuler(ToRadians(x), ToRadians(y), ToRadians(z));
 			}
 		}
 
 		auto scaleXML = transformXML.child("scale");
-		DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+		Vector3f scale(1.0f, 1.0f, 1.0f);
 		if (scaleXML) {
 			scale.x = scaleXML.child("x") ? scaleXML.child("x").text().as_float() : 1.0f;
 			scale.y = scaleXML.child("y") ? scaleXML.child("y").text().as_float() : 1.0f;
 			scale.z = scaleXML.child("z") ? scaleXML.child("z").text().as_float() : 1.0f;
 		}
 
-		return Transform(position, rotation, scale);
+		return Transform(Vector(position), rotation, Vector(scale));
 	}
 
 	void LoadWorldFromFile(const std::string &filename)

@@ -11,14 +11,12 @@ namespace na
 	{
 	public:
 		Quaternion();
-		// Creates a quaternion, where xAxis, yAxis, and zAxis make up the unit vector to 
-		// rotate about, and angleInRadians is the amount to rotate.
-		Quaternion(float xAxis, float yAxis, float zAxis, float angleInRadians);
+		Quaternion(float x, float y, float z, float w);
 		// Creates a quaternion, where axis is the unit vector to rotate about, and
 		// angleInRadians is the amount to rotate.
 		Quaternion(const Vector3f &axis, float angleInRadians);
 
-
+		static Quaternion Identity();
 		static Quaternion FromEuler(float x, float y, float z);
 		static Quaternion FromMatrix(const Matrix &mat);
 
@@ -28,6 +26,9 @@ namespace na
 		// Inverts this quaternion.
 		// Returns a reference to this.
 		Quaternion& Invert();
+
+		float Length()const;
+		float LengthSq()const;
 
 		// Multiplies the two quaternions and returns the result.
 		Quaternion operator*(const Quaternion &rhs)const;

@@ -45,20 +45,16 @@ namespace na
 		mYaw += GetMouseDelta().x * deltaTime * mSensitivity;
 		mPitch += GetMouseDelta().y * deltaTime * mSensitivity;
 
-		DirectX::XMVECTOR newRotation = DirectX::XMQuaternionRotationRollPitchYaw(mPitch, mYaw, mRoll);
-		mTransform->SetRotation(newRotation);
-
 		const float baseSpeed = 3.0f;
 		const float fastSpeed = 3.0f;
 		const float fastModifier = (IsShiftDown() || IsKeyDown('F')) ? fastSpeed : 1.0f;
 
-		DirectX::XMFLOAT3 delta;
+		Vector3f delta;
 		delta.x = (IsKeyDown('D') - IsKeyDown('A')) * deltaTime * baseSpeed * fastModifier;
 		delta.y = (IsKeyDown('E') - IsKeyDown('Q')) * deltaTime * baseSpeed * fastModifier;
 		delta.z = (IsKeyDown('W') - IsKeyDown('S')) * deltaTime * baseSpeed * fastModifier;
 
-		DirectX::XMVECTOR vDelta = DirectX::XMVector3Rotate(DirectX::XMLoadFloat3(&delta), newRotation);
-		DirectX::XMStoreFloat3(&delta, vDelta);
-		mTransform->Translate(delta);
+		mTransform->mRotation = Quaternion::FromEuler(mPitch, mYaw, mRoll);
+		mTransform->mPosition = Vector(mTransform->mPosition.AsVector3() + (mTransform->mRotation * delta));
 	}
 }

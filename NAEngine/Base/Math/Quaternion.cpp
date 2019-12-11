@@ -9,20 +9,17 @@ namespace na
 		x(0.0f),
 		y(0.0f),
 		z(0.0f),
-		w(0.0f)
+		w(1.0f)
 	{
 	}
 
-	Quaternion::Quaternion(float xAxis, float yAxis, float zAxis, float angleInRadians)
+	Quaternion::Quaternion(float x, float y, float z, float w) :
+		x(x),
+		y(y),
+		z(z),
+		w(w)
 	{
-		NA_ASSERT(FEquals(xAxis * xAxis + yAxis * yAxis + zAxis * zAxis, 1), "Quaternion parameters are not unit length.");
-
-		w = cosf(angleInRadians / 2.0f);
-
-		const float sinThetaDiv2 = sinf(angleInRadians / 2.0f);
-		x = sinThetaDiv2 * xAxis;
-		y = sinThetaDiv2 * yAxis;
-		z = sinThetaDiv2 * zAxis;
+		NA_ASSERT(FEquals(LengthSq(), 1), "Quaternion parameters are not unit length.");
 	}
 
 	Quaternion::Quaternion(const Vector3f &axis, float angleInRadians)
@@ -55,6 +52,16 @@ namespace na
 		z *= -1;
 
 		return *this;
+	}
+
+	float Quaternion::Length()const
+	{
+		return sqrtf(LengthSq());
+	}
+
+	float Quaternion::LengthSq()const
+	{
+		return x * x + y * y + z * z + w * w;
 	}
 
 	Quaternion Quaternion::operator*(const Quaternion &rhs)const
@@ -122,11 +129,20 @@ namespace na
 	}
 
 
+	Quaternion Quaternion::Identity()
+	{
+		Quaternion q;
+		q.x = q.y = q.z = 0.0f;
+		q.w = 1.0f;
+
+		return q;
+	}
+
 	Quaternion Quaternion::FromEuler(float x, float y, float z)
 	{
-		const Quaternion qX(1.0f, 0.0f, 0.0f, x);
-		const Quaternion qY(0.0f, 1.0f, 0.0f, y);
-		const Quaternion qZ(0.0f, 0.0f, 1.0f, z);
+		const Quaternion qX(Vector3f(1.0f, 0.0f, 0.0f), x);
+		const Quaternion qY(Vector3f(0.0f, 1.0f, 0.0f), y);
+		const Quaternion qZ(Vector3f(0.0f, 0.0f, 1.0f), z);
 
 		return qZ * qY * qX;
 	}

@@ -308,6 +308,13 @@ namespace na
 		}
 	}
 
+	Matrix Matrix::Inverted(Vector *pOutOptDet)const
+	{
+		Matrix temp = *this;
+		temp.Invert(pOutOptDet);
+		return temp;
+	}
+
 	Vector Matrix::Determinant()const
 	{
 		__m128 m0, m1, m2, m3, det;
@@ -325,6 +332,13 @@ namespace na
 	void Matrix::Transpose()
 	{
 		_MM_TRANSPOSE4_PS(mCols[0], mCols[1], mCols[2], mCols[3]);
+	}
+
+	Matrix Matrix::Transposed()const
+	{
+		Matrix temp = *this;
+		temp.Transpose();
+		return temp;
 	}
 
 
@@ -515,11 +529,9 @@ namespace na
 		return mOrtho;
 	}
 
-	Matrix MatrixTranslation(const Vector &translation)
+	Matrix Matrix::Translation(const Vector3f &t)
 	{
 		Matrix mTrans;
-
-		const Vector3f t = translation.AsVector3();
 
 		NA_ALIGN(float col0[4], 16) = { 1.0f, 0.0f, 0.0f, 0.0f };
 		NA_ALIGN(float col1[4], 16) = { 0.0f, 1.0f, 0.0f, 0.0f };
@@ -532,6 +544,11 @@ namespace na
 		mTrans.mCols[3] = _mm_load_ps(col3);
 
 		return mTrans;
+	}
+
+	Matrix Matrix::Translation(const Vector &t)
+	{
+		return Matrix::Translation(t.AsVector3());
 	}
 
 	Matrix Matrix::Scaling(const Vector &scaling)
@@ -638,7 +655,8 @@ namespace na
 		m.mCols[2] = _mm_load_ps(col2);
 		m.mCols[3] = _mm_load_ps(col3);
 
-		return m;
+		// Not sure why I need to transpose this.
+		return m.Transposed();
 	}
 
 	Matrix Matrix::RotationEuler(float x, float y, float z)

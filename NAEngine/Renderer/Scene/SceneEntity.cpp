@@ -3,59 +3,50 @@
 namespace na
 {
 	SceneEntity::SceneEntity() :
+		mPosition(0.0f, 0.0f, 0.0f),
+		mRotation(Quaternion::Identity()),
 		mDirty(false),
-		mWorldTransform(DirectX::XMMatrixIdentity())
+		mWorldTransform(Matrix::Identity())
 	{
 	}
 
-	void SceneEntity::SetPosition(const DirectX::XMFLOAT3 &position)
+	void SceneEntity::SetPosition(const Vector3f &position)
 	{
 		mDirty = true;
 		mPosition = position;
 	}
 
-	DirectX::XMFLOAT3 SceneEntity::GetPosition()const
+	Vector3f SceneEntity::GetPosition()const
 	{
 		return mPosition;
 	}
 
 
-	void SceneEntity::SetRotation(const DirectX::XMVECTOR &rotation)
+	void SceneEntity::SetRotation(const Quaternion &rotation)
 	{
 		mDirty = true;
 		mRotation = rotation;
 	}
 
-	DirectX::XMVECTOR SceneEntity::GetRotation()const
+	Quaternion SceneEntity::GetRotation()const
 	{
 		return mRotation;
 	}
 
 
-	void SceneEntity::SetWorldTransform(const DirectX::XMMATRIX &worldTransform)
+	void SceneEntity::SetWorldTransform(const Matrix &worldTransform)
 	{
 		mDirty = false;
 		mWorldTransform = worldTransform;
 	}
 
-	DirectX::XMMATRIX SceneEntity::GetWorldTransform()const
-	{
-		return mWorldTransform;
-	}
-
-
-	void SceneEntity::CalculateWorldTransform()
+	Matrix SceneEntity::GetWorldTransform()
 	{
 		if (mDirty) {
-			static const DirectX::XMVECTOR zero = DirectX::XMVectorZero();
-			static const DirectX::XMVECTOR one = DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
-			mWorldTransform = DirectX::XMMatrixTransformation(
-				zero, zero, one,								// scale
-				zero, mRotation,								// rotation
-				DirectX::XMLoadFloat3(&mPosition)				// position
-			);
-
+			mWorldTransform = Matrix::Translation(mPosition) * Matrix::RotationQuaternion(mRotation);
 			mDirty = false;
 		}
+
+		return mWorldTransform;
 	}
 }

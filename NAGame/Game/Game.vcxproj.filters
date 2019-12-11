@@ -33,6 +33,7 @@
     <Xml Include="config.xml" />
     <Xml Include="data\worlds\world.xml" />
     <Xml Include="data\worlds\test_physics.xml" />
+    <Xml Include="data\worlds\test.xml" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="data\cube.obj" />

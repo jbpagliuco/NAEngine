@@ -27,8 +27,8 @@ namespace na
 
 	struct PerObjectData
 	{
-		DirectX::XMMATRIX world;
-		DirectX::XMMATRIX worldInverseTranspose;
+		Matrix world;
+		Matrix worldInverseTranspose;
 	};
 	
 
@@ -72,20 +72,20 @@ namespace na
 		NA_RContext->RSSetViewports(1, &vp);
 	}
 
-	void StateData::SetViewProjMatrices(const DirectX::XMMATRIX &view, const DirectX::XMMATRIX &proj)
+	void StateData::SetViewProjMatrices(const Matrix &view, const Matrix &proj)
 	{
-		DirectX::XMMATRIX viewProj = DirectX::XMMatrixMultiplyTranspose(view, proj);
+		Matrix viewProj = proj * view;
 		mViewProjBuffer.Map(&viewProj);
 
 		PlatformConstantBuffer *cb = mViewProjBuffer.GetBuffer();
 		NA_RContext->VSSetConstantBuffers((int)VSConstantBuffers::VIEWPROJ, 1, &cb);
 	}
 
-	void StateData::SetObjectTransform(const DirectX::XMMATRIX &transform)
+	void StateData::SetObjectTransform(const Matrix &transform)
 	{
 		PerObjectData data;
-		data.world = DirectX::XMMatrixTranspose(transform);
-		data.worldInverseTranspose = DirectX::XMMatrixInverse(nullptr, transform); // ^T ^T
+		data.world = transform;
+		data.worldInverseTranspose = transform.Inverted().Transposed();
 
 		mObjectDataBuffer.Map(&data);
 

@@ -249,6 +249,7 @@
   <ItemGroup>
     <Xml Include="config.xml" />
     <Xml Include="data\materials\red.matx" />
+    <Xml Include="data\worlds\test.xml" />
     <Xml Include="data\worlds\test_physics.xml" />
     <Xml Include="data\worlds\world.xml">
       <SubType>Designer</SubType>

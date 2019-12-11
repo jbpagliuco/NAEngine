@@ -4,29 +4,21 @@ namespace na
 {
 	physx::PxTransform GameTransformToPhysX(const Transform &transform)
 	{
-		DirectX::XMFLOAT3 pos = transform.CopyPosition();
-
-		DirectX::XMVECTOR axis;
-		float angle;
-		DirectX::XMQuaternionToAxisAngle(&axis, &angle, transform.CopyRotation());
-		axis = DirectX::XMVector3Normalize(axis);
-
-		DirectX::XMFLOAT3 rot;
-		DirectX::XMStoreFloat3(&rot, axis);
+		const Vector3f pos = transform.mPosition.AsVector3();
+		const Quaternion rot = transform.mRotation;
 
 		return physx::PxTransform(
 			physx::PxVec3(pos.x, pos.y, pos.z),
-			physx::PxQuat(angle, physx::PxVec3(rot.x, rot.y, rot.z))
+			physx::PxQuat(rot.x, rot.y, rot.z, rot.w)
 		);
 	}
 
 	Transform PhysXTransformToGame(const physx::PxTransform &transform)
 	{
-		const DirectX::XMFLOAT4 rotQ(transform.q.x, transform.q.y, transform.q.z, transform.q.w);
 		return Transform(
-			DirectX::XMFLOAT3(transform.p.x, transform.p.y, transform.p.z),
-			DirectX::XMLoadFloat4(&rotQ),
-			DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f)
+			Vector3f(transform.p.x, transform.p.y, transform.p.z),
+			Quaternion(transform.q.x, transform.q.y, transform.q.z, transform.q.w),
+			Vector3f(1.0f, 1.0f, 1.0f)
 		);
 	}
 }
