@@ -92,6 +92,27 @@ namespace na
 	}
 
 
+	Tuple2f Vector::AsTuple2()const
+	{
+		NA_ALIGN(float vector[4], 16);
+		_mm_store_ps(vector, mElems);
+		return Tuple2f(vector[0], vector[1]);
+	}
+
+	Tuple3f Vector::AsTuple3()const
+	{
+		NA_ALIGN(float vector[4], 16);
+		_mm_store_ps(vector, mElems);
+		return Tuple3f(vector[0], vector[1], vector[2]);
+	}
+
+	Tuple4f Vector::AsTuple4()const
+	{
+		NA_ALIGN(float vector[4], 16);
+		_mm_store_ps(vector, mElems);
+		return Tuple4f(vector[0], vector[1], vector[2], vector[3]);
+	}
+
 
 
 

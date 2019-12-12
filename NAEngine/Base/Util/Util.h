@@ -23,10 +23,10 @@
 namespace na
 {
 	template <typename T>
-	struct Vector2
+	struct Tuple2
 	{
-		Vector2<T>() {}
-		Vector2<T>(T x, T y) : x(x), y(y) {}
+		Tuple2<T>() = default;
+		Tuple2<T>(T x, T y) : x(x), y(y) {}
 
 		union {
 			struct { T x, y; };
@@ -36,10 +36,10 @@ namespace na
 
 	/* Holds 3 components */
 	template <typename T>
-	struct Vector3
+	struct Tuple3
 	{
-		Vector3<T>() {}
-		Vector3<T>(T x, T y, T z) : x(x), y(y), z(z) {}
+		Tuple3<T>() = default;
+		Tuple3<T>(T x, T y, T z) : x(x), y(y), z(z) {}
 
 		union {
 			struct { T x, y, z; };
@@ -49,10 +49,10 @@ namespace na
 
 	/* Holds 4 components */
 	template <typename T>
-	struct Vector4
+	struct Tuple4
 	{
-		Vector4<T>() {}
-		Vector4<T>(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
+		Tuple4<T>() = default;
+		Tuple4<T>(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
 
 		union {
 			struct { T x, y, z, w; };
@@ -60,8 +60,12 @@ namespace na
 		};
 	};
 
-	typedef Vector2<int> Point;
-	typedef Vector2<unsigned int> Size;
+	typedef Tuple2<int> Point;
+	typedef Tuple2<unsigned int> Size;
+
+	typedef Tuple2<float> Tuple2f;
+	typedef Tuple3<float> Tuple3f;
+	typedef Tuple4<float> Tuple4f;
 
 	// Returns the larger of v1 and v2
 	template <typename T>

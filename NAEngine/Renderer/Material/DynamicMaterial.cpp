@@ -162,11 +162,11 @@ namespace na
 		}
 	}
 
-	void DynamicMaterialInstance::SetVectorParameter(const std::string &name, const DirectX::XMFLOAT4 &value)
+	void DynamicMaterialInstance::SetVectorParameter(const std::string &name, const Vector4f &value)
 	{
 		DynamicMaterialParameterInfo paramInfo;
 		if (mParent->GetParameterInfo(paramInfo, name)) {
-			NA_ASSERT(paramInfo.mLength == sizeof(DirectX::XMFLOAT4), "Trying to set vector data for a parameter of length %zu", paramInfo.mLength);
+			NA_ASSERT(paramInfo.mLength == sizeof(Vector4f), "Trying to set vector data for a parameter of length %zu", paramInfo.mLength);
 			memcpy(mParameterData, &value, paramInfo.mLength);
 		}
 	}

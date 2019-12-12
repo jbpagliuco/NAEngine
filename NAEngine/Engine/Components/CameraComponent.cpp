@@ -8,7 +8,7 @@ namespace na
 {
 	void CameraComponent::Deserialize(DeserializationParameterMap &params)
 	{
-		mCamera.mFOV = DirectX::XMConvertToRadians(params["fov"].AsFloat());
+		mCamera.mFOV = ToRadians(params["fov"].AsFloat());
 		mCamera.mNear = params["near"].AsFloat();
 		mCamera.mFar = params["far"].AsFloat();
 

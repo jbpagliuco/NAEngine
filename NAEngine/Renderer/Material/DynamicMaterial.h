@@ -56,7 +56,7 @@ namespace na
 		void BindData();
 
 		void SetFloatParameter(const std::string &name, float value);
-		void SetVectorParameter(const std::string &name, const DirectX::XMFLOAT4 &value);
+		void SetVectorParameter(const std::string &name, const Vector4f &value);
 
 		void SetTextureParameter(const std::string &name, const std::string &filename);
 		void SetTextureParameter(const std::string &name, Texture *pTexture);

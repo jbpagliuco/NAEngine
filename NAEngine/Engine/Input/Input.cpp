@@ -20,7 +20,7 @@ namespace na
 	};
 	static KeyState KeyStates[0xff];
 
-	static Vector2<int> MouseDelta = { 0, 0 };
+	static Tuple2<int> MouseDelta = { 0, 0 };
 	
 	static bool InputEnabled = true;
 
@@ -197,10 +197,10 @@ namespace na
 		return KeyStates[VK_MENU].mDown;
 	}
 
-	Vector2<int> GetMouseDelta()
+	Tuple2<int> GetMouseDelta()
 	{
 		if (ImguiRendererGetFocus()) {
-			return Vector2<int>(0, 0);
+			return Tuple2<int>(0, 0);
 		}
 
 		return MouseDelta;

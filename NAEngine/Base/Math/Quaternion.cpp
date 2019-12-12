@@ -111,6 +111,23 @@ namespace na
 		return (v2 + (v1Crossv2 * (2 * w)) + (v1.V3Cross(v1Crossv2) * 2)).AsVector3();
 	}
 
+	Vector4f Quaternion::operator*(const Vector4f &rhs)const
+	{
+		Vector v1(x, y, z, 0.0f);
+		Vector v2(rhs);
+
+		const Vector v1Crossv2 = v1.V3Cross(v2);
+		return (v2 + (v1Crossv2 * (2 * w)) + (v1.V3Cross(v1Crossv2) * 2)).AsVector4();
+	}
+
+	Vector Quaternion::operator*(const Vector &rhs)const
+	{
+		Vector v1(x, y, z, 0.0f);
+
+		const Vector v1Crossv2 = v1.V3Cross(rhs);
+		return (rhs + (v1Crossv2 * (2 * w)) + (v1.V3Cross(v1Crossv2) * 2));
+	}
+
 
 	Quaternion Quaternion::Lerp(const Quaternion &other, float t)const
 	{

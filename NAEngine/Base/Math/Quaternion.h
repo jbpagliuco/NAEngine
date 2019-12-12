@@ -38,6 +38,10 @@ namespace na
 
 		// Rotates a vector about the quaternion and returns the resulting rotated vector.
 		Vector3f operator*(const Vector3f &rhs)const;
+		// Rotates a vector about the quaternion and returns the resulting rotated vector.
+		Vector4f operator*(const Vector4f &rhs)const;
+		// Rotates a vector about the quaternion and returns the resulting rotated vector.
+		Vector operator*(const Vector &rhs)const;
 
 		// Linearly interpolates two quaternions by the amount t and returns the normalized quaternion.
 		Quaternion Lerp(const Quaternion &other, float t)const;

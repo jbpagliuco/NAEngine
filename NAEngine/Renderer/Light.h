@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-#include <DirectXMath.h>
+#include "Base/Util/Util.h"
 
 namespace na
 {
@@ -20,13 +20,13 @@ namespace na
 		float mIntensity;
 		int32_t _padding0;
 
-		DirectX::XMFLOAT3 mPosition;
+		Tuple3<float> mPosition;
 		float _padding1;
 
-		DirectX::XMFLOAT3 mDirection;
+		Tuple3<float> mDirection;
 		float mRadius;
 
-		DirectX::XMFLOAT4 mColor;
+		Tuple4<float> mColor;
 
 		float mSpotLightAngle;
 		float mConstantAttenuation;

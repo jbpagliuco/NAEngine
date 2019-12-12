@@ -3,8 +3,6 @@
 #include <sstream>
 #include <vector>
 
-#include <DirectXMath.h>
-
 #include "Base/Debug/Log.h"
 #include "Base/File/File.h"
 #include "Base/Streaming/Stream.h"
@@ -31,18 +29,19 @@
 // Changelog:
 // 2 - Add vertex format description to header.
 
-
+#include "Base/Math/Vector.h"
 
 namespace na
 {
 #if defined(_NA_TOOLS)
 	struct VertexType {
-		DirectX::XMFLOAT3 mPosition;
-		DirectX::XMFLOAT3 mNormal;
-		DirectX::XMFLOAT3 mBinormal;
-		DirectX::XMFLOAT3 mTangent;
-		DirectX::XMFLOAT2 mTexCoord;
+		Vector3f mPosition;
+		Vector3f mNormal;
+		Vector3f mBinormal;
+		Vector3f mTangent;
+		Vector2f mTexCoord;
 	};
+
 	struct VertexArray {
 		std::vector<VertexType> mVertices;
 
@@ -234,9 +233,9 @@ namespace na
 
 		File file(filename, std::ios::in);
 
-		typedef na::Vector3<float> Position;
-		typedef na::Vector3<float> Normal;
-		typedef na::Vector2<float> TexCoord;
+		typedef Vector3f Position;
+		typedef Vector3f Normal;
+		typedef Vector2f TexCoord;
 
 		std::vector<Position> positions;
 		std::vector<Normal> normals;
@@ -330,14 +329,9 @@ namespace na
 			if (vertexIds.find(faceString) == vertexIds.end()) {
 				VertexType vertex;
 
-				Position &pos = positions[face.pos];
-				vertex.mPosition = DirectX::XMFLOAT3(pos.vArray);
-
-				Normal &norm = normals[face.norm];
-				vertex.mNormal = DirectX::XMFLOAT3(norm.vArray);
-
-				TexCoord &texCoord = texCoords[face.tex];
-				vertex.mTexCoord = DirectX::XMFLOAT2(texCoord.vArray);
+				vertex.mPosition = positions[face.pos];
+				vertex.mNormal = normals[face.norm];
+				vertex.mTexCoord = texCoords[face.tex];
 
 				vertices.mVertices.push_back(vertex);
 
@@ -359,7 +353,7 @@ namespace na
 		vertices.mHasTangent = true;
 
 		for (auto &it : vertices.mVertices) {
-			it.mTangent = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+			it.mTangent = Vector3f(0.0f, 0.0f, 0.0f);
 		}
 
 		for (int i = 0; i < indices.size(); i += 3) {
@@ -371,13 +365,13 @@ namespace na
 			VertexType &vertex2 = vertices.mVertices[i2];
 			VertexType &vertex3 = vertices.mVertices[i3];
 
-			DirectX::XMFLOAT3 v1 = vertex1.mPosition;
-			DirectX::XMFLOAT3 v2 = vertex2.mPosition;
-			DirectX::XMFLOAT3 v3 = vertex3.mPosition;
+			Vector3f v1 = vertex1.mPosition;
+			Vector3f v2 = vertex2.mPosition;
+			Vector3f v3 = vertex3.mPosition;
 
-			DirectX::XMFLOAT2 w1 = vertex1.mTexCoord;
-			DirectX::XMFLOAT2 w2 = vertex2.mTexCoord;
-			DirectX::XMFLOAT2 w3 = vertex3.mTexCoord;
+			Vector2f w1 = vertex1.mTexCoord;
+			Vector2f w2 = vertex2.mTexCoord;
+			Vector2f w3 = vertex3.mTexCoord;
 
 			float x1 = v2.x - v1.x;
 			float x2 = v3.x - v1.x;
@@ -392,9 +386,9 @@ namespace na
 			float t2 = w3.y - w1.y;
 
 			float r = 1.0F / (s1 * t2 - s2 * t1);
-			DirectX::XMFLOAT3 sdir((t2 * x1 - t1 * x2) * r, (t2 * y1 - t1 * y2) * r,
+			Vector3f sdir((t2 * x1 - t1 * x2) * r, (t2 * y1 - t1 * y2) * r,
 				(t2 * z1 - t1 * z2) * r);
-			DirectX::XMFLOAT3 tdir((s1 * x2 - s2 * x1) * r, (s1 * y2 - s2 * y1) * r,
+			Vector3f tdir((s1 * x2 - s2 * x1) * r, (s1 * y2 - s2 * y1) * r,
 				(s1 * z2 - s2 * z1) * r);
 
 #define FLOAT3_ADD(f1, f2) f1.x += f2.x; f1.y += f2.y; f1.z += f2.z
@@ -405,13 +399,13 @@ namespace na
 		}
 
 		for (auto &vertex : vertices.mVertices) {
-			DirectX::XMVECTOR n = DirectX::XMLoadFloat3(&vertex.mNormal);
-			DirectX::XMVECTOR t = DirectX::XMLoadFloat3(&vertex.mTangent);
-			DirectX::XMVECTOR b = DirectX::XMLoadFloat3(&vertex.mBinormal);
+			Vector n(vertex.mNormal);
+			Vector t(vertex.mTangent);
+			Vector b(vertex.mBinormal);
 
-			t = DirectX::XMVectorSubtract(t, DirectX::XMVectorMultiply(n, DirectX::XMVector3Dot(n, t)));
-			t = DirectX::XMVector3Normalize(t);
-			DirectX::XMStoreFloat3(&vertex.mTangent, t);
+			t = t - (n * n.V3Dot(t));
+			t.V3Normalize();
+			vertex.mTangent = t.AsVector3();
 		}
 	}
 

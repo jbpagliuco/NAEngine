@@ -8,18 +8,14 @@
 
 struct ID3D11RasterizerState;
 
-namespace DirectX {
-	struct XMMATRIX;
-}
-
 namespace na
 {
 	struct Rect;
 
 	struct LightsData
 	{
-		DirectX::XMFLOAT4 globalAmbient;
-		DirectX::XMFLOAT3 eyePosition;
+		Tuple4f globalAmbient;
+		Tuple3f eyePosition;
 		int numLights;
 		Light lights[MAX_LIGHTS];
 	};

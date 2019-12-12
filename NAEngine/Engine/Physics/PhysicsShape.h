@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Base/Math/Transform.h"
+#include "Base/Util/Util.h"
 
 namespace na
 {
@@ -17,8 +17,8 @@ namespace na
 
 	struct PhysicsBoxInfo
 	{
-		DirectX::XMFLOAT3 mMin;
-		DirectX::XMFLOAT3 mMax;
+		Vector3f mMin;
+		Vector3f mMax;
 	};
 
 	struct PhysicsShapeInfo

@@ -71,26 +71,26 @@ namespace na
 		return std::stof(value);
 	}
 
-	DirectX::XMFLOAT2 DeserializationParameterMap::AsFloat2(DirectX::XMFLOAT2 def)
+	Vector2f DeserializationParameterMap::AsFloat2(Vector2f def)
 	{
 		RETURN_DEFAULT_IF_INVALID();
 		
 		float x = GetChild("x").AsFloat(0.0f);
 		float y = GetChild("y").AsFloat(0.0f);
-		return DirectX::XMFLOAT2(x, y);
+		return Vector2f(x, y);
 	}
 
-	DirectX::XMFLOAT3 DeserializationParameterMap::AsFloat3(DirectX::XMFLOAT3 def)
+	Vector3f DeserializationParameterMap::AsFloat3(Vector3f def)
 	{
 		RETURN_DEFAULT_IF_INVALID();
 
 		float x = GetChild("x").AsFloat(0.0f);
 		float y = GetChild("y").AsFloat(0.0f);
 		float z = GetChild("z").AsFloat(0.0f);
-		return DirectX::XMFLOAT3(x, y, z);
+		return Vector3f(x, y, z);
 	}
 
-	DirectX::XMFLOAT4 DeserializationParameterMap::AsFloat4(DirectX::XMFLOAT4 def)
+	Vector4f DeserializationParameterMap::AsFloat4(Vector4f def)
 	{
 		RETURN_DEFAULT_IF_INVALID();
 
@@ -98,30 +98,78 @@ namespace na
 		float y = GetChild("y").AsFloat(0.0f);
 		float z = GetChild("z").AsFloat(0.0f);
 		float w = GetChild("w").AsFloat(0.0f);
-		return DirectX::XMFLOAT4(x, y, z, w);
+		return Vector4f(x, y, z, w);
 	}
 
-	DirectX::XMFLOAT4 DeserializationParameterMap::AsColor(DirectX::XMFLOAT4 def)
+	Tuple2f DeserializationParameterMap::AsTuple2f(Tuple2f def)
+	{
+		RETURN_DEFAULT_IF_INVALID();
+
+		float x = GetChild("x").AsFloat(0.0f);
+		float y = GetChild("y").AsFloat(0.0f);
+		return Tuple2f(x, y);
+	}
+
+	Tuple3f DeserializationParameterMap::AsTuple3f(Tuple3f def)
+	{
+		RETURN_DEFAULT_IF_INVALID();
+
+		float x = GetChild("x").AsFloat(0.0f);
+		float y = GetChild("y").AsFloat(0.0f);
+		float z = GetChild("z").AsFloat(0.0f);
+		return Tuple3f(x, y, z);
+	}
+
+	Tuple4f DeserializationParameterMap::AsTuple4f(Tuple4f def)
+	{
+		RETURN_DEFAULT_IF_INVALID();
+
+		float x = GetChild("x").AsFloat(0.0f);
+		float y = GetChild("y").AsFloat(0.0f);
+		float z = GetChild("z").AsFloat(0.0f);
+		float w = GetChild("w").AsFloat(0.0f);
+		return Tuple4f(x, y, z, w);
+	}
+
+
+	Vector4f DeserializationParameterMap::AsColor(Vector4f def)
 	{
 		RETURN_DEFAULT_IF_INVALID();
 
 		// String
 		if (value.length() != 0) {
 			ColorF color(value);
-			return DirectX::XMFLOAT4(color.r, color.g, color.b, color.a);
+			return Vector4f(color.r, color.g, color.b, color.a);
 		}
 
 		float r = GetChild("r").AsFloat(0.0f);
 		float g = GetChild("g").AsFloat(0.0f);
 		float b = GetChild("b").AsFloat(0.0f);
 		float a = GetChild("a").AsFloat(1.0f);
-		return DirectX::XMFLOAT4(r, g, b, a);
+		return Vector4f(r, g, b, a);
+	}
+
+	Tuple4f DeserializationParameterMap::AsColorTuple(Tuple4f def)
+	{
+		RETURN_DEFAULT_IF_INVALID();
+
+		// String
+		if (value.length() != 0) {
+			ColorF color(value);
+			return Tuple4f(color.r, color.g, color.b, color.a);
+		}
+
+		float r = GetChild("r").AsFloat(0.0f);
+		float g = GetChild("g").AsFloat(0.0f);
+		float b = GetChild("b").AsFloat(0.0f);
+		float a = GetChild("a").AsFloat(1.0f);
+		return Tuple4f(r, g, b, a);
 	}
 
 	float DeserializationParameterMap::AsRadian(float def)
 	{
 		RETURN_DEFAULT_IF_INVALID();
-		return DirectX::XMConvertToRadians(AsFloat(def));
+		return ToRadians(AsFloat(def));
 	}
 
 	std::string DeserializationParameterMap::AsFilepath(const std::string &def)
@@ -144,10 +192,10 @@ namespace na
 #define COPY_INTO_BUFFER(s, T, f) if (type == s) { T v = f(); memcpy(out, &v, sizeof(T)); found = true; }
 		bool found = false;
 		COPY_INTO_BUFFER("float", float, AsFloat);
-		COPY_INTO_BUFFER("float2", DirectX::XMFLOAT2, AsFloat2);
-		COPY_INTO_BUFFER("float3", DirectX::XMFLOAT3, AsFloat3);
-		COPY_INTO_BUFFER("float4", DirectX::XMFLOAT4, AsFloat4);
-		COPY_INTO_BUFFER("color", DirectX::XMFLOAT4, AsColor);
+		COPY_INTO_BUFFER("float2", Vector2f, AsFloat2);
+		COPY_INTO_BUFFER("float3", Vector3f, AsFloat3);
+		COPY_INTO_BUFFER("float4", Vector4f, AsFloat4);
+		COPY_INTO_BUFFER("color", Vector4f, AsColor);
 		NA_ASSERT(found, "Type %s is not recognized.", type.c_str());
 #undef COPY_INTO_BUFFER
 	}

@@ -55,6 +55,8 @@ namespace na
 		sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
 		PXScene = PXPhysics->createScene(sceneDesc);
 		NA_FATAL_ERROR(PXScene, "Failed to create PhysX scene!");
+
+		return true;
 	}
 
 	void PhysicsSystemShutdown()

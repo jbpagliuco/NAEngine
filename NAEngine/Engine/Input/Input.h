@@ -19,7 +19,7 @@ namespace na
 	bool IsControlDown();
 	bool IsAltDown();
 
-	Vector2<int> GetMouseDelta();
+	Tuple2<int> GetMouseDelta();
 
 	void ForceShowCursor(bool show);
 }

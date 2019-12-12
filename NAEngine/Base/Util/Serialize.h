@@ -4,7 +4,8 @@
 #include <map>
 #include <vector>
 
-#include <DirectXMath.h>
+#include "Base/Math/Vector.h"
+#include "Base/Util/Util.h"
 
 namespace pugi {
 	class xml_node;
@@ -35,11 +36,16 @@ namespace na
 		int AsInt(int def = 0);
 		
 		float AsFloat(float def = 0.0f);
-		DirectX::XMFLOAT2 AsFloat2(DirectX::XMFLOAT2 def = DirectX::XMFLOAT2(0.0f, 0.0f));
-		DirectX::XMFLOAT3 AsFloat3(DirectX::XMFLOAT3 def = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-		DirectX::XMFLOAT4 AsFloat4(DirectX::XMFLOAT4 def = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f));
+		Vector2f AsFloat2(Vector2f def = Vector2f(0.0f, 0.0f));
+		Vector3f AsFloat3(Vector3f def = Vector3f(0.0f, 0.0f, 0.0f));
+		Vector4f AsFloat4(Vector4f def = Vector4f(0.0f, 0.0f, 0.0f, 0.0f));
 
-		DirectX::XMFLOAT4 AsColor(DirectX::XMFLOAT4 def = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+		Tuple2f AsTuple2f(Tuple2f = Tuple2f(0.0f, 0.0f));
+		Tuple3f AsTuple3f(Tuple3f = Tuple3f(0.0f, 0.0f, 0.0f));
+		Tuple4f AsTuple4f(Tuple4f = Tuple4f(0.0f, 0.0f, 0.0f, 0.0f));
+
+		Vector4f AsColor(Vector4f def = Vector4f(1.0f, 0.0f, 0.0f, 1.0f));
+		Tuple4f AsColorTuple(Tuple4f def = Tuple4f(1.0f, 0.0f, 0.0f, 1.0f));
 
 		float AsRadian(float def = 0.0f);
 

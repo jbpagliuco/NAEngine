@@ -11,6 +11,7 @@
 #include "MathUtil.h"
 
 #include "Base/Memory/Memory.h"
+#include "Base/Util/Util.h"
 
 #define NA_MM_SHUFFLE_PARAM(x, y, z, w) ((x) | (y << 2) | (z << 4) | (w << 6))
 
@@ -27,12 +28,14 @@ namespace na
 	NA_ALIGN_MS(16) struct Vector2f
 	{
 	public:
-		Vector2f() { }
+		Vector2f() = default;
+		Vector2f(const Vector2f &other) = default;
 		Vector2f(float _x, float _y) : x(_x), y(_y) { }
-		Vector2f(const Vector2f &other) : x(other.x), y(other.y) { }
 		explicit Vector2f(const float *pDataArray) : x(pDataArray[0]), y(pDataArray[1]) { }
+
+		Tuple2f AsTuple()const { return Tuple2f(x, y); }
 		
-		Vector2f& operator=(const Vector2f &rhs) { x = rhs.x; y = rhs.y; return *this; }
+		Vector2f& operator=(const Vector2f &rhs) = default;
 
 		bool operator==(const Vector2f &rhs) { return FEquals(x, rhs.x) && FEquals(y, rhs.y); }
 		bool operator!=(const Vector2f &rhs) { return !FEquals(x, rhs.x) || !FEquals(y, rhs.y); }
@@ -58,12 +61,14 @@ namespace na
 	// 3D vector of 32 bit single floating point components.
 	NA_ALIGN_MS(16) struct Vector3f
 	{
-		Vector3f() { }
+		Vector3f() = default;
+		Vector3f(const Vector3f &other) = default;
 		Vector3f(float _x, float _y, float _z) : x(_x), y(_y), z(_z) { }
-		Vector3f(const Vector3f &other) : x(other.x), y(other.y), z(other.z) { }
 		explicit Vector3f(const float *pDataArray) : x(pDataArray[0]), y(pDataArray[1]), z(pDataArray[2]) { }
 
-		Vector3f& operator=(const Vector3f &rhs) { x = rhs.x; y = rhs.y; z = rhs.z; return *this; }
+		Tuple3f AsTuple()const { return Tuple3f(x, y, z); }
+
+		Vector3f& operator=(const Vector3f &rhs) = default;
 
 		bool operator==(const Vector3f &rhs) { return FEquals(x, rhs.x) && FEquals(y, rhs.y) && FEquals(z, rhs.z); }
 		bool operator!=(const Vector3f &rhs) { return !FEquals(x, rhs.x) || !FEquals(y, rhs.y) || !FEquals(z, rhs.z); }
@@ -90,12 +95,14 @@ namespace na
 	// 4D vector of 32 bit single floating point components.
 	NA_ALIGN_MS(16) struct Vector4f
 	{
-		Vector4f() { }
+		Vector4f() = default;
+		Vector4f(const Vector4f &other) = default;
 		Vector4f(float _x, float _y, float _z, float _w) : x(_x), y(_y), z(_z), w(_w) { }
-		Vector4f(const Vector4f &other) : x(other.x), y(other.y), z(other.z), w(other.w) { }
 		explicit Vector4f(const float *pDataArray) : x(pDataArray[0]), y(pDataArray[1]), z(pDataArray[2]), w(pDataArray[3]) { }
 
-		Vector4f& operator=(const Vector4f &rhs) { x = rhs.x; y = rhs.y; z = rhs.z; w = rhs.w;  return *this; }
+		Tuple4f AsTuple()const { return Tuple4f(x, y, z, w); }
+
+		Vector4f& operator=(const Vector4f &rhs) = default;
 
 		bool operator==(const Vector4f &rhs) { return FEquals(x, rhs.x) && FEquals(y, rhs.y) && FEquals(z, rhs.z) && FEquals(w, rhs.w); }
 		bool operator!=(const Vector4f &rhs) { return !FEquals(x, rhs.x) || !FEquals(y, rhs.y) || !FEquals(z, rhs.z) || !FEquals(w, rhs.w); }
@@ -149,6 +156,13 @@ namespace na
 		Vector3f AsVector3()const;
 		// Stores the data into a Vector4f object.
 		Vector4f AsVector4()const;
+
+		// Stores the data into a Tuple2f object.
+		Tuple2f AsTuple2()const;
+		// Stores the data into a Tuple3f object.
+		Tuple3f AsTuple3()const;
+		// Stores the data into a Tuple4f object.
+		Tuple4f AsTuple4()const;
 
 
 		// Get the x component.

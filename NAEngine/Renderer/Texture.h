@@ -4,11 +4,11 @@
 
 #if defined(NA_D3D11)
 #include <d3d11.h>
-#include <DirectXMath.h>
 #endif
 
 #include <string>
 
+#include "Base/Math/Vector.h"
 #include "Base/Streaming/AssetFactory.h"
 
 namespace na
@@ -53,7 +53,7 @@ namespace na
 		TextureAddressMode mAddressV = TextureAddressMode::WRAP;
 		TextureAddressMode mAddressW = TextureAddressMode::WRAP;
 
-		DirectX::XMFLOAT4 mBorderColor = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+		Vector4f mBorderColor = Vector4f(1.0f, 0.0f, 0.0f, 1.0f);
 	};
 
 	class Texture : public AssetFactory<Texture>

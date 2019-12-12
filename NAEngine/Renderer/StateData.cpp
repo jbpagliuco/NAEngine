@@ -1,7 +1,6 @@
 #include "StateData.h"
 
 #include <d3d11.h>
-#include <DirectXMath.h>
 
 #include "Rect.h"
 #include "RendererD3D.h"
@@ -36,7 +35,7 @@ namespace na
 
 	bool StateData::Initialize()
 	{
-		bool success = mViewProjBuffer.Initialize(BufferUsage::DYNAMIC, nullptr, sizeof(DirectX::XMMATRIX));
+		bool success = mViewProjBuffer.Initialize(BufferUsage::DYNAMIC, nullptr, sizeof(Matrix));
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize view proj buffer.");
 
 		success = mObjectDataBuffer.Initialize(BufferUsage::DYNAMIC, nullptr, sizeof(PerObjectData));
