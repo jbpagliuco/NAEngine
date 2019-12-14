@@ -23,31 +23,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="data\shaders\tex_debug\tex_debug_ps.hlsl" />
-    <FxCompile Include="data\shaders\tex_debug\tex_debug_vs.hlsl" />
-    <FxCompile Include="data\shaders\normal_debug\normal_debug_vs.hlsl" />
-    <FxCompile Include="data\shaders\normal_debug\normal_debug_ps.hlsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <Xml Include="data\materials\red.matx" />
     <Xml Include="config.xml" />
-    <Xml Include="data\worlds\world.xml" />
-    <Xml Include="data\worlds\test_physics.xml" />
-    <Xml Include="data\worlds\test.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="data\cube.obj" />
-    <Object Include="data\meshes\cube.objx" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="data\shaders\tex_debug\tex_debug.shaderx" />
-    <None Include="data\materials\tex_debug.matx" />
-    <None Include="data\materials\gray.matx" />
-    <None Include="data\shaders\normal_debug\normal_debug.shaderx" />
-    <None Include="data\materials\tex_map.matx" />
-    <None Include="data\materials\brick.matx" />
-    <None Include="data\materials\normal_debug.matx" />
-    <None Include="data\materials\tex_dyn.matx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Tools.h">

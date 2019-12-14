@@ -13,10 +13,9 @@ namespace na
 		virtual void* allocate(size_t size, const char *typeName, const char *filename, int line) override;
 		virtual void deallocate(void* ptr) override;
 
-		inline size_t GetBytesAllocated()const { return mAllocated; }
-
-	private:
 #if defined(NA_TRACK_MEMORY)
+		inline size_t GetBytesAllocated()const { return mAllocated; }
+	private:
 		size_t mAllocated = 0;
 #endif
 	};
