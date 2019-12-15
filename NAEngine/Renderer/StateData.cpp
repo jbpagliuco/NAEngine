@@ -2,6 +2,9 @@
 
 #include <d3d11.h>
 
+#include "Resources/IndexBuffer.h"
+#include "Resources/VertexBuffer.h"
+
 #include "Rect.h"
 #include "RendererD3D.h"
 
@@ -56,6 +59,16 @@ namespace na
 		mLightsBuffer.Shutdown();
 
 		NA_SAFE_RELEASE(mRasterizerState);
+	}
+
+	void StateData::BindIndexBuffer(const IndexBuffer &ib)
+	{
+		mCommandContext.BindIndexBuffer(ib.GetBuffer(), NGAIndexBufferType::IBT_32BIT);
+	}
+
+	void StateData::BindVertexBuffer(const VertexBuffer &vb)
+	{
+		mCommandContext.BindVertexBuffer(vb.GetBuffer(), vb.GetVertexStride());
 	}
 
 	void StateData::SetViewport(const Rect &rect)

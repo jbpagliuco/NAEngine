@@ -7,7 +7,7 @@
 #include "Renderer/Material/DynamicMaterial.h"
 #include "Renderer/Mesh.h"
 #include "Renderer/RendererD3D.h"
-#include "Renderer/VertexBuffer.h"
+#include "Renderer/Resources/VertexBuffer.h"
 
 namespace na
 {

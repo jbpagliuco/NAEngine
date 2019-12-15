@@ -7,6 +7,7 @@
 #pragma comment(lib, "d3dcompiler.lib")
 
 #include <d3d11.h>
+#include <dxgi.h>
 
 #include "Base/Debug/Assert.h"
 
@@ -18,7 +19,39 @@ namespace na
 
 	bool RendererD3D::Initialize(const RendererInitParams &params)
 	{
-		NA_FATAL_ERROR(InitDevice(params), "Failed to initialize Direct3D device.");
+		// NA_FATAL_ERROR(InitDevice(params), "Failed to initialize Direct3D device.");
+
+		DXGI_SWAP_CHAIN_DESC swapChainDesc{};
+		swapChainDesc.BufferCount = 2;
+		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		swapChainDesc.BufferDesc.Width = params.mWidth;
+		swapChainDesc.BufferDesc.Height = params.mHeight;
+		swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
+		swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+		swapChainDesc.SampleDesc.Count = 1;
+		swapChainDesc.SampleDesc.Quality = 0;
+		swapChainDesc.OutputWindow = params.mWindow.handle;
+		swapChainDesc.Windowed = true;
+		swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+		swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_CENTERED;
+		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+		swapChainDesc.Flags = 0;
+
+		IDXGIDevice *dxgiDevice;
+		NA_RDevice->QueryInterface(__uuidof(dxgiDevice), (void**)&dxgiDevice);
+
+		IDXGIAdapter *dxgiAdapter;
+		dxgiDevice->GetAdapter(&dxgiAdapter);
+
+		IDXGIFactory *dxgiFactory;
+		dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxgiFactory);
+
+		dxgiFactory->CreateSwapChain(NA_RDevice, &swapChainDesc, &mSwapChain);
+
+		NA_SAFE_RELEASE(dxgiDevice);
+		NA_SAFE_RELEASE(dxgiAdapter);
+		NA_SAFE_RELEASE(dxgiFactory);
 
 		if (!Renderer::Initialize(params)) {
 			return false;
@@ -36,8 +69,8 @@ namespace na
 		}
 
 		NA_SAFE_RELEASE(mSwapChain);
-		NA_SAFE_RELEASE(mContext);
-		NA_SAFE_RELEASE(mDevice);
+		/*NA_SAFE_RELEASE(mContext);
+		NA_SAFE_RELEASE(mDevice);*/
 	}
 
 	void RendererD3D::BeginRender()

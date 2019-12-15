@@ -9,9 +9,10 @@ struct ID3D11DeviceContext;
 struct IDXGISwapChain;
 
 #if defined(NA_D3D11)
+#include "NGA/DX11/NGACoreInternalDX11.h"
 #define NA_Renderer ((na::RendererD3D*)na::RendererD3D::Get())
-#define NA_RDevice NA_Renderer->GetDevice()
-#define NA_RContext NA_Renderer->GetContext()
+#define NA_RDevice na::NgaDx11State.mDevice
+#define NA_RContext na::NgaDx11State.mContext
 #define NA_RSwapChain NA_Renderer->GetSwapChain()
 #endif
 

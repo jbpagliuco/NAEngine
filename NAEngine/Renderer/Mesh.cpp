@@ -8,11 +8,11 @@ namespace na
 
 	bool Mesh::Initialize(const MeshData &meshData)
 	{
-		if (!mVertexBuffer.Initialize(meshData.vertices, meshData.numVertices, meshData.vertexStride, BufferUsage::DEFAULT)) {
+		if (!mVertexBuffer.Initialize(meshData.vertices, meshData.numVertices, meshData.vertexStride)) {
 			return false;
 		}
 
-		if (!mIndexBuffer.Initialize(meshData.indices, meshData.numIndices, BufferUsage::DEFAULT)) {
+		if (!mIndexBuffer.Initialize(meshData.indices, meshData.numIndices)) {
 			mVertexBuffer.Shutdown();
 			return false;
 		}
@@ -30,8 +30,8 @@ namespace na
 
 	void Mesh::Render()
 	{
-		mVertexBuffer.Bind();
-		mIndexBuffer.Bind();
+		NA_RStateData->BindIndexBuffer(mIndexBuffer);
+		NA_RStateData->BindVertexBuffer(mVertexBuffer);
 
 		NA_RContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

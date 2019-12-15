@@ -2,6 +2,8 @@
 
 #include "Base/Math/Matrix.h"
 
+#include "NGA/NGACommandContext.h"
+
 #include "ConstantBuffer.h"
 #include "Light.h"
 #include "Shader/EngineShaders/shader_common.hlsli"
@@ -10,6 +12,9 @@ struct ID3D11RasterizerState;
 
 namespace na
 {
+	class IndexBuffer;
+	class VertexBuffer;
+
 	struct Rect;
 
 	struct LightsData
@@ -26,6 +31,9 @@ namespace na
 		bool Initialize();
 		void Shutdown();
 		
+		void BindIndexBuffer(const IndexBuffer &ib);
+		void BindVertexBuffer(const VertexBuffer &vb);
+
 		void SetViewport(const Rect &rect);
 		
 		void SetViewProjMatrices(const Matrix &view, const Matrix &proj);
@@ -39,6 +47,8 @@ namespace na
 		int GetUserPSConstantBufferIndex()const;
 
 	private:
+		NGACommandContext mCommandContext;
+
 		ConstantBuffer mViewProjBuffer;
 		ConstantBuffer mObjectDataBuffer;
 

@@ -2,8 +2,8 @@
 
 #include "Base/Streaming/AssetFactory.h"
 
-#include "IndexBuffer.h"
-#include "VertexBuffer.h"
+#include "Resources/IndexBuffer.h"
+#include "Resources/VertexBuffer.h"
 #include "VertexFormat.h"
 
 namespace na

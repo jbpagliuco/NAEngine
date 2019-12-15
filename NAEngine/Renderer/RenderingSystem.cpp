@@ -3,6 +3,8 @@
 #include "Base/Debug/Assert.h"
 #include "Base/OS/OS.h"
 
+#include "NGA/NGACore.h"
+
 #include "ImguiRenderer.h"
 #include "RendererD3D.h"
 #include "Scene/Scene.h"
@@ -24,6 +26,9 @@ namespace na
 		p.mWindow = CreateAndShowWindow(-1, -1, width, height, L"NA Game LUL");
 
 		NA_FATAL_ERROR(p.mWindow != INVALID_WINDOW, "Failed to create main window.");
+
+		NGAInitParams ngaParams;
+		NGAInitialize(ngaParams);
 		
 		bool success = NA_Renderer->Initialize(p);
 		NA_FATAL_ERROR(success, "Failed to initialize renderer.");
@@ -45,6 +50,8 @@ namespace na
 		ImguiRendererSystemShutdown();
 
 		NA_Renderer->Shutdown();
+
+		NGAShutdown();
 	}
 
 	void RenderingSystemBeginFrame()
