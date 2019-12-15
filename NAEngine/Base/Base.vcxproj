@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="DebugTools|Win32">
@@ -240,6 +240,7 @@
     <ClInclude Include="OS\OS.h" />
     <ClInclude Include="Streaming\AssetFactory.h" />
     <ClInclude Include="Streaming\Stream.h" />
+    <ClInclude Include="Util\BitUtil.h" />
     <ClInclude Include="Util\Color.h" />
     <ClInclude Include="Util\Serialize.h" />
     <ClInclude Include="Util\String.h" />
