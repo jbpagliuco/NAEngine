@@ -64,7 +64,7 @@ namespace na
 			dxusage |= D3D11_BIND_INDEX_BUFFER;
 		}
 		if (usage & NGA_BUFFER_USAGE_CONSTANT) {
-			NA_ASSERT(dxusage == 0, "Constant buffers cannot be combing with any other binding type.");
+			NA_ASSERT(dxusage == 0, "Constant buffers cannot be combined with any other binding type.");
 			dxusage = D3D11_BIND_CONSTANT_BUFFER;
 		}
 
