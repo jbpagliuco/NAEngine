@@ -220,6 +220,8 @@
     <ClCompile Include="NGA\DX11\NGACoreDX11.cpp" />
     <ClCompile Include="NGA\DX11\NGACoreInternalDX11.cpp" />
     <ClCompile Include="NGA\DX11\NGAResourcesDX11.cpp" />
+    <ClCompile Include="NGA\DX11\NGAResourceViewsDX11.cpp" />
+    <ClCompile Include="NGA\DX11\NGASamplerState.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RendererD3D.cpp" />
     <ClCompile Include="RenderingSystem.cpp" />
@@ -231,7 +233,7 @@
     <ClCompile Include="Shader\Shader.cpp" />
     <ClCompile Include="Shader\ShaderProgram.cpp" />
     <ClCompile Include="StateData.cpp" />
-    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Resources\Texture.cpp" />
     <ClCompile Include="Resources\VertexBuffer.cpp" />
     <ClCompile Include="Scene\ForwardRenderer.cpp" />
     <ClCompile Include="Scene\Renderables\MeshInstance.cpp" />
@@ -251,6 +253,8 @@
     <ClInclude Include="NGA\NGACore.h" />
     <ClInclude Include="NGA\NGADefs.h" />
     <ClInclude Include="NGA\NGAResources.h" />
+    <ClInclude Include="NGA\NGAResourceViews.h" />
+    <ClInclude Include="NGA\NGASamplerState.h" />
     <ClInclude Include="NGA\NGAShader.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Renderer.h" />
@@ -266,7 +270,7 @@
     <ClInclude Include="Shader\Shader.h" />
     <ClInclude Include="Shader\ShaderProgram.h" />
     <ClInclude Include="StateData.h" />
-    <ClInclude Include="Texture.h" />
+    <ClInclude Include="Resources\Texture.h" />
     <ClInclude Include="Resources\VertexBuffer.h" />
     <ClInclude Include="Scene\ForwardRenderer.h" />
     <ClInclude Include="Scene\Renderables\MeshInstance.h" />

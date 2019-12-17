@@ -12,6 +12,8 @@ struct ID3D11RasterizerState;
 
 namespace na
 {
+	class NGASamplerState;
+	class NGAShaderResourceView;
 	class IndexBuffer;
 	class VertexBuffer;
 
@@ -31,9 +33,6 @@ namespace na
 		bool Initialize();
 		void Shutdown();
 		
-		void BindIndexBuffer(const IndexBuffer &ib);
-		void BindVertexBuffer(const VertexBuffer &vb);
-
 		void SetViewport(const Rect &rect);
 		
 		void SetViewProjMatrices(const Matrix &view, const Matrix &proj);
@@ -42,6 +41,12 @@ namespace na
 		void SetLightsData(const LightsData &lights);
 
 		void SetRasterizerState();
+
+		void BindIndexBuffer(const IndexBuffer &ib);
+		void BindVertexBuffer(const VertexBuffer &vb);
+
+		void BindShaderResource(const NGAShaderResourceView &view, NGAShaderStage stage, int slot);
+		void BindSamplerState(const NGASamplerState &samplerState, NGAShaderStage stage, int slot);
 
 		int GetUserVSConstantBufferIndex()const;
 		int GetUserPSConstantBufferIndex()const;

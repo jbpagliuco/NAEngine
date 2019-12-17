@@ -61,16 +61,6 @@ namespace na
 		NA_SAFE_RELEASE(mRasterizerState);
 	}
 
-	void StateData::BindIndexBuffer(const IndexBuffer &ib)
-	{
-		mCommandContext.BindIndexBuffer(ib.GetBuffer(), NGAIndexBufferType::IBT_32BIT);
-	}
-
-	void StateData::BindVertexBuffer(const VertexBuffer &vb)
-	{
-		mCommandContext.BindVertexBuffer(vb.GetBuffer(), vb.GetVertexStride());
-	}
-
 	void StateData::SetViewport(const Rect &rect)
 	{
 		D3D11_VIEWPORT vp;
@@ -133,6 +123,26 @@ namespace na
 		}
 
 		NA_RContext->RSSetState(mRasterizerState);
+	}
+
+	void StateData::BindIndexBuffer(const IndexBuffer &ib)
+	{
+		mCommandContext.BindIndexBuffer(ib.GetBuffer(), NGAIndexBufferType::IBT_32BIT);
+	}
+
+	void StateData::BindVertexBuffer(const VertexBuffer &vb)
+	{
+		mCommandContext.BindVertexBuffer(vb.GetBuffer(), vb.GetVertexStride());
+	}
+
+	void StateData::BindShaderResource(const NGAShaderResourceView &view, NGAShaderStage stage, int slot)
+	{
+		mCommandContext.BindShaderResource(view, stage, slot);
+	}
+
+	void StateData::BindSamplerState(const NGASamplerState &samplerState, NGAShaderStage stage, int slot)
+	{
+		mCommandContext.BindSamplerState(samplerState, stage, slot);
 	}
 
 	int StateData::GetUserVSConstantBufferIndex()const

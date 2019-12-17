@@ -2,10 +2,52 @@
 
 #if defined(NGA_D3D11)
 
+#include "Vendor/DirectXTK/Include/DDSTextureLoader.h"
+
+#include "Base/Util/String.h"
+
 #include "NGACoreInternalDX11.h"
 
 namespace na
 {
+	NGA_GPU_CLASS_IMPLEMENT(NGATexture);
+	NGA_GPU_CLASS_IMPLEMENT(NGABuffer);
+
+
+	bool NGATexture::Construct(const char *filename)
+	{
+		const HRESULT hr = DirectX::CreateDDSTextureFromFile(NgaDx11State.mDevice, ToWideString(filename).c_str(), &mResource, nullptr);
+		NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "Failed to load texture from file %s (HR: %X)", filename, hr);
+
+		mDesc.mType = NGATextureType::TEXTURE2D;
+
+		return true;
+	}
+
+	bool NGATexture::Construct(const NGATextureDesc &desc, void *initialData)
+	{
+		NA_ASSERT_RETURN_VALUE(false, false, "Unimplemented.");
+
+		mDesc = desc;
+	}
+
+	void NGATexture::Destruct()
+	{
+		NGA_DX11_SAFE_RELEASE(mResource);
+	}
+
+	bool NGATexture::IsConstructed()const
+	{
+		return mResource != nullptr;
+	}
+
+	const NGATextureDesc& NGATexture::GetDesc()const
+	{
+		return mDesc;
+	}
+
+
+
 	D3D11_USAGE NgaDx11TranslateUsage(NGABufferUsage usage)
 	{
 		return D3D11_USAGE_DEFAULT;

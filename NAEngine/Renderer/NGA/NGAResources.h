@@ -4,12 +4,47 @@
 
 #include "Base/Util/BitUtil.h"
 
-#if defined(NGA_D3D11)
-struct ID3D11Buffer;
-#endif
-
 namespace na
 {
+	/////////////////////////////////////////////////////
+	// Textures
+	enum class NGATextureType
+	{
+		TEXTURE1D,
+		TEXTURE2D,
+		TEXTURE3D
+	};
+
+	struct NGATextureDesc
+	{
+		NGATextureType mType;
+	};
+
+	class NGATexture
+	{
+		NGA_GPU_CLASS(NGATexture);
+
+	public:
+		bool Construct(const char *filename);
+		bool Construct(const NGATextureDesc &desc, void *initialData);
+		void Destruct();
+
+		bool IsConstructed()const;
+
+		const NGATextureDesc& GetDesc()const;
+		
+	private:
+		NGATextureDesc mDesc;
+
+#if defined(NGA_D3D11)
+	private:
+		struct ID3D11Resource *mResource;
+#endif
+
+		friend class NGAShaderResourceView;
+	};
+
+
 	/////////////////////////////////////////////////////
 	// Buffers
 	enum NGABufferUsage
@@ -39,8 +74,10 @@ namespace na
 		bool IsConstructed()const;
 
 #if defined(NGA_D3D11)
-	public:
-		ID3D11Buffer *mBuffer;
+	private:
+		struct ID3D11Buffer *mBuffer;
+
+		friend class NGACommandContext;
 #endif
 	};
 }

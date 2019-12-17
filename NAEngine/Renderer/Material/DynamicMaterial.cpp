@@ -1,6 +1,6 @@
 #include "DynamicMaterial.h"
 
-#include "Renderer/Texture.h"
+#include "Renderer/Resources/Texture.h"
 
 namespace na
 {
@@ -69,11 +69,8 @@ namespace na
 
 		// Bind textures
 		for (int i = 0; i < mDefaultTextures.size(); ++i) {
-			PlatformShaderResourceView *srv = mDefaultTextures[i]->GetShaderResourceView();
-			NA_RContext->PSSetShaderResources(i, 1, &srv);
-
-			PlatformSamplerState *sampler = mDefaultTextures[i]->GetSampler();
-			NA_RContext->PSSetSamplers(i, 1, &sampler);
+			NA_RStateData->BindShaderResource(mDefaultTextures[i]->GetShaderResourceView(), NGA_SHADER_STAGE_PIXEL, i);
+			NA_RStateData->BindSamplerState(mDefaultTextures[i]->GetSamplerState(), NGA_SHADER_STAGE_PIXEL, i);
 		}
 
 		// Bind constant data
@@ -144,11 +141,8 @@ namespace na
 
 		// Bind textures
 		for (int i = 0; i < mTextures.size(); ++i) {
-			PlatformShaderResourceView *srv = mTextures[i]->GetShaderResourceView();
-			NA_RContext->PSSetShaderResources(i, 1, &srv);
-
-			PlatformSamplerState *sampler = mTextures[i]->GetSampler();
-			NA_RContext->PSSetSamplers(i, 1, &sampler);
+			NA_RStateData->BindShaderResource(mTextures[i]->GetShaderResourceView(), NGA_SHADER_STAGE_PIXEL, i);
+			NA_RStateData->BindSamplerState(mTextures[i]->GetSamplerState(), NGA_SHADER_STAGE_PIXEL, i);
 		}
 	}
 

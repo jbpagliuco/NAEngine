@@ -2,7 +2,7 @@
 
 #include "Base/Streaming/Stream.h"
 #include "Base/Util/Serialize.h"
-#include "Renderer/Texture.h"
+#include "Renderer/Resources/Texture.h"
 
 namespace na
 {
@@ -36,7 +36,7 @@ namespace na
 
 	static bool OnTextureTexxLoad(const AssetID &id, const std::string &filename)
 	{
-		Texture *pTex = Texture::Create(id);
+		/*Texture *pTex = Texture::Create(id);
 		NA_ASSERT_RETURN_VALUE(pTex != nullptr, false, "Failed to allocate texture");
 
 		DeserializationParameterMap params = ParseFile(filename);
@@ -72,7 +72,9 @@ namespace na
 		samplerStateParams.mAddressW = _addressModeConv[samplerStateParamMap["addressW"].AsString("wrap")];
 		samplerStateParams.mBorderColor = samplerStateParamMap.AsColor();
 		
-		return pTex->Initialize(textureFile, samplerStateParams);
+		return pTex->Initialize(textureFile, samplerStateParams);*/
+
+		return false;
 	}
 
 	static bool OnTextureDDSLoad(const AssetID &id, const std::string &filename)
@@ -81,7 +83,7 @@ namespace na
 		NA_ASSERT_RETURN_VALUE(pTex != nullptr, false, "Failed to allocate texture");
 
 		// Create the texture right from a DDS file, with the normal sampler state parameters
-		return pTex->Initialize(filename, SamplerStateParameters());
+		return pTex->Initialize(filename, NGASamplerStateDesc());
 	}
 
 	static void OnTextureUnload(const AssetID &id)
