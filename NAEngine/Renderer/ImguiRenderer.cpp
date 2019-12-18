@@ -10,6 +10,8 @@
 #include "Vendor/imgui/examples/imgui_impl_win32.h"
 #include "Vendor/imgui/examples/imgui_impl_dx11.h"
 
+#include "NGA/DX11/NGACoreInternalDX11.h"
+
 namespace na
 {
 	static bool StylePushed = false;
@@ -34,7 +36,7 @@ namespace na
 			return false;
 		}
 
-		if (!ImGui_ImplDX11_Init(NA_RDevice, NA_RContext)) {
+		if (!ImGui_ImplDX11_Init(NgaDx11State.mDevice, NgaDx11State.mContext)) {
 			return false;
 		}
 
