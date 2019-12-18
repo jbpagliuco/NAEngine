@@ -50,7 +50,6 @@ namespace na
 
 	D3D11_USAGE NgaDx11TranslateUsage(NGABufferUsage usage)
 	{
-		return D3D11_USAGE_DEFAULT;
 		if (usage & NGA_BUFFER_USAGE_CPU_READ_WRITE) {
 			return D3D11_USAGE_STAGING;
 		}
