@@ -1,88 +1,49 @@
 #include "ConstantBuffer.h"
 
-#if defined(NA_D3D11)
-#include "Renderer/RendererD3D.h"
-#endif
+#include "Base/Util/Util.h"
+#include "Renderer/Renderer.h"
 
 namespace na
 {
-	bool ConstantBuffer::Initialize(BufferUsage usage, void *pData, size_t dataByteLength)
+	bool ConstantBuffer::Initialize(ConstantBufferUsage usage, void *initialData, size_t size)
 	{
+		NA_ASSERT_RETURN_VALUE(!mBuffer.IsConstructed(), false);
+		
+		NGABufferDesc desc;
+		desc.mUsage = NGA_BUFFER_USAGE_CONSTANT;
+		desc.mSizeInBytes = RoundToNearestMultiple((int)size, 16);
+
+		switch (usage) {
+		case ConstantBufferUsage::IMMUTABLE:
+			NA_ASSERT_RETURN_VALUE(initialData != nullptr, false, "Immutable buffers needs data upon creation.");
+			break;
+
+		case ConstantBufferUsage::GPU_WRITE:
+			desc.mUsage |= NGA_BUFFER_USAGE_GPU_WRITE;
+			break;
+
+		case ConstantBufferUsage::CPU_WRITE:
+			desc.mUsage |= NGA_BUFFER_USAGE_CPU_WRITE;
+			break;
+		};
+
+		mBuffer.Construct(desc, initialData);
 		mUsage = usage;
-		mSize = dataByteLength;
-
-		NA_SAFE_RELEASE(mBuffer);
-
-		if (dataByteLength > 0) {
-			if (pData != nullptr) {
-				NA_ASSERT(dataByteLength > 0, "Must initialize constant buffer with a positive data byte length.");
-			}
-
-			if (usage == BufferUsage::IMMUTABLE) {
-				NA_ASSERT(pData != nullptr, "You must set constant buffer immutable data at the time of creation.");
-			}
-
-			// ViewProj buffer
-			D3D11_BUFFER_DESC desc;
-			desc.Usage = (D3D11_USAGE)usage;
-			desc.ByteWidth = RoundToNearestMultiple((int)dataByteLength, 16);
-			desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-			desc.MiscFlags = 0;
-			desc.StructureByteStride = 0;
-
-			switch (usage) {
-			case BufferUsage::DEFAULT:
-			case BufferUsage::IMMUTABLE:
-				desc.CPUAccessFlags = 0;
-				break;
-
-			case BufferUsage::DYNAMIC:
-				desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-				break;
-
-			case BufferUsage::STAGING:
-				desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ;
-				break;
-			};
-
-			HRESULT hr;
-			if (pData != nullptr) {
-				D3D11_SUBRESOURCE_DATA srData{};
-				srData.pSysMem = pData;
-
-				hr = NA_RDevice->CreateBuffer(&desc, &srData, &mBuffer);
-			} else {
-				hr = NA_RDevice->CreateBuffer(&desc, nullptr, &mBuffer);
-			}
-
-			return SUCCEEDED(hr);
-		}
-
-		return true;
+		mSize = size;
 	}
 
 	void ConstantBuffer::Shutdown()
 	{
-		NA_SAFE_RELEASE(mBuffer);
+		mBuffer.Destruct();
 	}
 
-	bool ConstantBuffer::Map(void *pData)
+	void ConstantBuffer::Map(void *pData)
 	{
-		NA_ASSERT_RETURN_VALUE(mUsage != BufferUsage::IMMUTABLE && mUsage != BufferUsage::DEFAULT, false, "Trying to map data to an immutable buffer.");
-
-		D3D11_MAPPED_SUBRESOURCE res;
-
-		HRESULT hr = NA_RContext->Map(mBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
-		NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false);
-
-		memcpy(res.pData, pData, mSize);
-
-		NA_RContext->Unmap(mBuffer, 0);
-
-		return true;
+		NA_ASSERT_RETURN(mUsage == ConstantBufferUsage::CPU_WRITE, "Trying to map data to a non-CPU writeable buffer.");
+		NA_RStateData->MapBufferData(mBuffer, pData);
 	}
 
-	PlatformConstantBuffer* ConstantBuffer::GetBuffer()const
+	const NGABuffer& ConstantBuffer::GetBuffer()const
 	{
 		return mBuffer;
 	}

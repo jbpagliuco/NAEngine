@@ -38,13 +38,13 @@ namespace na
 
 	bool StateData::Initialize()
 	{
-		bool success = mViewProjBuffer.Initialize(BufferUsage::DYNAMIC, nullptr, sizeof(Matrix));
+		bool success = mViewProjBuffer.Initialize(ConstantBufferUsage::CPU_WRITE, nullptr, sizeof(Matrix));
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize view proj buffer.");
 
-		success = mObjectDataBuffer.Initialize(BufferUsage::DYNAMIC, nullptr, sizeof(PerObjectData));
+		success = mObjectDataBuffer.Initialize(ConstantBufferUsage::CPU_WRITE, nullptr, sizeof(PerObjectData));
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize object data buffer.");
 
-		success = mLightsBuffer.Initialize(BufferUsage::DYNAMIC, nullptr, sizeof(LightsData));
+		success = mLightsBuffer.Initialize(ConstantBufferUsage::CPU_WRITE, nullptr, sizeof(LightsData));
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize lights buffer.");
 		
 		mRasterizerState = nullptr;
@@ -79,8 +79,7 @@ namespace na
 		Matrix viewProj = proj * view;
 		mViewProjBuffer.Map(&viewProj);
 
-		PlatformConstantBuffer *cb = mViewProjBuffer.GetBuffer();
-		NA_RContext->VSSetConstantBuffers((int)VSConstantBuffers::VIEWPROJ, 1, &cb);
+		mCommandContext.BindConstantBuffer(mViewProjBuffer.GetBuffer(), NGA_SHADER_STAGE_VERTEX, (int)VSConstantBuffers::VIEWPROJ);
 	}
 
 	void StateData::SetObjectTransform(const Matrix &transform)
@@ -91,16 +90,14 @@ namespace na
 
 		mObjectDataBuffer.Map(&data);
 
-		PlatformConstantBuffer *cb = mObjectDataBuffer.GetBuffer();
-		NA_RContext->VSSetConstantBuffers((int)VSConstantBuffers::OBJECTDATA, 1, &cb);
+		mCommandContext.BindConstantBuffer(mObjectDataBuffer.GetBuffer(), NGA_SHADER_STAGE_VERTEX, (int)VSConstantBuffers::OBJECTDATA);
 	}
 
 	void StateData::SetLightsData(const LightsData &lights)
 	{
 		mLightsBuffer.Map((void*)&lights);
 
-		PlatformConstantBuffer *cb = mLightsBuffer.GetBuffer();
-		NA_RContext->PSSetConstantBuffers((int)PSConstantBuffers::LIGHTS, 1, &cb);
+		mCommandContext.BindConstantBuffer(mLightsBuffer.GetBuffer(), NGA_SHADER_STAGE_PIXEL, (int)PSConstantBuffers::LIGHTS);
 	}
 
 	void StateData::SetRasterizerState()
@@ -140,9 +137,27 @@ namespace na
 		mCommandContext.BindShaderResource(view, stage, slot);
 	}
 
+	void StateData::BindConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot)
+	{
+		NA_ASSERT_RETURN(stage != NGA_SHADER_STAGE_ALL, "Need to implement this.");
+
+		if (stage & NGA_SHADER_STAGE_VERTEX) {
+			mCommandContext.BindConstantBuffer(constantBuffer, NGA_SHADER_STAGE_VERTEX, slot + (int)VSConstantBuffers::USER);
+		}
+
+		if (stage & NGA_SHADER_STAGE_PIXEL) {
+			mCommandContext.BindConstantBuffer(constantBuffer, NGA_SHADER_STAGE_PIXEL, slot + (int)PSConstantBuffers::USER);
+		}
+	}
+
 	void StateData::BindSamplerState(const NGASamplerState &samplerState, NGAShaderStage stage, int slot)
 	{
 		mCommandContext.BindSamplerState(samplerState, stage, slot);
+	}
+
+	void StateData::MapBufferData(const NGABuffer &buffer, void *data)
+	{
+		mCommandContext.MapBufferData(buffer, data);
 	}
 
 	int StateData::GetUserVSConstantBufferIndex()const

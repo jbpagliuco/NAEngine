@@ -12,7 +12,7 @@ namespace na
 			return false;
 		}
 
-		if (!mConstantBuffer.Initialize(BufferUsage::DYNAMIC, nullptr, parameterByteLength)) {
+		if (!mConstantBuffer.Initialize(ConstantBufferUsage::CPU_WRITE, nullptr, parameterByteLength)) {
 			return false;
 		}
 
@@ -67,15 +67,14 @@ namespace na
 		// Bind default data. This is not great.
 		mConstantBuffer.Map(mDefaultParameterData);
 
+		// Bind constant data
+		NA_RStateData->BindConstantBuffer(mConstantBuffer.GetBuffer(), NGA_SHADER_STAGE_PIXEL, 0);
+
 		// Bind textures
 		for (int i = 0; i < mDefaultTextures.size(); ++i) {
 			NA_RStateData->BindShaderResource(mDefaultTextures[i]->GetShaderResourceView(), NGA_SHADER_STAGE_PIXEL, i);
 			NA_RStateData->BindSamplerState(mDefaultTextures[i]->GetSamplerState(), NGA_SHADER_STAGE_PIXEL, i);
 		}
-
-		// Bind constant data
-		PlatformConstantBuffer *cb = mConstantBuffer.GetBuffer();
-		NA_RContext->PSSetConstantBuffers(NA_RStateData->GetUserPSConstantBufferIndex(), 1, &cb);
 	}
 
 	bool DynamicMaterial::GetParameterInfo(DynamicMaterialParameterInfo &info, const std::string &name)

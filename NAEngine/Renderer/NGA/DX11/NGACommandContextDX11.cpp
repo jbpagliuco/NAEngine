@@ -22,6 +22,17 @@ namespace na
 		NgaDx11State.mContext->IASetVertexBuffers(0, 1, &vertexBuffer.mBuffer, &stride, &offset);
 	}
 
+	void NGACommandContext::BindConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot)
+	{
+		if (stage & NGA_SHADER_STAGE_VERTEX) {
+			NgaDx11State.mContext->VSSetConstantBuffers(slot, 1, &constantBuffer.mBuffer);
+		}
+
+		if (stage & NGA_SHADER_STAGE_PIXEL) {
+			NgaDx11State.mContext->PSSetConstantBuffers(slot, 1, &constantBuffer.mBuffer);
+		}
+	}
+
 	void NGACommandContext::BindShaderResource(const NGAShaderResourceView &view, NGAShaderStage stage, int slot)
 	{
 		if (stage & NGA_SHADER_STAGE_VERTEX) {
@@ -42,6 +53,21 @@ namespace na
 		if (stage & NGA_SHADER_STAGE_PIXEL) {
 			NgaDx11State.mContext->PSSetSamplers(slot, 1, &samplerState.mSamplerState);
 		}
+	}
+
+	void NGACommandContext::MapBufferData(const NGABuffer &buffer, void *data)
+	{
+		const NGABufferUsage usage = buffer.mDesc.mUsage;
+		NA_ASSERT_RETURN((usage & NGA_BUFFER_USAGE_CPU_WRITE) || (usage & NGA_BUFFER_USAGE_CPU_READ_WRITE));
+
+		D3D11_MAPPED_SUBRESOURCE res;
+
+		HRESULT hr = NgaDx11State.mContext->Map(buffer.mBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
+		NA_ASSERT_RETURN(SUCCEEDED(hr), false, "ID3D11DeviceContext::Map() failed with HRESULT %X", hr);
+
+		memcpy(res.pData, data, buffer.mDesc.mSizeInBytes);
+
+		NgaDx11State.mContext->Unmap(buffer.mBuffer, 0);
 	}
 }
 

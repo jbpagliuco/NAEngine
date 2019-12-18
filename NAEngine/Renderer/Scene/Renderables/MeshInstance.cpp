@@ -2,11 +2,11 @@
 
 #include <d3d11.h>
 
-#include "Renderer/IndexBuffer.h"
 #include "Renderer/Material/Material.h"
 #include "Renderer/Material/DynamicMaterial.h"
 #include "Renderer/Mesh.h"
 #include "Renderer/RendererD3D.h"
+#include "Renderer/Resources/IndexBuffer.h"
 #include "Renderer/Resources/VertexBuffer.h"
 
 namespace na

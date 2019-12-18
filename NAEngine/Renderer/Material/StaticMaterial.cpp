@@ -12,7 +12,7 @@ namespace na
 			return false;
 		}
 
-		if (!mConstantBuffer.Initialize(BufferUsage::IMMUTABLE, parameterData, parameterByteLength)) {
+		if (!mConstantBuffer.Initialize(ConstantBufferUsage::IMMUTABLE, parameterData, parameterByteLength)) {
 			return false;
 		}
 
@@ -39,8 +39,7 @@ namespace na
 		Material::Bind();
 
 		// Bind constant data
-		PlatformConstantBuffer *cb = mConstantBuffer.GetBuffer();
-		NA_RContext->PSSetConstantBuffers(NA_RStateData->GetUserPSConstantBufferIndex(), 1, &cb);
+		NA_RStateData->BindConstantBuffer(mConstantBuffer.GetBuffer(), NGA_SHADER_STAGE_PIXEL, 0);
 
 		// Bind textures
 		for (int i = 0; i < mTextures.size(); ++i) {

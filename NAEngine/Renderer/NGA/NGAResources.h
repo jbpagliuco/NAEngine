@@ -52,7 +52,12 @@ namespace na
 		NGA_BUFFER_USAGE_NONE			= 0,
 		NGA_BUFFER_USAGE_VERTEX			= 1 << 0,
 		NGA_BUFFER_USAGE_INDEX			= 1 << 1,
-		NGA_BUFFER_USAGE_CONSTANT		= 1 << 2
+		NGA_BUFFER_USAGE_CONSTANT		= 1 << 2,
+
+		// Immutable is the default if none of these flags are specified
+		NGA_BUFFER_USAGE_GPU_WRITE		= 1 << 3,
+		NGA_BUFFER_USAGE_CPU_WRITE		= 1 << 4,
+		NGA_BUFFER_USAGE_CPU_READ_WRITE = 1 << 5
 	};
 	NA_DEFINE_ENUM_FLAG_OPERATORS(NGABufferUsage);
 
@@ -72,6 +77,9 @@ namespace na
 		void Destruct();
 
 		bool IsConstructed()const;
+
+	private:
+		NGABufferDesc mDesc;
 
 #if defined(NGA_D3D11)
 	private:

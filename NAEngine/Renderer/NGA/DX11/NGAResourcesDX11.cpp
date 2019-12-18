@@ -51,6 +51,19 @@ namespace na
 	D3D11_USAGE NgaDx11TranslateUsage(NGABufferUsage usage)
 	{
 		return D3D11_USAGE_DEFAULT;
+		if (usage & NGA_BUFFER_USAGE_CPU_READ_WRITE) {
+			return D3D11_USAGE_STAGING;
+		}
+
+		if (usage & NGA_BUFFER_USAGE_GPU_WRITE) {
+			return D3D11_USAGE_DEFAULT;
+		}
+
+		if (usage & NGA_BUFFER_USAGE_CPU_WRITE) {
+			return D3D11_USAGE_DYNAMIC;
+		}
+
+		return D3D11_USAGE_IMMUTABLE;
 	}
 
 	UINT NgaDx11TranslateBindUsage(NGABufferUsage usage)
@@ -71,6 +84,19 @@ namespace na
 		return dxusage;
 	}
 
+	UINT NgaDx11TranslateCPUAccessFlags(NGABufferUsage usage)
+	{
+		if (usage & NGA_BUFFER_USAGE_CPU_WRITE) {
+			return D3D11_CPU_ACCESS_WRITE;
+		}
+
+		if (usage & NGA_BUFFER_USAGE_CPU_READ_WRITE) {
+			return D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ;
+		}
+
+		return 0;
+	}
+
 	bool NGABuffer::Construct(const NGABufferDesc &desc)
 	{
 		return Construct(desc, nullptr);
@@ -84,7 +110,7 @@ namespace na
 		dxDesc.Usage = NgaDx11TranslateUsage(desc.mUsage);
 		dxDesc.BindFlags = NgaDx11TranslateBindUsage(desc.mUsage);
 		dxDesc.ByteWidth = (UINT)desc.mSizeInBytes;
-		dxDesc.CPUAccessFlags = 0;
+		dxDesc.CPUAccessFlags = NgaDx11TranslateCPUAccessFlags(desc.mUsage);
 		dxDesc.MiscFlags = 0;
 		dxDesc.StructureByteStride = 0;
 
@@ -97,6 +123,8 @@ namespace na
 
 		HRESULT hr = NgaDx11State.mDevice->CreateBuffer(&dxDesc, pSubResData, &mBuffer);
 		NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "ID3D11Device::CreateBuffer() failed with HRESULT %X", hr);
+
+		mDesc = desc;
 
 		return true;
 	}

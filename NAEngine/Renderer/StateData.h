@@ -12,6 +12,7 @@ struct ID3D11RasterizerState;
 
 namespace na
 {
+	class NGABuffer;
 	class NGASamplerState;
 	class NGAShaderResourceView;
 	class IndexBuffer;
@@ -45,8 +46,11 @@ namespace na
 		void BindIndexBuffer(const IndexBuffer &ib);
 		void BindVertexBuffer(const VertexBuffer &vb);
 
+		void BindConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot);
 		void BindShaderResource(const NGAShaderResourceView &view, NGAShaderStage stage, int slot);
 		void BindSamplerState(const NGASamplerState &samplerState, NGAShaderStage stage, int slot);
+
+		void MapBufferData(const NGABuffer &buffer, void *data);
 
 		int GetUserVSConstantBufferIndex()const;
 		int GetUserPSConstantBufferIndex()const;

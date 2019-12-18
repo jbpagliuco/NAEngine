@@ -1,34 +1,31 @@
 #pragma once
 
-#include "Renderer/RenderDefs.h"
-
-#if defined(NA_D3D11)
-#include <d3d11.h>
-#endif
-
-#include "Renderer/Buffer.h"
+#include "NGA/NGAResources.h"
 
 namespace na
 {
-#if defined(NA_D3D11)
-	typedef ID3D11Buffer PlatformConstantBuffer;
-#endif
+	enum class ConstantBufferUsage
+	{
+		IMMUTABLE = 0,
+		GPU_WRITE = 1,
+		CPU_WRITE = 2
+	};
 
 	class ConstantBuffer
 	{
 	public:
-		bool Initialize(BufferUsage usage, void *pData, size_t dataByteLength);
+		bool Initialize(ConstantBufferUsage usage, void *initialData, size_t size);
 		void Shutdown();
 
-		bool Map(void *pData);
+		void Map(void *pData);
 		
-		PlatformConstantBuffer* GetBuffer()const;
+		const NGABuffer& GetBuffer()const;
 		size_t GetSize()const;
 
 	private:
-		PlatformConstantBuffer *mBuffer;
-	
-		BufferUsage mUsage;
+		NGABuffer mBuffer;
+
+		ConstantBufferUsage mUsage;
 		size_t mSize;
 	};
 }
