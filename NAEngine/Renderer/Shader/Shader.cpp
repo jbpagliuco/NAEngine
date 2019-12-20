@@ -1,13 +1,15 @@
 #include "Shader.h"
 
+#include "Renderer/Renderer.h"
+
 namespace na
 {
 	NA_FACTORY_SETUP(Shader);
 
-	bool Shader::Initialize(VertexShader vertexShader, PixelShader pixelShader)
+	bool Shader::Initialize(const std::string &vs, NGAVertexFormatDesc vsFormat, const std::string &ps)
 	{
-		mVertexShader = vertexShader;
-		mPixelShader = pixelShader;
+		mVertexShader.Initialize(vs, vsFormat);
+		mPixelShader.Initialize(ps);
 
 		return true;
 	}
@@ -20,7 +22,7 @@ namespace na
 
 	void Shader::Bind()
 	{
-		mVertexShader.Bind();
-		mPixelShader.Bind();
+		NA_RStateData->BindShader(mVertexShader);
+		NA_RStateData->BindShader(mPixelShader);
 	}
 }

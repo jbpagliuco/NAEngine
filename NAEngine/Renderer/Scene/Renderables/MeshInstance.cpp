@@ -19,9 +19,9 @@ namespace na
 		const VertexShader &vs = mMaterial->GetShader()->GetVertexShader();
 
 		// Build the input layout
-		VertexFormatDesc vDesc;
+		NGAVertexFormatDesc vDesc;
 		for (auto &shaderInput : vs.GetVertexFormatDesc().mAttributes) {
-			VertexAttribute attr;
+			NGAVertexAttribute attr;
 			
 			// Find the matching input from the mesh.
 			bool found = false;
@@ -44,7 +44,7 @@ namespace na
 			vDesc.mAttributes.push_back(attr);
 		}
 
-		mInputLayout.Initialize(vDesc, vs);
+		mInputLayout.Construct(vDesc, vs.GetShader());
 
 		return true;
 	}
@@ -62,7 +62,7 @@ namespace na
 		ReleaseMaterial(mMaterial);
 		mMaterial = nullptr;
 
-		mInputLayout.Shutdown();
+		mInputLayout.Destruct();
 	}
 
 	DynamicMaterialInstance* MeshInstance::CreateDynamicMaterialInstance()
@@ -88,7 +88,7 @@ namespace na
 			mDynMaterialInst->BindData();
 		}
 
-		mInputLayout.Bind();
+		NA_RStateData->BindInputLayout(mInputLayout);
 		mMesh->Render();
 	}
 }

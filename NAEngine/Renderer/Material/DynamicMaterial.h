@@ -4,7 +4,7 @@
 
 #include "Base/Util/Color.h"
 #include "Base/Util/Serialize.h"
-#include "Renderer/ConstantBuffer.h"
+#include "Renderer/Resources/ConstantBuffer.h"
 
 namespace na
 {

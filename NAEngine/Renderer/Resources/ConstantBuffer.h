@@ -1,6 +1,6 @@
 #pragma once
 
-#include "NGA/NGAResources.h"
+#include "Renderer/NGA/NGAResources.h"
 
 namespace na
 {

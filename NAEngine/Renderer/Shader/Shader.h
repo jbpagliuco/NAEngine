@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Base/Streaming/AssetFactory.h"
-#include "Renderer/InputLayout.h"
 #include "ShaderProgram.h"
 
 namespace na
@@ -9,7 +8,7 @@ namespace na
 	class Shader : public AssetFactory<Shader>
 	{
 	public:
-		bool Initialize(VertexShader vertexShader, PixelShader pixelShader);
+		bool Initialize(const std::string &vs, NGAVertexFormatDesc vsFormat, const std::string &ps);
 		void Shutdown();
 
 		void Bind();

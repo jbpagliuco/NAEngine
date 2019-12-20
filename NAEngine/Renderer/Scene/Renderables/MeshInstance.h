@@ -3,7 +3,7 @@
 #include "RenderableInstance.h"
 
 #include "Base/Streaming/Stream.h"
-#include "Renderer/InputLayout.h"
+#include "Renderer/NGA/NGAInputLayout.h"
 
 namespace na
 {
@@ -28,6 +28,6 @@ namespace na
 
 		DynamicMaterialInstance *mDynMaterialInst;
 
-		InputLayout mInputLayout;
+		NGAInputLayout mInputLayout;
 	};
 }

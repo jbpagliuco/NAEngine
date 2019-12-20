@@ -6,6 +6,8 @@
 
 #include <d3d11.h>
 
+#include "NGA/NGACommon.h"
+
 #define NGA_DX11_SAFE_RELEASE(x) if ((x)) { (x)->Release(); (x) = nullptr; }
 
 namespace na
@@ -16,6 +18,8 @@ namespace na
 		ID3D11Device *mDevice;
 		ID3D11DeviceContext *mContext;
 	};
+
+	DXGI_FORMAT NGAFormatToDXGI(NGAFormat format);
 
 	extern NGAInternalStateDX11 NgaDx11State;
 }

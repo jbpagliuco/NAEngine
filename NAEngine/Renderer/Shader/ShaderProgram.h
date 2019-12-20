@@ -1,63 +1,37 @@
 #pragma once
 
-#include "Renderer/RenderDefs.h"
-
 #include <string>
 
-#if defined(NA_D3D11)
-#include <d3d11.h>
-#include "Renderer/RendererD3D.h"
-#endif
-
-#include "Base/Util/Util.h"
-#include "Renderer/VertexFormat.h"
+#include "Renderer/NGA/NGAShader.h"
+#include "Renderer/NGA/NGACommon.h"
 
 namespace na
 {
-#if defined(NA_D3D11)
-	typedef ID3D11VertexShader PlatformVertexShader;
-	typedef ID3D11PixelShader PlatformPixelShader;
-
-	typedef ID3D10Blob PlatformBlob;
-#endif
-	
-	template <typename T>
 	class ShaderProgram
 	{
 	public:
-		// virtual bool Initialize(const std::string &filename);
-		virtual void Shutdown()
-		{
-			NA_SAFE_RELEASE(mBytecode);
-			NA_SAFE_RELEASE(mShader);
-		}
+		virtual void Shutdown();
 
-		virtual void* GetBuffer()const { return mBytecode->GetBufferPointer(); }
-		virtual size_t GetBufferSize()const { return mBytecode->GetBufferSize(); }
+		const NGAShader& GetShader()const;
 		
 	protected:
-		T *mShader;
-		PlatformBlob *mBytecode;
+		NGAShader mShader;
 	};
 
-	class VertexShader : public ShaderProgram<PlatformVertexShader>
+	class VertexShader : public ShaderProgram
 	{
 	public:
-		virtual bool Initialize(const std::string &filename, VertexFormatDesc vertexFormatDesc);
-		
-		virtual void Bind();
+		virtual bool Initialize(const std::string &filename, NGAVertexFormatDesc vertexFormatDesc);
 
-		inline VertexFormatDesc GetVertexFormatDesc()const { return mVertexFormatDesc; }
+		NGAVertexFormatDesc GetVertexFormatDesc()const;
 
 	private:
-		VertexFormatDesc mVertexFormatDesc;
+		NGAVertexFormatDesc mVertexFormatDesc;
 	};
 
-	class PixelShader : public ShaderProgram<PlatformPixelShader>
+	class PixelShader : public ShaderProgram
 	{
 	public:
 		virtual bool Initialize(const std::string &filename);
-
-		virtual void Bind();
 	};
 }

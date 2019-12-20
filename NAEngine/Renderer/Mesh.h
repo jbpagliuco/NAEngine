@@ -2,9 +2,9 @@
 
 #include "Base/Streaming/AssetFactory.h"
 
+#include "Renderer/NGA/NGACommon.h"
 #include "Resources/IndexBuffer.h"
 #include "Resources/VertexBuffer.h"
-#include "VertexFormat.h"
 
 namespace na
 {
@@ -17,7 +17,7 @@ namespace na
 		IndexType *indices;
 		size_t numIndices;
 
-		VertexFormatDesc mVertexFormat;
+		NGAVertexFormatDesc mVertexFormat;
 	};
 
 	class Mesh : public AssetFactory<Mesh>
@@ -28,12 +28,12 @@ namespace na
 
 		void Render();
 
-		inline const VertexFormatDesc& GetVertexFormatDesc()const { return mVertexFormat; }
+		inline const NGAVertexFormatDesc& GetVertexFormatDesc()const { return mVertexFormat; }
 
 	private:
 		VertexBuffer mVertexBuffer;
 		IndexBuffer mIndexBuffer;
 
-		VertexFormatDesc mVertexFormat;
+		NGAVertexFormatDesc mVertexFormat;
 	};
 }

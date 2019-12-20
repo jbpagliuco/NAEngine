@@ -4,8 +4,8 @@
 
 #include "NGA/NGACommandContext.h"
 
-#include "ConstantBuffer.h"
 #include "Light.h"
+#include "Resources/ConstantBuffer.h"
 #include "Shader/EngineShaders/shader_common.hlsli"
 
 struct ID3D11RasterizerState;
@@ -13,9 +13,11 @@ struct ID3D11RasterizerState;
 namespace na
 {
 	class NGABuffer;
+	class NGAInputLayout;
 	class NGASamplerState;
 	class NGAShaderResourceView;
 	class IndexBuffer;
+	class ShaderProgram;
 	class VertexBuffer;
 
 	struct Rect;
@@ -45,6 +47,10 @@ namespace na
 
 		void BindIndexBuffer(const IndexBuffer &ib);
 		void BindVertexBuffer(const VertexBuffer &vb);
+
+		void BindInputLayout(const NGAInputLayout &inputLayout);
+
+		void BindShader(const ShaderProgram &shader);
 
 		void BindConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot);
 		void BindShaderResource(const NGAShaderResourceView &view, NGAShaderStage stage, int slot);

@@ -208,7 +208,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ConstantBuffer.cpp" />
+    <ClCompile Include="Resources\ConstantBuffer.cpp" />
     <ClCompile Include="Formats.cpp" />
     <ClCompile Include="ImguiRenderer.cpp" />
     <ClCompile Include="Light.cpp" />
@@ -219,14 +219,16 @@
     <ClCompile Include="NGA\DX11\NGACommandContextDX11.cpp" />
     <ClCompile Include="NGA\DX11\NGACoreDX11.cpp" />
     <ClCompile Include="NGA\DX11\NGACoreInternalDX11.cpp" />
+    <ClCompile Include="NGA\DX11\NGAInputLayoutDX11.cpp" />
     <ClCompile Include="NGA\DX11\NGAResourcesDX11.cpp" />
     <ClCompile Include="NGA\DX11\NGAResourceViewsDX11.cpp" />
     <ClCompile Include="NGA\DX11\NGASamplerState.cpp" />
+    <ClCompile Include="NGA\DX11\NGAShaderDX11.cpp" />
+    <ClCompile Include="NGA\NGACommon.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RendererD3D.cpp" />
     <ClCompile Include="RenderingSystem.cpp" />
     <ClCompile Include="Resources\IndexBuffer.cpp" />
-    <ClCompile Include="InputLayout.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="Scene\Camera.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
@@ -238,10 +240,9 @@
     <ClCompile Include="Scene\ForwardRenderer.cpp" />
     <ClCompile Include="Scene\Renderables\MeshInstance.cpp" />
     <ClCompile Include="Scene\SceneEntity.cpp" />
-    <ClCompile Include="VertexFormat.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ConstantBuffer.h" />
+    <ClInclude Include="Resources\ConstantBuffer.h" />
     <ClInclude Include="ImguiRenderer.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material\DynamicMaterial.h" />
@@ -252,6 +253,7 @@
     <ClInclude Include="NGA\NGACommon.h" />
     <ClInclude Include="NGA\NGACore.h" />
     <ClInclude Include="NGA\NGADefs.h" />
+    <ClInclude Include="NGA\NGAInputLayout.h" />
     <ClInclude Include="NGA\NGAResources.h" />
     <ClInclude Include="NGA\NGAResourceViews.h" />
     <ClInclude Include="NGA\NGASamplerState.h" />
@@ -264,7 +266,6 @@
     <ClInclude Include="RenderingSystem.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Resources\IndexBuffer.h" />
-    <ClInclude Include="InputLayout.h" />
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="Scene\Camera.h" />
     <ClInclude Include="Shader\Shader.h" />
@@ -279,7 +280,6 @@
     <ClInclude Include="Scene\SceneRenderer.h" />
     <ClInclude Include="Scene\SceneEntity.h" />
     <ClInclude Include="Formats.h" />
-    <ClInclude Include="VertexFormat.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

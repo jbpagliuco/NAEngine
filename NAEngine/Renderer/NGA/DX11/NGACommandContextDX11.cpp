@@ -2,6 +2,7 @@
 
 #if defined(NGA_D3D11)
 
+#include "NGA/NGAInputLayout.h"
 #include "NGA/NGAResources.h"
 #include "NGA/NGAResourceViews.h"
 #include "NGA/NGASamplerState.h"
@@ -20,6 +21,25 @@ namespace na
 		UINT stride = (UINT)vertexStride;
 		UINT offset = 0;
 		NgaDx11State.mContext->IASetVertexBuffers(0, 1, &vertexBuffer.mBuffer, &stride, &offset);
+	}
+
+	void NGACommandContext::BindInputLayout(const NGAInputLayout &inputLayout)
+	{
+		NgaDx11State.mContext->IASetInputLayout(inputLayout.mInputLayout);
+	}
+
+	void NGACommandContext::BindShader(const NGAShader &shader)
+	{
+		switch (shader.GetType())
+		{
+		case NGAShaderType::VERTEX:
+			NgaDx11State.mContext->VSSetShader(shader.mVertexShader, nullptr, 0);
+			break;
+
+		case NGAShaderType::PIXEL:
+			NgaDx11State.mContext->PSSetShader(shader.mPixelShader, nullptr, 0);
+			break;
+		}
 	}
 
 	void NGACommandContext::BindConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot)

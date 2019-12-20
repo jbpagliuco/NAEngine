@@ -77,7 +77,7 @@ namespace na
 					parameter.AsHLSLType((unsigned char*)parameterData + calculatedSize, type);
 				}
 
-				calculatedSize += GetFormatByteSize(GetFormatFromString(type));
+				calculatedSize += GetFormatByteSize(GetFormatFromString(type.c_str()));
 			}
 		}
 
@@ -120,32 +120,24 @@ namespace na
 
 		DeserializationParameterMap params = ParseFile(filename);
 
-		// VERTEX SHADER
 		auto vsParams = params["vertexShader"];
+		auto psParams = params["pixelShader"];
 
-		VertexFormatDesc vertexFormatDesc;
+		NGAVertexFormatDesc vertexFormatDesc;
 		for (auto &elem : vsParams["inputs"].childrenArray) {
-			VertexAttribute attr;
+			NGAVertexAttribute attr;
 
-			attr.mSemanticType = GetSemanticType(elem["semanticName"].AsString());
+			attr.mSemanticType = GetSemanticType(elem["semanticName"].AsString().c_str());
 			attr.mSemanticIndex = elem["semanticIndex"].AsInt(0);
 
 			std::string format = elem["type"].AsString();
-			attr.mFormat = GetFormatFromString(format);
+			attr.mFormat = GetFormatFromString(format.c_str());
 
 			vertexFormatDesc.mAttributes.push_back(attr);
 		}
 
-		VertexShader vs;
-		vs.Initialize(vsParams["file"].AsFilepath(), vertexFormatDesc);
-
-		// PIXEL SHADER
-		PixelShader ps;
-		auto psParams = params["pixelShader"];
-		ps.Initialize(psParams["file"].AsFilepath());
-
 		// SHADER
-		return pShader->Initialize(vs, ps);
+		return pShader->Initialize(vsParams["file"].AsFilepath(), vertexFormatDesc, psParams["file"].AsFilepath());
 	}
 
 	static void OnShaderUnload(const AssetID &id)

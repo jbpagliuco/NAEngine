@@ -30,6 +30,8 @@ namespace na
 		mBuffer.Construct(desc, initialData);
 		mUsage = usage;
 		mSize = size;
+
+		return true;
 	}
 
 	void ConstantBuffer::Shutdown()

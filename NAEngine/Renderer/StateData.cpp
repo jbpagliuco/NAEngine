@@ -4,6 +4,7 @@
 
 #include "Resources/IndexBuffer.h"
 #include "Resources/VertexBuffer.h"
+#include "Shader/ShaderProgram.h"
 
 #include "Rect.h"
 #include "RendererD3D.h"
@@ -130,6 +131,16 @@ namespace na
 	void StateData::BindVertexBuffer(const VertexBuffer &vb)
 	{
 		mCommandContext.BindVertexBuffer(vb.GetBuffer(), vb.GetVertexStride());
+	}
+
+	void StateData::BindInputLayout(const NGAInputLayout &inputLayout)
+	{
+		mCommandContext.BindInputLayout(inputLayout);
+	}
+
+	void StateData::BindShader(const ShaderProgram &shader)
+	{
+		mCommandContext.BindShader(shader.GetShader());
 	}
 
 	void StateData::BindShaderResource(const NGAShaderResourceView &view, NGAShaderStage stage, int slot)

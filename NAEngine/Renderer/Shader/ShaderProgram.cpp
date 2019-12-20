@@ -1,146 +1,32 @@
 #include "ShaderProgram.h"
 
-#if defined(NA_D3D11)
-#include <d3dcompiler.h>
-#include "Renderer/RendererD3D.h"
-#endif
-
-#include "Base/File/File.h"
-#include "Base/Memory/Memory.h"
-
-#define VERTEX_SHADER_TARGET "vs_5_0"
-#define PIXEL_SHADER_TARGET  "ps_5_0"
-
 namespace na
 {
-#if defined(NA_D3D11)
-	class ShaderProgramInclude : public ID3DInclude
+	void ShaderProgram::Shutdown()
 	{
-		virtual HRESULT __stdcall Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFilename, LPCVOID pParentData, LPCVOID *ppData, UINT *pBytes) override
-		{
-			std::string fullPath = "";
-			switch(IncludeType)
-			{
-			case D3D_INCLUDE_LOCAL:
-			case D3D_INCLUDE_SYSTEM:
-			{
-				const bool found = FindFileRecursively(fullPath, "data\\shaders", pFilename);
-				if (!found) {
-					NA_ASSERT(false, "Failed to find HLSL include '%s'", pFilename);
-					*ppData = nullptr;
-					*pBytes = 0;
-					return S_FALSE;
-				}
-				break;
-			}
-
-			default:
-				break;
-			}
-
-			File file(fullPath, std::ios::in);
-			if (!file) {
-				*ppData = nullptr;
-				*pBytes = 0;
-				return S_FALSE;
-			}
-
-			const UINT fileSize = (UINT)file.GetFileSize();
-
-			if(fileSize > 0) {
-				char *buf = (char*)NA_ALLOC(fileSize);
-				file.ReadBytes(buf, fileSize);
-
-				*ppData = buf;
-				*pBytes = fileSize;
-			} else {
-				*ppData = nullptr;
-				*pBytes = 0;
-			}
-			return S_OK;
-		}
-
-		virtual HRESULT __stdcall Close(LPCVOID pData) override
-		{
-			// Here we must correctly free buffer created in Open.
-			NA_FREE((void*)pData);
-			return S_OK;
-		}
-
-	};
-#endif
-
-
-
-#if defined(NA_D3D11)
-	static bool CompileShader(ID3D10Blob **outBuffer, const std::string &file, const std::string &target)
-	{
-		const size_t MAX_FILE_LENGTH = 256;
-		wchar_t wfile[MAX_FILE_LENGTH];
-		MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, file.c_str(), -1, wfile, MAX_FILE_LENGTH);
-
-		ShaderProgramInclude includer;
-
-		ID3D10Blob *errorMessage = nullptr;
-		HRESULT hr = D3DCompileFromFile(wfile, nullptr, &includer, "main", target.c_str(), D3D10_SHADER_ENABLE_STRICTNESS, 0, outBuffer, &errorMessage);
-		if (FAILED(hr)) {
-			if (errorMessage != nullptr) {
-				NA_ASSERT(false, "Failed to compile HLSL shader '%s' with error message: %.*s", file.c_str(), errorMessage->GetBufferSize(), errorMessage->GetBufferPointer());
-			} else {
-				NA_ASSERT(false, "Failed to compile HLSL shader '%s' with unknown error", file.c_str());
-			}
-			return false;
-		}
-
-		return true;
+		mShader.Destruct();
 	}
-#endif
 
-	// Vertex Shader ////////////////////////////////////////////////////
-	bool VertexShader::Initialize(const std::string &filename, VertexFormatDesc vertexFormatDesc)
+	const NGAShader& ShaderProgram::GetShader()const
 	{
-#if defined(NA_D3D11)
-		if (!CompileShader(&mBytecode, filename, VERTEX_SHADER_TARGET)) {
-			return false;
-		}
+		return mShader;
+	}
 
-		HRESULT hr = NA_RDevice->CreateVertexShader(mBytecode->GetBufferPointer(), mBytecode->GetBufferSize(), nullptr, &mShader);
-		if (FAILED(hr)) {
-			return false;
-		}
-#endif
 
+	bool VertexShader::Initialize(const std::string &filename, NGAVertexFormatDesc vertexFormatDesc)
+	{
 		mVertexFormatDesc = vertexFormatDesc;
-
-		return true;
+		return mShader.Construct(filename.c_str(), NGAShaderType::VERTEX);
 	}
 
-	void VertexShader::Bind()
+	NGAVertexFormatDesc VertexShader::GetVertexFormatDesc()const
 	{
-		NA_RContext->VSSetShader(mShader, nullptr, 0);
+		return mVertexFormatDesc;
 	}
-	
 
 
-	// Pixel Shader ////////////////////////////////////////////////////
 	bool PixelShader::Initialize(const std::string &filename)
 	{
-#if defined(NA_D3D11)
-		if (!CompileShader(&mBytecode, filename, PIXEL_SHADER_TARGET)) {
-			return false;
-		}
-
-		HRESULT hr = NA_RDevice->CreatePixelShader(mBytecode->GetBufferPointer(), mBytecode->GetBufferSize(), nullptr, &mShader);
-		if (FAILED(hr)) {
-			return false;
-		}
-#endif
-
-		return true;
-	}
-
-	void PixelShader::Bind()
-	{
-		NA_RContext->PSSetShader(mShader, nullptr, 0);
+		return mShader.Construct(filename.c_str(), NGAShaderType::PIXEL);
 	}
 }

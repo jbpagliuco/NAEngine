@@ -1,5 +1,6 @@
 #include "DynamicMaterial.h"
 
+#include "Renderer/Renderer.h"
 #include "Renderer/Resources/Texture.h"
 
 namespace na
@@ -28,7 +29,7 @@ namespace na
 				++curTextureIndex;
 			} else {
 				DynamicMaterialParameterInfo info;
-				info.mLength = GetFormatByteSize(GetFormatFromString(type));
+				info.mLength = GetFormatByteSize(GetFormatFromString(type.c_str()));
 				info.mOffset = curParameterByteOffset;
 
 				mParameterMap[name] = info;

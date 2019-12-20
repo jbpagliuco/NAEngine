@@ -12,10 +12,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game\Game.vcxproj",
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NAEngine", "NAEngine", "{CAD9370D-CAB3-49BE-8C9E-0DD990D3D754}"
-	ProjectSection(SolutionItems) = preProject
-		..\NAEngine\Renderer\VertexBuffer.cpp = ..\NAEngine\Renderer\VertexBuffer.cpp
-		..\NAEngine\Renderer\VertexBuffer.h = ..\NAEngine\Renderer\VertexBuffer.h
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Renderer", "..\NAEngine\Renderer\Renderer.vcxproj", "{29460F26-D491-4110-A8D5-4BC3EA7A7AC4}"
 	ProjectSection(ProjectDependencies) = postProject

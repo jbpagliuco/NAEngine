@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <vector>
 
 #include "NGADefs.h"
 
@@ -10,6 +11,7 @@
 
 #include "Base/Debug/Assert.h"
 #include "Base/Util/BitUtil.h"
+
 
 #define NGA_GPU_CLASS(ClassName)								\
 	public:														\
@@ -25,6 +27,41 @@
 
 namespace na
 {
+	enum class NGAFormat
+	{
+#if defined(NGA_D3D11)
+		R32_FLOAT = 0,
+		R32G32_FLOAT,
+		R32G32B32_FLOAT,
+		R32G32B32A32_FLOAT
+#endif
+	};
+
+	enum class NGAVertexSemanticType
+	{
+		POSITION,
+		NORMAL,
+		TEXCOORD,
+		BINORMAL,
+		TANGENT,
+		COLOR,
+
+		UNKNOWN
+	};
+
+	struct NGAVertexAttribute
+	{
+		NGAFormat mFormat;
+		NGAVertexSemanticType mSemanticType;
+		int mSemanticIndex;
+		int mOffset;
+	};
+
+	struct NGAVertexFormatDesc
+	{
+		std::vector<NGAVertexAttribute> mAttributes;
+	};
+
 	enum class NGAIndexBufferType
 	{
 		IBT_16BIT,
@@ -70,4 +107,11 @@ namespace na
 		MIRROR_ONCE = D3D11_TEXTURE_ADDRESS_MIRROR_ONCE
 #endif
 	};
+
+
+	NGAFormat GetFormatFromString(const char *s);
+	size_t GetFormatByteSize(NGAFormat format);
+
+	const char* GetSemanticName(NGAVertexSemanticType type);
+	NGAVertexSemanticType GetSemanticType(const char *name);
 }

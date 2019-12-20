@@ -9,7 +9,6 @@
 #include "Base/Util/String.h"
 #include "Base/Util/Util.h"
 #include "Renderer/Mesh.h"
-#include "Renderer/VertexFormat.h"
 
 
 // MeshX File Format - Version 2
@@ -163,7 +162,7 @@ namespace na
 		bool success = file.Read<uint32_t>(numVertexAttributes);
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to read numVertexAttributes from mesh file: %s", filename.c_str());
 
-		VertexFormatDesc vDesc;
+		NGAVertexFormatDesc vDesc;
 		int vertexStride = 0;
 		for (int i = 0; i < (int)numVertexAttributes; ++i) {
 			uint8_t format;
@@ -178,9 +177,9 @@ namespace na
 			success = file.Read<uint8_t>(semanticIndex);
 			NA_ASSERT_RETURN_VALUE(success, false, "Failed to read vertex attribute semanticIndex at index %d from mesh file: %s", i, filename.c_str());
 
-			VertexAttribute attr;
-			attr.mFormat = (Format)format;
-			attr.mSemanticType = (VertexSemanticType)semanticType;
+			NGAVertexAttribute attr;
+			attr.mFormat = (NGAFormat)format;
+			attr.mSemanticType = (NGAVertexSemanticType)semanticType;
 			attr.mSemanticIndex = semanticIndex;
 			attr.mOffset = vertexStride;
 			vDesc.mAttributes.push_back(attr);

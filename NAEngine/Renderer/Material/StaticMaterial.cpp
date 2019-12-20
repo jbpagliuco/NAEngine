@@ -1,5 +1,6 @@
 #include "StaticMaterial.h"
 
+#include "Renderer/Renderer.h"
 #include "Renderer/Resources/Texture.h"
 
 namespace na
