@@ -1,7 +1,6 @@
 #pragma once
 
 #include "SceneRenderer.h"
-#include "Renderer/RenderTarget.h"
 
 namespace na
 {
@@ -15,8 +14,5 @@ namespace na
 		virtual void EndRender() override;
 
 		virtual void RenderScene(Scene *scene) override;
-
-	private:
-		RenderTarget mRT;
 	};
 }

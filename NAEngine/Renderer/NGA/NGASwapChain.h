@@ -30,5 +30,8 @@ namespace na
 	private:
 		struct IDXGISwapChain *mSwapChain;
 #endif
+
+		// TODO: Might be a better way to handle this
+		friend class NGARenderTargetView;
 	};
 }

@@ -1,7 +1,7 @@
 #include "Texture.h"
 
 #include "Base/Util/String.h"
-#include "Renderer/RendererD3D.h"
+#include "Renderer/Renderer.h"
 #include "Vendor/DirectXTK/Include/DDSTextureLoader.h"
 
 namespace na

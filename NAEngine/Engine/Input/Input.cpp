@@ -3,7 +3,7 @@
 #include "Base/OS/OS.h"
 #include "Base/Util/Util.h"
 #include "Renderer/ImguiRenderer.h"
-#include "Renderer/RendererD3D.h"
+#include "Renderer/Renderer.h"
 
 #if defined(_NA_WIN32)
 #include "Base/OS/OSWin32.h"

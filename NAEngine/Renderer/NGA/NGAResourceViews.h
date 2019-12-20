@@ -5,6 +5,7 @@
 namespace na
 {
 	class NGATexture;
+	class NGASwapChain;
 
 	class NGAShaderResourceView
 	{
@@ -19,6 +20,43 @@ namespace na
 #if defined(NGA_D3D11)
 	private:
 		struct ID3D11ShaderResourceView *mView;
+#endif
+
+		friend class NGACommandContext;
+	};
+
+	class NGARenderTargetView
+	{
+		NGA_GPU_CLASS(NGARenderTargetView);
+
+	public:
+		bool Construct(const NGASwapChain &swapChain);
+		void Destruct();
+
+		bool IsConstructed()const;
+
+#if defined(NGA_D3D11)
+	private:
+		struct ID3D11RenderTargetView *mView;
+#endif
+
+		friend class NGACommandContext;
+	};
+
+	class NGADepthStencilView
+	{
+		NGA_GPU_CLASS(NGADepthStencilView);
+
+	public:
+		bool Construct(int width, int height);
+		void Destruct();
+
+		bool IsConstructed()const;
+
+#if defined(NGA_D3D11)
+	private:
+		struct ID3D11Texture2D *mBuffer;
+		struct ID3D11DepthStencilView *mView;
 #endif
 
 		friend class NGACommandContext;

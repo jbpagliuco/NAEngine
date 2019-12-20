@@ -56,6 +56,10 @@ namespace na
 		void BindShaderResource(const NGAShaderResourceView &view, NGAShaderStage stage, int slot);
 		void BindSamplerState(const NGASamplerState &samplerState, NGAShaderStage stage, int slot);
 
+		void ClearRenderTarget(const NGARenderTargetView &renderTargetView, const float *clearColor);
+		void ClearDepthStencilView(const NGADepthStencilView &depthStencilView);
+		void BindRenderTarget(const NGARenderTargetView &renderTargetView, const NGADepthStencilView &depthStencilView);
+
 		void MapBufferData(const NGABuffer &buffer, void *data);
 
 		int GetUserVSConstantBufferIndex()const;

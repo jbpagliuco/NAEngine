@@ -5,8 +5,17 @@
 
 #include "RenderDefs.h"
 #include "StateData.h"
+#include "Renderer/NGA/NGASwapChain.h"
+#include "Renderer/NGA/NGAResourceViews.h"
 
 #define NA_RStateData Renderer::Get()->GetStateData()
+#if defined(NA_D3D11)
+#include "NGA/DX11/NGACoreInternalDX11.h"
+#define NA_Renderer Renderer::Get()
+#define NA_RSwapChain Renderer::Get()->GetStateData()
+#define NA_RDevice na::NgaDx11State.mDevice
+#define NA_RContext na::NgaDx11State.mContext
+#endif
 
 namespace na
 {
@@ -23,10 +32,10 @@ namespace na
 	{
 	public:
 		virtual bool Initialize(const RendererInitParams &params);
-		virtual void Shutdown() = 0;
+		virtual void Shutdown();
 
-		virtual void BeginRender() = 0;
-		virtual void EndRender() = 0;
+		virtual void BeginRender();
+		virtual void EndRender();
 
 		void SetActiveCamera(Camera *camera);
 		Camera* GetActiveCamera();
@@ -37,6 +46,11 @@ namespace na
 
 	protected:
 		Window mWindow;
+		NGASwapChain mSwapChain;
+
+		NGARenderTargetView mRenderTargetView;
+		NGADepthStencilView mDepthStencilView;
+
 		StateData mStateData;
 
 		Camera* mActiveCamera;

@@ -75,6 +75,21 @@ namespace na
 		}
 	}
 
+	void NGACommandContext::ClearRenderTarget(const NGARenderTargetView &renderTargetView, const float *clearColor)
+	{
+		NgaDx11State.mContext->ClearRenderTargetView(renderTargetView.mView, clearColor);
+	}
+
+	void NGACommandContext::ClearDepthStencilView(const NGADepthStencilView &depthStencilView)
+	{
+		NgaDx11State.mContext->ClearDepthStencilView(depthStencilView.mView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	}
+
+	void NGACommandContext::BindRenderTarget(const NGARenderTargetView &renderTarget, const NGADepthStencilView &depthStencilView)
+	{
+		NgaDx11State.mContext->OMSetRenderTargets(1, &renderTarget.mView, depthStencilView.mView);
+	}
+
 	void NGACommandContext::MapBufferData(const NGABuffer &buffer, void *data)
 	{
 		const NGABufferUsage usage = buffer.mDesc.mUsage;

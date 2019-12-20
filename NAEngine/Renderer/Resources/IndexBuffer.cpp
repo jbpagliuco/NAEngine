@@ -1,6 +1,6 @@
 #include "IndexBuffer.h"
 
-#include "RendererD3D.h"
+#include "Renderer.h"
 
 namespace na
 {

@@ -1,37 +1,27 @@
 #include "ForwardRenderer.h"
 
-#include "Base/Util/Color.h"
-
 #include "Camera.h"
 #include "Renderables/RenderableInstance.h"
-#include "Renderer/RendererD3D.h"
+#include "Renderer/Renderer.h"
 #include "Scene.h"
 
 namespace na
 {
 	bool ForwardRenderer::Initialize()
 	{
-		mRT.Initialize();
-
 		return true;
 	}
 
 	void ForwardRenderer::Shutdown()
 	{
-		mRT.Shutdown();
 	}
 
 	void ForwardRenderer::BeginRender()
 	{
-		mRT.Bind();
-
-		const ColorF clearColor = COLOR_CORNFLOWERBLUE;
-		mRT.Clear(clearColor.vArray);
 	}
 
 	void ForwardRenderer::EndRender()
 	{
-
 	}
 
 	void ForwardRenderer::RenderScene(Scene *scene)

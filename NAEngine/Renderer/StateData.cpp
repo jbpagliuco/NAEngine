@@ -7,7 +7,7 @@
 #include "Shader/ShaderProgram.h"
 
 #include "Rect.h"
-#include "RendererD3D.h"
+#include "Renderer.h"
 
 #include "Light.h"
 
@@ -164,6 +164,21 @@ namespace na
 	void StateData::BindSamplerState(const NGASamplerState &samplerState, NGAShaderStage stage, int slot)
 	{
 		mCommandContext.BindSamplerState(samplerState, stage, slot);
+	}
+
+	void StateData::ClearRenderTarget(const NGARenderTargetView &renderTargetView, const float *clearColor)
+	{
+		mCommandContext.ClearRenderTarget(renderTargetView, clearColor);
+	}
+
+	void StateData::ClearDepthStencilView(const NGADepthStencilView &depthStencilView)
+	{
+		mCommandContext.ClearDepthStencilView(depthStencilView);
+	}
+
+	void StateData::BindRenderTarget(const NGARenderTargetView &renderTargetView, const NGADepthStencilView &depthStencilView)
+	{
+		mCommandContext.BindRenderTarget(renderTargetView, depthStencilView);
 	}
 
 	void StateData::MapBufferData(const NGABuffer &buffer, void *data)

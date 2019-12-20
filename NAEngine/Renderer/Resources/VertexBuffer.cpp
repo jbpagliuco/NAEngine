@@ -2,7 +2,7 @@
 
 #include "Base/Util/Util.h"
 
-#include "RendererD3D.h"
+#include "Renderer.h"
 
 namespace na
 {

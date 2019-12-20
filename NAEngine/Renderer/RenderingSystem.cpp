@@ -6,7 +6,7 @@
 #include "NGA/NGACore.h"
 
 #include "ImguiRenderer.h"
-#include "RendererD3D.h"
+#include "Renderer.h"
 #include "Scene/Scene.h"
 #include "Scene/ForwardRenderer.h"
 

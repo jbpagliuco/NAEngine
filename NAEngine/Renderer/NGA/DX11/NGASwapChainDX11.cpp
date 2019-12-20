@@ -41,6 +41,10 @@ namespace na
 		HRESULT hr = dxgiFactory->CreateSwapChain(NgaDx11State.mDevice, &swapChainDesc, &mSwapChain);
 		NA_FATAL_ERROR(SUCCEEDED(hr), "Failed to create D3D11 swap chain.");
 
+		NGA_DX11_SAFE_RELEASE(dxgiDevice);
+		NGA_DX11_SAFE_RELEASE(dxgiAdapter);
+		NGA_DX11_SAFE_RELEASE(dxgiFactory);
+
 		return true;
 	}
 

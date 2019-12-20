@@ -7,7 +7,9 @@
 namespace na
 {
 	class NGABuffer;
+	class NGADepthStencilView;
 	class NGAInputLayout;
+	class NGARenderTargetView;
 	class NGASamplerState;
 	class NGAShaderResourceView;
 
@@ -24,6 +26,10 @@ namespace na
 		void BindConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot);
 		void BindShaderResource(const NGAShaderResourceView &view, NGAShaderStage stage, int slot);
 		void BindSamplerState(const NGASamplerState &samplerState, NGAShaderStage stage, int slot);
+
+		void ClearRenderTarget(const NGARenderTargetView &renderTargetView, const float *clearColor);
+		void ClearDepthStencilView(const NGADepthStencilView &depthStencilView);
+		void BindRenderTarget(const NGARenderTargetView &renderTargetView, const NGADepthStencilView &depthStencilView);
 
 		void MapBufferData(const NGABuffer &buffer, void *data);
 	};
