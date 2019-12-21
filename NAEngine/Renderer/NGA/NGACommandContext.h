@@ -16,6 +16,8 @@ namespace na
 	class NGACommandContext
 	{
 	public:
+		void SetPrimitiveTopology(NGAPrimitiveTopology primTopology);
+
 		void BindIndexBuffer(const NGABuffer &indexBuffer, NGAIndexBufferType indexBufferType);
 		void BindVertexBuffer(const NGABuffer &vertexBuffer, size_t vertexStride);
 

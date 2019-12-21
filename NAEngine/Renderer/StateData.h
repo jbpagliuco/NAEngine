@@ -45,6 +45,8 @@ namespace na
 
 		void SetRasterizerState();
 
+		void SetPrimitiveTopology(NGAPrimitiveTopology primTopology);
+
 		void BindIndexBuffer(const IndexBuffer &ib);
 		void BindVertexBuffer(const VertexBuffer &vb);
 

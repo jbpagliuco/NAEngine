@@ -10,6 +10,11 @@
 
 namespace na
 {
+	void NGACommandContext::SetPrimitiveTopology(NGAPrimitiveTopology primTopology)
+	{
+		NgaDx11State.mContext->IASetPrimitiveTopology((D3D11_PRIMITIVE_TOPOLOGY)primTopology);
+	}
+
 	void NGACommandContext::BindIndexBuffer(const NGABuffer &indexBuffer, NGAIndexBufferType indexBufferType)
 	{
 		const DXGI_FORMAT indexFormat = (indexBufferType == NGAIndexBufferType::IBT_16BIT) ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;

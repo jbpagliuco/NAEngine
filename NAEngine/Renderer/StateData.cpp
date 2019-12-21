@@ -123,6 +123,11 @@ namespace na
 		NA_RContext->RSSetState(mRasterizerState);
 	}
 
+	void StateData::SetPrimitiveTopology(NGAPrimitiveTopology primTopology)
+	{
+		mCommandContext.SetPrimitiveTopology(primTopology);
+	}
+
 	void StateData::BindIndexBuffer(const IndexBuffer &ib)
 	{
 		mCommandContext.BindIndexBuffer(ib.GetBuffer(), NGAIndexBufferType::IBT_32BIT);
