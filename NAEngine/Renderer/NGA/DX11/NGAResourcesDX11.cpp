@@ -14,12 +14,19 @@ namespace na
 	NGA_GPU_CLASS_IMPLEMENT(NGABuffer);
 
 
-	bool NGATexture::Construct(const char *filename)
+	bool NGATexture::Construct(const NGATextureDesc &desc, const char *filename)
 	{
-		const HRESULT hr = DirectX::CreateDDSTextureFromFile(NgaDx11State.mDevice, ToWideString(filename).c_str(), &mResource, nullptr);
+		D3D11_USAGE usage = D3D11_USAGE_DEFAULT;
+		unsigned int bindFlags = D3D11_BIND_SHADER_RESOURCE;
+		unsigned int miscFlags = (desc.mType == NGATextureType::TEXTURECUBE) ? D3D11_RESOURCE_MISC_TEXTURECUBE : 0;
+
+		HRESULT hr = DirectX::CreateDDSTextureFromFileEx(NgaDx11State.mDevice, ToWideString(filename).c_str(),
+			0, usage, bindFlags, 0, miscFlags, false, 
+			&mResource, nullptr);
+		
 		NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "Failed to load texture from file %s (HR: %X)", filename, hr);
 
-		mDesc.mType = NGATextureType::TEXTURE2D;
+		mDesc = desc;
 
 		return true;
 	}

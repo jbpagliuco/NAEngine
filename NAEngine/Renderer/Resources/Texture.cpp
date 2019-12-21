@@ -13,7 +13,9 @@ namespace na
 		bool success = mSampler.Construct(samplerStateDesc);
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to construct sampler state for texture %s", filename.c_str());
 
-		success = mTexture.Construct(filename.c_str());
+		NGATextureDesc desc;
+		desc.mType = NGATextureType::TEXTURE2D;
+		success = mTexture.Construct(desc, filename.c_str());
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to construct texture %s", filename.c_str());
 
 		success = mSRV.Construct(mTexture);

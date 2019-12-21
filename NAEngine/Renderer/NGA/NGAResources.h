@@ -12,7 +12,8 @@ namespace na
 	{
 		TEXTURE1D,
 		TEXTURE2D,
-		TEXTURE3D
+		TEXTURE3D,
+		TEXTURECUBE
 	};
 
 	struct NGATextureDesc
@@ -25,7 +26,7 @@ namespace na
 		NGA_GPU_CLASS(NGATexture);
 
 	public:
-		bool Construct(const char *filename);
+		bool Construct(const NGATextureDesc &desc, const char *filename);
 		bool Construct(const NGATextureDesc &desc, void *initialData);
 		void Destruct();
 
