@@ -211,7 +211,6 @@
     <ClCompile Include="NGA\DX11\NGARasterizerDX11.cpp" />
     <ClCompile Include="NGA\DX11\NGASwapChainDX11.cpp" />
     <ClCompile Include="Resources\ConstantBuffer.cpp" />
-    <ClCompile Include="Formats.cpp" />
     <ClCompile Include="ImguiRenderer.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Material\DynamicMaterial.cpp" />
@@ -265,7 +264,6 @@
     <ClInclude Include="Material\Material.h" />
     <ClInclude Include="RenderDefs.h" />
     <ClInclude Include="RenderingSystem.h" />
-    <ClInclude Include="Buffer.h" />
     <ClInclude Include="Resources\IndexBuffer.h" />
     <ClInclude Include="Scene\Camera.h" />
     <ClInclude Include="Shader\Shader.h" />
@@ -279,7 +277,6 @@
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\SceneRenderer.h" />
     <ClInclude Include="Scene\SceneEntity.h" />
-    <ClInclude Include="Formats.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
