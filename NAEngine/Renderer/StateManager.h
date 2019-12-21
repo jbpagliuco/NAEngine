@@ -64,10 +64,7 @@ namespace na
 		void MapBufferData(const NGABuffer &buffer, void *data);
 
 		void DrawIndexed(const IndexBuffer &buffer);
-
-		int GetUserVSConstantBufferIndex()const;
-		int GetUserPSConstantBufferIndex()const;
-
+		
 	private:
 		NGACommandContext mCommandContext;
 

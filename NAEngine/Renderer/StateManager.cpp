@@ -178,14 +178,4 @@ namespace na
 	{
 		mCommandContext.DrawIndexed((unsigned int)buffer.GetNumIndices());
 	}
-
-	int StateManager::GetUserVSConstantBufferIndex()const
-	{
-		return (int)VSConstantBuffers::USER;
-	}
-
-	int StateManager::GetUserPSConstantBufferIndex()const
-	{
-		return (int)PSConstantBuffers::USER;
-	}
 }
