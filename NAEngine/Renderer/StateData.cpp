@@ -64,15 +64,15 @@ namespace na
 
 	void StateData::SetViewport(const Rect &rect)
 	{
-		D3D11_VIEWPORT vp;
-		vp.TopLeftX = rect.x;
-		vp.TopLeftY = rect.y;
-		vp.Width = rect.w;
-		vp.Height = rect.h;
-		vp.MinDepth = 0.0f;
-		vp.MaxDepth = 1.0f;
+		NGAViewport vp;
+		vp.mX = rect.x;
+		vp.mY = rect.y;
+		vp.mWidth = rect.w;
+		vp.mHeight = rect.h;
+		vp.mMinDepth = 0.0f;
+		vp.mMaxDepth = 1.0f;
 
-		NA_RContext->RSSetViewports(1, &vp);
+		mCommandContext.SetViewport(vp);
 	}
 
 	void StateData::SetViewProjMatrices(const Matrix &view, const Matrix &proj)
@@ -193,7 +193,7 @@ namespace na
 
 	void StateData::DrawIndexed(const IndexBuffer &buffer)
 	{
-		mCommandContext.DrawIndexed(buffer.GetNumIndices());
+		mCommandContext.DrawIndexed((unsigned int)buffer.GetNumIndices());
 	}
 
 	int StateData::GetUserVSConstantBufferIndex()const

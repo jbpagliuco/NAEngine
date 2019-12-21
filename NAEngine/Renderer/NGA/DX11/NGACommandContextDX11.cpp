@@ -10,6 +10,19 @@
 
 namespace na
 {
+	void NGACommandContext::SetViewport(const NGAViewport &viewport)
+	{
+		D3D11_VIEWPORT vp;
+		vp.TopLeftX = viewport.mX;
+		vp.TopLeftY = viewport.mY;
+		vp.Width = viewport.mWidth;
+		vp.Height = viewport.mHeight;
+		vp.MinDepth = viewport.mMinDepth;
+		vp.MaxDepth = viewport.mMaxDepth;
+
+		NgaDx11State.mContext->RSSetViewports(1, &vp);
+	}
+
 	void NGACommandContext::SetPrimitiveTopology(NGAPrimitiveTopology primTopology)
 	{
 		NgaDx11State.mContext->IASetPrimitiveTopology((D3D11_PRIMITIVE_TOPOLOGY)primTopology);

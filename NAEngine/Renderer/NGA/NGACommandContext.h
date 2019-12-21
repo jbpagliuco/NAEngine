@@ -12,10 +12,13 @@ namespace na
 	class NGARenderTargetView;
 	class NGASamplerState;
 	class NGAShaderResourceView;
+	struct NGAViewport;
 
 	class NGACommandContext
 	{
 	public:
+		void SetViewport(const NGAViewport &viewport);
+
 		void SetPrimitiveTopology(NGAPrimitiveTopology primTopology);
 
 		void BindIndexBuffer(const NGABuffer &indexBuffer, NGAIndexBufferType indexBufferType);
