@@ -3,6 +3,7 @@
 #if defined(NGA_D3D11)
 
 #include "NGA/NGAInputLayout.h"
+#include "NGA/NGARasterizer.h"
 #include "NGA/NGAResources.h"
 #include "NGA/NGAResourceViews.h"
 #include "NGA/NGASamplerState.h"
@@ -21,6 +22,11 @@ namespace na
 		vp.MaxDepth = viewport.mMaxDepth;
 
 		NgaDx11State.mContext->RSSetViewports(1, &vp);
+	}
+
+	void NGACommandContext::SetRasterizerState(const NGARasterizerState &state)
+	{
+		NgaDx11State.mContext->RSSetState(state.mRasterizerState);
 	}
 
 	void NGACommandContext::SetPrimitiveTopology(NGAPrimitiveTopology primTopology)

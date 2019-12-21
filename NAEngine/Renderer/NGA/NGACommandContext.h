@@ -9,6 +9,7 @@ namespace na
 	class NGABuffer;
 	class NGADepthStencilView;
 	class NGAInputLayout;
+	class NGARasterizerState;
 	class NGARenderTargetView;
 	class NGASamplerState;
 	class NGAShaderResourceView;
@@ -18,6 +19,7 @@ namespace na
 	{
 	public:
 		void SetViewport(const NGAViewport &viewport);
+		void SetRasterizerState(const NGARasterizerState &state);
 
 		void SetPrimitiveTopology(NGAPrimitiveTopology primTopology);
 

@@ -108,6 +108,9 @@
     <ClCompile Include="NGA\DX11\NGASwapChainDX11.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NGA\DX11\NGARasterizerDX11.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RenderingSystem.h">
@@ -219,6 +222,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NGA\NGASwapChain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NGA\NGARasterizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

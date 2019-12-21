@@ -61,20 +61,7 @@ namespace na
 
 		NA_SAFE_RELEASE(mRasterizerState);
 	}
-
-	void StateData::SetViewport(const Rect &rect)
-	{
-		NGAViewport vp;
-		vp.mX = rect.x;
-		vp.mY = rect.y;
-		vp.mWidth = rect.w;
-		vp.mHeight = rect.h;
-		vp.mMinDepth = 0.0f;
-		vp.mMaxDepth = 1.0f;
-
-		mCommandContext.SetViewport(vp);
-	}
-
+	
 	void StateData::SetViewProjMatrices(const Matrix &view, const Matrix &proj)
 	{
 		Matrix viewProj = proj * view;
@@ -101,26 +88,22 @@ namespace na
 		mCommandContext.BindConstantBuffer(mLightsBuffer.GetBuffer(), NGA_SHADER_STAGE_PIXEL, (int)PSConstantBuffers::LIGHTS);
 	}
 
-	void StateData::SetRasterizerState()
+	void StateData::SetViewport(const Rect &rect)
 	{
-		if (mRasterizerState == nullptr) {
-			D3D11_RASTERIZER_DESC desc{};
-			desc.AntialiasedLineEnable = false;
-			desc.CullMode = D3D11_CULL_BACK;
-			desc.DepthBias = 0;
-			desc.DepthBiasClamp = 0.0f;
-			desc.DepthClipEnable = true;
-			desc.FillMode = D3D11_FILL_SOLID;
-			desc.FrontCounterClockwise = false;
-			desc.MultisampleEnable = false;
-			desc.ScissorEnable = false;
-			desc.SlopeScaledDepthBias = 0.0f;
+		NGAViewport vp;
+		vp.mX = rect.x;
+		vp.mY = rect.y;
+		vp.mWidth = rect.w;
+		vp.mHeight = rect.h;
+		vp.mMinDepth = 0.0f;
+		vp.mMaxDepth = 1.0f;
 
-			HRESULT hr = NA_RDevice->CreateRasterizerState(&desc, &mRasterizerState);
-			NA_ASSERT(SUCCEEDED(hr), "Failed to create rasterizer state.");
-		}
+		mCommandContext.SetViewport(vp);
+	}
 
-		NA_RContext->RSSetState(mRasterizerState);
+	void StateData::SetRasterizerState(const NGARasterizerState &state)
+	{
+		mCommandContext.SetRasterizerState(state);
 	}
 
 	void StateData::SetPrimitiveTopology(NGAPrimitiveTopology primTopology)

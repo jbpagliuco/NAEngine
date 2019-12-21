@@ -36,14 +36,13 @@ namespace na
 		bool Initialize();
 		void Shutdown();
 		
-		void SetViewport(const Rect &rect);
-		
 		void SetViewProjMatrices(const Matrix &view, const Matrix &proj);
 		void SetObjectTransform(const Matrix &transform);
 
 		void SetLightsData(const LightsData &lights);
 
-		void SetRasterizerState();
+		void SetViewport(const Rect &rect);
+		void SetRasterizerState(const NGARasterizerState &state);
 
 		void SetPrimitiveTopology(NGAPrimitiveTopology primTopology);
 

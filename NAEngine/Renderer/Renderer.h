@@ -5,8 +5,9 @@
 
 #include "RenderDefs.h"
 #include "StateData.h"
-#include "Renderer/NGA/NGASwapChain.h"
+#include "Renderer/NGA/NGARasterizer.h"
 #include "Renderer/NGA/NGAResourceViews.h"
+#include "Renderer/NGA/NGASwapChain.h"
 
 #define NA_RStateData Renderer::Get()->GetStateData()
 #if defined(NA_D3D11)
@@ -50,6 +51,8 @@ namespace na
 
 		NGARenderTargetView mRenderTargetView;
 		NGADepthStencilView mDepthStencilView;
+
+		NGARasterizerState mRasterizerState;
 
 		StateData mStateData;
 

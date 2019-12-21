@@ -25,6 +25,14 @@ namespace na
 		success = mDepthStencilView.Construct(params.mWidth, params.mHeight);
 		NA_FATAL_ERROR(success, "Failed to create main depth stencil view.");
 
+		NGARasterizerStateDesc rasterizerDesc;
+		rasterizerDesc.mAntialias = true;
+		rasterizerDesc.mCullMode = NGACullMode::CULL_BACK;
+		rasterizerDesc.mFillMode = NGAFillMode::SOLID;
+		rasterizerDesc.mFrontCounterClockwise = false;
+		success = mRasterizerState.Construct(rasterizerDesc);
+		NA_FATAL_ERROR(success, "Failed to create main rasterizer state.");
+
 		if (!mStateData.Initialize()) {
 			return false;
 		}
@@ -55,7 +63,8 @@ namespace na
 		r.h = (float)mWindow.height;
 
 		mStateData.SetViewport(r);
-		mStateData.SetRasterizerState();
+
+		mStateData.SetRasterizerState(mRasterizerState);
 
 		if (mActiveCamera != nullptr) {
 			mStateData.SetViewProjMatrices(
