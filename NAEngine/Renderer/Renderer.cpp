@@ -33,7 +33,7 @@ namespace na
 		success = mRasterizerState.Construct(rasterizerDesc);
 		NA_FATAL_ERROR(success, "Failed to create main rasterizer state.");
 
-		if (!mStateData.Initialize()) {
+		if (!mStateManager.Initialize()) {
 			return false;
 		}
 
@@ -42,7 +42,7 @@ namespace na
 
 	void Renderer::Shutdown()
 	{
-		mStateData.Shutdown();
+		mStateManager.Shutdown();
 		mDepthStencilView.Destruct();
 		mRenderTargetView.Destruct();
 		mSwapChain.Destruct();
@@ -50,11 +50,11 @@ namespace na
 
 	void Renderer::BeginRender()
 	{
-		mStateData.BindRenderTarget(mRenderTargetView, mDepthStencilView);
+		mStateManager.BindRenderTarget(mRenderTargetView, mDepthStencilView);
 
 		const ColorF clearColor = COLOR_CORNFLOWERBLUE;
-		mStateData.ClearRenderTarget(mRenderTargetView, clearColor.vArray);
-		mStateData.ClearDepthStencilView(mDepthStencilView);
+		mStateManager.ClearRenderTarget(mRenderTargetView, clearColor.vArray);
+		mStateManager.ClearDepthStencilView(mDepthStencilView);
 
 		Rect r;
 		r.x = 0.0f;
@@ -62,12 +62,12 @@ namespace na
 		r.w = (float)mWindow.width;
 		r.h = (float)mWindow.height;
 
-		mStateData.SetViewport(r);
+		mStateManager.SetViewport(r);
 
-		mStateData.SetRasterizerState(mRasterizerState);
+		mStateManager.SetRasterizerState(mRasterizerState);
 
 		if (mActiveCamera != nullptr) {
-			mStateData.SetViewProjMatrices(
+			mStateManager.SetViewProjMatrices(
 				mActiveCamera->mTransform.GetMatrix().Inverted(),
 				Matrix::PerspectiveFOVLH(mActiveCamera->mFOV, mWindow.GetAspectRatio(), mActiveCamera->mNear, mActiveCamera->mFar)
 			);

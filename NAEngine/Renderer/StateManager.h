@@ -30,7 +30,7 @@ namespace na
 		Light lights[MAX_LIGHTS];
 	};
 
-	class StateData
+	class StateManager
 	{
 	public:
 		bool Initialize();

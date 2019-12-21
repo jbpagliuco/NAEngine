@@ -88,7 +88,7 @@ namespace na
 			mDynMaterialInst->BindData();
 		}
 
-		NA_RStateData->BindInputLayout(mInputLayout);
+		NA_RStateManager->BindInputLayout(mInputLayout);
 		mMesh->Render();
 	}
 }

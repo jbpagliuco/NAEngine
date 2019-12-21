@@ -233,7 +233,7 @@
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Shader\Shader.cpp" />
     <ClCompile Include="Shader\ShaderProgram.cpp" />
-    <ClCompile Include="StateData.cpp" />
+    <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="Resources\Texture.cpp" />
     <ClCompile Include="Resources\VertexBuffer.cpp" />
     <ClCompile Include="Scene\ForwardRenderer.cpp" />
@@ -268,7 +268,7 @@
     <ClInclude Include="Scene\Camera.h" />
     <ClInclude Include="Shader\Shader.h" />
     <ClInclude Include="Shader\ShaderProgram.h" />
-    <ClInclude Include="StateData.h" />
+    <ClInclude Include="StateManager.h" />
     <ClInclude Include="Resources\Texture.h" />
     <ClInclude Include="Resources\VertexBuffer.h" />
     <ClInclude Include="Scene\ForwardRenderer.h" />

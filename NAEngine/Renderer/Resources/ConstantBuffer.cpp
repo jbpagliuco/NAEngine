@@ -42,7 +42,7 @@ namespace na
 	void ConstantBuffer::Map(void *pData)
 	{
 		NA_ASSERT_RETURN(mUsage == ConstantBufferUsage::CPU_WRITE, "Trying to map data to a non-CPU writeable buffer.");
-		NA_RStateData->MapBufferData(mBuffer, pData);
+		NA_RStateManager->MapBufferData(mBuffer, pData);
 	}
 
 	const NGABuffer& ConstantBuffer::GetBuffer()const

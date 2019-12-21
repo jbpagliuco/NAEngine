@@ -37,10 +37,10 @@ namespace na
 		for (int i = 0; i < lightsData.numLights; ++i) {
 			lightsData.lights[i] = *lights[i];
 		}
-		NA_RStateData->SetLightsData(lightsData);
+		NA_RStateManager->SetLightsData(lightsData);
 
 		for (auto &r : scene->GetRenderables()) {
-			NA_RStateData->SetObjectTransform(r->GetWorldTransform());
+			NA_RStateManager->SetObjectTransform(r->GetWorldTransform());
 			r->Render();
 		}
 	}

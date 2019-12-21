@@ -30,9 +30,9 @@ namespace na
 
 	void Mesh::Render()
 	{
-		NA_RStateData->SetPrimitiveTopology(NGAPrimitiveTopology::TRIANGLE_LIST);
-		NA_RStateData->BindIndexBuffer(mIndexBuffer);
-		NA_RStateData->BindVertexBuffer(mVertexBuffer);
-		NA_RStateData->DrawIndexed(mIndexBuffer);
+		NA_RStateManager->SetPrimitiveTopology(NGAPrimitiveTopology::TRIANGLE_LIST);
+		NA_RStateManager->BindIndexBuffer(mIndexBuffer);
+		NA_RStateManager->BindVertexBuffer(mVertexBuffer);
+		NA_RStateManager->DrawIndexed(mIndexBuffer);
 	}
 }

@@ -22,7 +22,7 @@ namespace na
 
 	void Shader::Bind()
 	{
-		NA_RStateData->BindShader(mVertexShader);
-		NA_RStateData->BindShader(mPixelShader);
+		NA_RStateManager->BindShader(mVertexShader);
+		NA_RStateManager->BindShader(mPixelShader);
 	}
 }

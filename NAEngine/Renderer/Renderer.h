@@ -4,13 +4,13 @@
 #include "Base/OS/OS.h"
 
 #include "RenderDefs.h"
-#include "StateData.h"
+#include "StateManager.h"
 #include "Renderer/NGA/NGARasterizer.h"
 #include "Renderer/NGA/NGAResourceViews.h"
 #include "Renderer/NGA/NGASwapChain.h"
 
 #define NA_Renderer Renderer::Get()
-#define NA_RStateData Renderer::Get()->GetStateData()
+#define NA_RStateManager Renderer::Get()->GetStateManager()
 
 namespace na
 {
@@ -37,7 +37,7 @@ namespace na
 
 		const Window& GetWindow() { return mWindow; }
 
-		StateData* GetStateData() { return &mStateData; }
+		StateManager* GetStateManager() { return &mStateManager; }
 
 	protected:
 		Window mWindow;
@@ -48,7 +48,7 @@ namespace na
 
 		NGARasterizerState mRasterizerState;
 
-		StateData mStateData;
+		StateManager mStateManager;
 
 		Camera* mActiveCamera;
 	};
