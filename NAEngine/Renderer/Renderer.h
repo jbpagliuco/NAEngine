@@ -9,14 +9,8 @@
 #include "Renderer/NGA/NGAResourceViews.h"
 #include "Renderer/NGA/NGASwapChain.h"
 
-#define NA_RStateData Renderer::Get()->GetStateData()
-#if defined(NA_D3D11)
-#include "NGA/DX11/NGACoreInternalDX11.h"
 #define NA_Renderer Renderer::Get()
-#define NA_RSwapChain Renderer::Get()->GetStateData()
-#define NA_RDevice na::NgaDx11State.mDevice
-#define NA_RContext na::NgaDx11State.mContext
-#endif
+#define NA_RStateData Renderer::Get()->GetStateData()
 
 namespace na
 {
