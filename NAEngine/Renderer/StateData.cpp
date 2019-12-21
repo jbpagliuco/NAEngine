@@ -186,6 +186,11 @@ namespace na
 		mCommandContext.MapBufferData(buffer, data);
 	}
 
+	void StateData::DrawIndexed(const IndexBuffer &buffer)
+	{
+		mCommandContext.DrawIndexed(buffer.GetNumIndices());
+	}
+
 	int StateData::GetUserVSConstantBufferIndex()const
 	{
 		return (int)VSConstantBuffers::USER;

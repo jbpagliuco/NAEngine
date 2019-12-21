@@ -32,5 +32,7 @@ namespace na
 		void BindRenderTarget(const NGARenderTargetView &renderTargetView, const NGADepthStencilView &depthStencilView);
 
 		void MapBufferData(const NGABuffer &buffer, void *data);
+
+		void DrawIndexed(unsigned int indexCount);
 	};
 }

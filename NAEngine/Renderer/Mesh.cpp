@@ -35,6 +35,6 @@ namespace na
 
 		NA_RContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		NA_RContext->DrawIndexed((UINT)mIndexBuffer.GetNumIndices(), 0, 0);
+		NA_RStateData->DrawIndexed(mIndexBuffer);
 	}
 }

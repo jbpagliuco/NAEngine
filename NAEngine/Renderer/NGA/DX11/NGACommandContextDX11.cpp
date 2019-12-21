@@ -104,6 +104,11 @@ namespace na
 
 		NgaDx11State.mContext->Unmap(buffer.mBuffer, 0);
 	}
+
+	void NGACommandContext::DrawIndexed(unsigned int indexCount)
+	{
+		NgaDx11State.mContext->DrawIndexed(indexCount, 0, 0);
+	}
 }
 
 #endif // defined(NGA_D3D11)
