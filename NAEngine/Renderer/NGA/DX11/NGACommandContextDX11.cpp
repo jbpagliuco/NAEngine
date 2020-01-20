@@ -3,30 +3,53 @@
 #if defined(NGA_D3D11)
 
 #include "NGA/NGAInputLayout.h"
-#include "NGA/NGARasterizer.h"
 #include "NGA/NGAResources.h"
 #include "NGA/NGAResourceViews.h"
 #include "NGA/NGASamplerState.h"
+#include "NGA/NGAPipelineState.h"
 #include "NGACoreInternalDX11.h"
 
 namespace na
 {
-	void NGACommandContext::SetViewport(const NGAViewport &viewport)
+	void NGACommandContext::BindPipelineState(const NGAPipelineState &pipelineState)
 	{
-		D3D11_VIEWPORT vp;
-		vp.TopLeftX = viewport.mX;
-		vp.TopLeftY = viewport.mY;
-		vp.Width = viewport.mWidth;
-		vp.Height = viewport.mHeight;
-		vp.MinDepth = viewport.mMinDepth;
-		vp.MaxDepth = viewport.mMaxDepth;
+		NgaDx11State.mContext->IASetPrimitiveTopology((D3D11_PRIMITIVE_TOPOLOGY)pipelineState.mPrimitiveTopology);
 
-		NgaDx11State.mContext->RSSetViewports(1, &vp);
+		NgaDx11State.mContext->RSSetState(pipelineState.mRasterizerState);
+		NgaDx11State.mContext->OMSetDepthStencilState(pipelineState.mDepthStencilState, 0);
 	}
 
-	void NGACommandContext::SetRasterizerState(const NGARasterizerState &state)
+	void NGACommandContext::DrawIndexed(unsigned int indexCount)
 	{
-		NgaDx11State.mContext->RSSetState(state.mRasterizerState);
+		NgaDx11State.mContext->DrawIndexed(indexCount, 0, 0);
+	}
+
+	void NGACommandContext::MapBufferData(const NGABuffer &buffer, void *data)
+	{
+		const NGABufferUsage usage = buffer.mDesc.mUsage;
+		NA_ASSERT_RETURN((usage & NGA_BUFFER_USAGE_CPU_WRITE) || (usage & NGA_BUFFER_USAGE_CPU_READ_WRITE));
+
+		D3D11_MAPPED_SUBRESOURCE res;
+
+		HRESULT hr = NgaDx11State.mContext->Map(buffer.mBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
+		NA_ASSERT_RETURN(SUCCEEDED(hr), false, "ID3D11DeviceContext::Map() failed with HRESULT %X", hr);
+
+		memcpy(res.pData, data, buffer.mDesc.mSizeInBytes);
+
+		NgaDx11State.mContext->Unmap(buffer.mBuffer, 0);
+	}
+
+	void NGACommandContext::SetViewport(const NGARect &rect, float minDepth, float maxDepth)
+	{
+		D3D11_VIEWPORT vp;
+		vp.TopLeftX = rect.x;
+		vp.TopLeftY = rect.y;
+		vp.Width = rect.width;
+		vp.Height = rect.height;
+		vp.MinDepth = minDepth;
+		vp.MaxDepth = maxDepth;
+
+		NgaDx11State.mContext->RSSetViewports(1, &vp);
 	}
 
 	void NGACommandContext::SetPrimitiveTopology(NGAPrimitiveTopology primTopology)
@@ -112,26 +135,6 @@ namespace na
 	void NGACommandContext::BindRenderTarget(const NGARenderTargetView &renderTarget, const NGADepthStencilView &depthStencilView)
 	{
 		NgaDx11State.mContext->OMSetRenderTargets(1, &renderTarget.mView, depthStencilView.mView);
-	}
-
-	void NGACommandContext::MapBufferData(const NGABuffer &buffer, void *data)
-	{
-		const NGABufferUsage usage = buffer.mDesc.mUsage;
-		NA_ASSERT_RETURN((usage & NGA_BUFFER_USAGE_CPU_WRITE) || (usage & NGA_BUFFER_USAGE_CPU_READ_WRITE));
-
-		D3D11_MAPPED_SUBRESOURCE res;
-
-		HRESULT hr = NgaDx11State.mContext->Map(buffer.mBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
-		NA_ASSERT_RETURN(SUCCEEDED(hr), false, "ID3D11DeviceContext::Map() failed with HRESULT %X", hr);
-
-		memcpy(res.pData, data, buffer.mDesc.mSizeInBytes);
-
-		NgaDx11State.mContext->Unmap(buffer.mBuffer, 0);
-	}
-
-	void NGACommandContext::DrawIndexed(unsigned int indexCount)
-	{
-		NgaDx11State.mContext->DrawIndexed(indexCount, 0, 0);
 	}
 }
 

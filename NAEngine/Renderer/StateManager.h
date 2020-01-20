@@ -8,8 +8,6 @@
 #include "Resources/ConstantBuffer.h"
 #include "Shader/EngineShaders/shader_common.hlsli"
 
-struct ID3D11RasterizerState;
-
 namespace na
 {
 	class NGABuffer;
@@ -41,8 +39,7 @@ namespace na
 
 		void SetLightsData(const LightsData &lights);
 
-		void SetViewport(const Rect &rect);
-		void SetRasterizerState(const NGARasterizerState &state);
+		void SetViewport(const NGARect &rect);
 
 		void SetPrimitiveTopology(NGAPrimitiveTopology primTopology);
 
@@ -72,7 +69,5 @@ namespace na
 		ConstantBuffer mObjectDataBuffer;
 
 		ConstantBuffer mLightsBuffer;
-		
-		ID3D11RasterizerState *mRasterizerState;
 	};
 }

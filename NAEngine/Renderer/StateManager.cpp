@@ -47,8 +47,6 @@ namespace na
 
 		success = mLightsBuffer.Initialize(ConstantBufferUsage::CPU_WRITE, nullptr, sizeof(LightsData));
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize lights buffer.");
-		
-		mRasterizerState = nullptr;
 
 		return true;
 	}
@@ -58,8 +56,6 @@ namespace na
 		mViewProjBuffer.Shutdown();
 		mObjectDataBuffer.Shutdown();
 		mLightsBuffer.Shutdown();
-
-		NA_SAFE_RELEASE(mRasterizerState);
 	}
 	
 	void StateManager::SetViewProjMatrices(const Matrix &view, const Matrix &proj)
@@ -88,22 +84,9 @@ namespace na
 		mCommandContext.BindConstantBuffer(mLightsBuffer.GetBuffer(), NGA_SHADER_STAGE_PIXEL, (int)PSConstantBuffers::LIGHTS);
 	}
 
-	void StateManager::SetViewport(const Rect &rect)
+	void StateManager::SetViewport(const NGARect &rect)
 	{
-		NGAViewport vp;
-		vp.mX = rect.x;
-		vp.mY = rect.y;
-		vp.mWidth = rect.w;
-		vp.mHeight = rect.h;
-		vp.mMinDepth = 0.0f;
-		vp.mMaxDepth = 1.0f;
-
-		mCommandContext.SetViewport(vp);
-	}
-
-	void StateManager::SetRasterizerState(const NGARasterizerState &state)
-	{
-		mCommandContext.SetRasterizerState(state);
+		mCommandContext.SetViewport(rect);
 	}
 
 	void StateManager::SetPrimitiveTopology(NGAPrimitiveTopology primTopology)

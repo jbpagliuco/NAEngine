@@ -3,12 +3,14 @@
 #include "NGACommon.h"
 
 #include "NGAShader.h"
+#include "NGAShapes.h"
 
 namespace na
 {
 	class NGABuffer;
 	class NGADepthStencilView;
 	class NGAInputLayout;
+	class NGAPipelineState;
 	class NGARasterizerState;
 	class NGARenderTargetView;
 	class NGASamplerState;
@@ -18,8 +20,15 @@ namespace na
 	class NGACommandContext
 	{
 	public:
-		void SetViewport(const NGAViewport &viewport);
-		void SetRasterizerState(const NGARasterizerState &state);
+		void BindPipelineState(const NGAPipelineState &pipelineState);
+
+		void DrawIndexed(unsigned int indexCount);
+
+		void MapBufferData(const NGABuffer &buffer, void *data);
+
+		void SetViewport(const NGARect &rect, float minDepth = 0.0f, float maxDepth = 1.0f);
+
+
 
 		void SetPrimitiveTopology(NGAPrimitiveTopology primTopology);
 
@@ -38,8 +47,5 @@ namespace na
 		void ClearDepthStencilView(const NGADepthStencilView &depthStencilView);
 		void BindRenderTarget(const NGARenderTargetView &renderTargetView, const NGADepthStencilView &depthStencilView);
 
-		void MapBufferData(const NGABuffer &buffer, void *data);
-
-		void DrawIndexed(unsigned int indexCount);
 	};
 }

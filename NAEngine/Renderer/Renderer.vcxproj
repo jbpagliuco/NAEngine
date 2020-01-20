@@ -208,7 +208,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="NGA\DX11\NGARasterizerDX11.cpp" />
+    <ClCompile Include="NGA\DX11\NGAPipelineStateDX11.cpp" />
     <ClCompile Include="NGA\DX11\NGASwapChainDX11.cpp" />
     <ClCompile Include="Resources\ConstantBuffer.cpp" />
     <ClCompile Include="ImguiRenderer.cpp" />
@@ -241,7 +241,9 @@
     <ClCompile Include="Scene\SceneEntity.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="NGA\NGARasterizer.h" />
+    <ClInclude Include="NGA\NGAPipelineState.h" />
+    <ClInclude Include="NGA\NGAPipelineStateDefs.h" />
+    <ClInclude Include="NGA\NGAShapes.h" />
     <ClInclude Include="NGA\NGASwapChain.h" />
     <ClInclude Include="Resources\ConstantBuffer.h" />
     <ClInclude Include="ImguiRenderer.h" />

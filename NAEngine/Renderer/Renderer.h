@@ -5,9 +5,9 @@
 
 #include "RenderDefs.h"
 #include "StateManager.h"
-#include "Renderer/NGA/NGARasterizer.h"
 #include "Renderer/NGA/NGAResourceViews.h"
 #include "Renderer/NGA/NGASwapChain.h"
+#include "Renderer/NGA/NGAPipelineState.h"
 
 #define NA_Renderer Renderer::Get()
 #define NA_RStateManager Renderer::Get()->GetStateManager()
@@ -38,16 +38,14 @@ namespace na
 		const Window& GetWindow() { return mWindow; }
 
 		StateManager* GetStateManager() { return &mStateManager; }
-
-	protected:
+		
+	private:
 		Window mWindow;
 		NGASwapChain mSwapChain;
 
 		NGARenderTargetView mRenderTargetView;
 		NGADepthStencilView mDepthStencilView;
-
-		NGARasterizerState mRasterizerState;
-
+		
 		StateManager mStateManager;
 
 		Camera* mActiveCamera;

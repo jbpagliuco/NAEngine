@@ -12,6 +12,8 @@
 #include "Base/Debug/Assert.h"
 #include "Base/Util/BitUtil.h"
 
+#include "NGAPipelineStateDefs.h"
+
 
 #define NGA_GPU_CLASS(ClassName)								\
 	public:														\
@@ -29,22 +31,11 @@ namespace na
 {
 	enum class NGAFormat
 	{
-#if defined(NGA_D3D11)
 		R32_FLOAT = 0,
 		R32G32_FLOAT,
 		R32G32B32_FLOAT,
 		R32G32B32A32_FLOAT
-#endif
 	};
-
-
-	enum class NGAPrimitiveTopology
-	{
-#if defined(NGA_D3D11)
-		TRIANGLE_LIST = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST
-#endif
-	};
-
 
 	enum NGAShaderStage
 	{
@@ -84,11 +75,6 @@ namespace na
 	};
 
 
-	enum class NGAIndexBufferType
-	{
-		IBT_16BIT,
-		IBT_32BIT
-	};
 
 	enum class NGAVertexSemanticType
 	{
@@ -113,17 +99,6 @@ namespace na
 	struct NGAVertexFormatDesc
 	{
 		std::vector<NGAVertexAttribute> mAttributes;
-	};
-
-
-	struct NGAViewport
-	{
-		float mX;
-		float mY;
-		float mWidth;
-		float mHeight;
-		float mMinDepth;
-		float mMaxDepth;
 	};
 
 	/////////////////////////////////////////////////////////////////////////

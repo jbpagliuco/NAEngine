@@ -102,10 +102,10 @@
     <ClCompile Include="NGA\DX11\NGASwapChainDX11.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NGA\DX11\NGARasterizerDX11.cpp">
+    <ClCompile Include="StateManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StateManager.cpp">
+    <ClCompile Include="NGA\DX11\NGAPipelineStateDX11.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -212,10 +212,16 @@
     <ClInclude Include="NGA\NGASwapChain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NGA\NGARasterizer.h">
+    <ClInclude Include="StateManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="StateManager.h">
+    <ClInclude Include="NGA\NGAPipelineState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NGA\NGAShapes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NGA\NGAPipelineStateDefs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

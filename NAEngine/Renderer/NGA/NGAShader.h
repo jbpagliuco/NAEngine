@@ -39,5 +39,6 @@ namespace na
 #endif
 
 		friend class NGACommandContext;
+		friend class NGAPipelineState;
 	};
 }
