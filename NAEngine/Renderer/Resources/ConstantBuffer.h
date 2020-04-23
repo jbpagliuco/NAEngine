@@ -18,7 +18,7 @@ namespace na
 		void Shutdown();
 
 		void Map(void *pData);
-		
+
 		const NGABuffer& GetBuffer()const;
 		size_t GetSize()const;
 

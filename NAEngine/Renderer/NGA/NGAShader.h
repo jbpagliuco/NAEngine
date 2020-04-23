@@ -15,7 +15,7 @@ namespace na
 		NGA_GPU_CLASS(NGAShader);
 
 	public:
-		bool Construct(const char *filename, NGAShaderType type, int version);
+		bool Construct(const char *filename, NGAShaderType type);
 		void Destruct();
 
 		bool IsConstructed()const;

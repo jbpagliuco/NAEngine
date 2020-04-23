@@ -34,5 +34,8 @@
   <ItemGroup>
     <FxCompile Include="data\shaders\normal_map\normal_map.hlsl" />
     <FxCompile Include="data\shaders\red\red.hlsl" />
+    <FxCompile Include="data\shaders\tex_map\tex_map.hlsl" />
+    <FxCompile Include="data\shaders\tex_debug\tex_debug.hlsl" />
+    <FxCompile Include="data\shaders\normal_debug\normal_debug.hlsl" />
   </ItemGroup>
 </Project>

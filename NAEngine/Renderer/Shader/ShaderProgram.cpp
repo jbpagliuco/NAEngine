@@ -13,10 +13,10 @@ namespace na
 	}
 
 
-	bool VertexShader::Initialize(const std::string &filename, NGAVertexFormatDesc vertexFormatDesc, int version)
+	bool VertexShader::Initialize(const std::string &filename, NGAVertexFormatDesc vertexFormatDesc)
 	{
 		mVertexFormatDesc = vertexFormatDesc;
-		return mShader.Construct(filename.c_str(), NGAShaderType::VERTEX, version);
+		return mShader.Construct(filename.c_str(), NGAShaderType::VERTEX);
 	}
 
 	NGAVertexFormatDesc VertexShader::GetVertexFormatDesc()const
@@ -25,8 +25,8 @@ namespace na
 	}
 
 
-	bool PixelShader::Initialize(const std::string &filename, int version)
+	bool PixelShader::Initialize(const std::string &filename)
 	{
-		return mShader.Construct(filename.c_str(), NGAShaderType::PIXEL, version);
+		return mShader.Construct(filename.c_str(), NGAShaderType::PIXEL);
 	}
 }

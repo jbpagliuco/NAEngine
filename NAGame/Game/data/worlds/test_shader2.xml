@@ -59,6 +59,44 @@
 			</component>
 		</components>
 	</gameobject>
+
+	<gameobject>
+		<name>Sphere</name>
+		<transform>
+			<position>
+				<x>0</x>
+				<y>3</y>
+			</position>
+		</transform>
+		<components>
+			<component type="StaticMeshComponent">
+				<mesh>sphere.meshx</mesh>
+				<material>tex_debug.matx</material>
+			</component>
+		</components>
+	</gameobject>
+
+	<gameobject>
+		<name>Wall</name>
+		<transform>
+			<position>
+				<x>0</x>
+				<y>0</y>
+				<z>4</z>
+			</position>
+			<scale>
+				<x>10</x>
+				<y>10</y>
+				<z>1</z>
+			</scale>
+		</transform>
+		<components>
+			<component type="StaticMeshComponent">
+				<mesh>cube.meshx</mesh>
+				<material>normal_debug.matx</material>
+			</component>
+		</components>
+	</gameobject>
 	
 	<!-- Lights -->
 	<gameobject>

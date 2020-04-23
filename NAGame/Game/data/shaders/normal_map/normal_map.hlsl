@@ -17,17 +17,19 @@ struct PixelInput {
 	float3 tangent : TANGENT0;
 };
 
-cbuffer cbMaterial : register(MATERIAL_CB_REGISTER)
+// Material data
+cbuffer cbMaterial : register(CB_REGISTER_MATERIAL)
 {
 	float4 matDiffuse;
 	float4 matSpecular;
 };
 
-Texture2D DiffuseTexture : register(t0);
-SamplerState DiffuseSampler : register(s0);
+// Resources
+Texture2D DiffuseTexture : register(TEX_REGISTER_USER0);
+SamplerState DiffuseSampler : register(SAM_REGISTER_USER0);
 
-Texture2D NormalTexture : register(t1);
-SamplerState NormalSampler : register(s1);
+Texture2D NormalTexture : register(TEX_REGISTER_USER1);
+SamplerState NormalSampler : register(SAM_REGISTER_USER1);
 
 PixelInput vsMain(VertexInput input)
 {

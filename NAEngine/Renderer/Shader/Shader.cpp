@@ -8,16 +8,8 @@ namespace na
 
 	bool Shader::Initialize(const std::string &file, NGAVertexFormatDesc vsFormat)
 	{
-		mVertexShader.Initialize(file, vsFormat, 2);
-		mPixelShader.Initialize(file, 2);
-
-		return true;
-	}
-
-	bool Shader::Initialize(const std::string &vs, NGAVertexFormatDesc vsFormat, const std::string &ps)
-	{
-		mVertexShader.Initialize(vs, vsFormat, 1);
-		mPixelShader.Initialize(ps, 1);
+		mVertexShader.Initialize(file, vsFormat);
+		mPixelShader.Initialize(file);
 
 		return true;
 	}

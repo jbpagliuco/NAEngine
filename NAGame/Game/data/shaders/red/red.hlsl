@@ -15,12 +15,14 @@ struct PixelInput {
 	float2 texCoord : TEXCOORD0;
 };
 
-cbuffer cbMaterial : register(MATERIAL_CB_REGISTER)
+// Material data
+cbuffer cbMaterial : register(CB_REGISTER_MATERIAL)
 {
 	float4 matDiffuse;
 	float4 matSpecular;
 };
 
+// Vertex shader
 PixelInput vsMain(VertexInput input)
 {
 	float4 pos = float4(input.position, 1.0f);
@@ -38,6 +40,7 @@ PixelInput vsMain(VertexInput input)
 	return output;
 }
 
+// Pixel shader
 float4 psMain(PixelInput input) : SV_TARGET
 {
 	float3 P = input.position;
