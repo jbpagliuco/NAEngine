@@ -26,7 +26,7 @@ namespace na
 		rs.SlopeScaledDepthBias = 0.0f;
 
 		HRESULT hr = NgaDx11State.mDevice->CreateRasterizerState(&rs, &out);
-		NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "ID3D11Device::CreateRasterizerState() failed with HRESULT %X", hr);
+		NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), nullptr, "ID3D11Device::CreateRasterizerState() failed with HRESULT %X", hr);
 
 		return out;
 	}
@@ -42,7 +42,7 @@ namespace na
 		ds.StencilEnable = false;
 
 		HRESULT hr = NgaDx11State.mDevice->CreateDepthStencilState(&ds, &out);
-		NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "ID3D11Device::CreateDepthStencilState() failed with HRESULT %X", hr);
+		NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), nullptr, "ID3D11Device::CreateDepthStencilState() failed with HRESULT %X", hr);
 
 		return out;
 	}
@@ -69,7 +69,7 @@ namespace na
 		elementDescs[0].AlignedByteOffset = 0;
 
 		HRESULT hr = NgaDx11State.mDevice->CreateInputLayout(&(elementDescs[0]), (UINT)elementDescs.size(), vertexShader->GetBytecode(), vertexShader->GetBytecodeSize(), &out);
-		NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "ID3D11Device::CreateInputLayout failed with HRESULT %X", hr);
+		NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), nullptr, "ID3D11Device::CreateInputLayout failed with HRESULT %X", hr);
 
 		return out;
 	}
