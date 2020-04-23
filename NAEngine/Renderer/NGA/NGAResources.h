@@ -13,12 +13,22 @@ namespace na
 		TEXTURE1D,
 		TEXTURE2D,
 		TEXTURE3D,
-		TEXTURECUBE
+		TEXTURECUBE,
+		UNKNOWN
 	};
 
 	struct NGATextureDesc
 	{
-		NGATextureType mType;
+		NGATextureType mType = NGATextureType::UNKNOWN;
+
+		NGAUsage mUsage = NGAUsage::IMMUTABLE;
+		NGAFormat mFormat = NGAFormat::UNKNOWN;
+
+		int mWidth = 0;
+		int mHeight = 0;
+
+		unsigned int mIsRenderTarget : 1;
+		unsigned int mIsShaderResource : 1;
 	};
 
 	class NGATexture
@@ -26,8 +36,8 @@ namespace na
 		NGA_GPU_CLASS(NGATexture);
 
 	public:
-		bool Construct(const NGATextureDesc &desc, const char *filename);
 		bool Construct(const NGATextureDesc &desc, void *initialData);
+		bool ConstructFromFile(const NGATextureDesc &desc, const char *filename);
 		void Destruct();
 
 		bool IsConstructed()const;
@@ -43,6 +53,7 @@ namespace na
 #endif
 
 		friend class NGAShaderResourceView;
+		friend class NGARenderTargetView;
 	};
 
 

@@ -17,6 +17,7 @@ namespace na
 	class NGASamplerState;
 	class NGAShaderResourceView;
 	class IndexBuffer;
+	class RenderTarget;
 	class ShaderProgram;
 	class VertexBuffer;
 
@@ -58,6 +59,8 @@ namespace na
 
 		void ClearRenderTarget(const NGARenderTargetView &renderTargetView, const float *clearColor);
 		void ClearDepthStencilView(const NGADepthStencilView &depthStencilView);
+
+		void BindRenderTarget(const RenderTarget &renderTarget);
 		void BindRenderTarget(const NGARenderTargetView &renderTargetView, const NGADepthStencilView &depthStencilView);
 
 		void MapBufferData(const NGABuffer &buffer, void *data);

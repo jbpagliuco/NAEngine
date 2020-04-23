@@ -14,28 +14,68 @@ namespace na
 	NGA_GPU_CLASS_IMPLEMENT(NGABuffer);
 
 
-	bool NGATexture::Construct(const NGATextureDesc &desc, const char *filename)
+	static UINT CreateBindFlags(const NGATextureDesc &desc)
 	{
-		D3D11_USAGE usage = D3D11_USAGE_DEFAULT;
-		unsigned int bindFlags = D3D11_BIND_SHADER_RESOURCE;
+		UINT bindFlags = 0;
+		bindFlags |= desc.mIsRenderTarget ? D3D11_BIND_RENDER_TARGET : 0;
+		bindFlags |= desc.mIsShaderResource ? D3D11_BIND_SHADER_RESOURCE : 0;
+		
+		return bindFlags;
+	}
+
+	bool NGATexture::Construct(const NGATextureDesc &desc, void *initialData)
+	{
+		NA_ASSERT_RETURN_VALUE(desc.mWidth > 0 && desc.mHeight > 0, false, "Invalid texture dimension: (%d, %d).", desc.mWidth, desc.mHeight);
+		NA_ASSERT_RETURN_VALUE(desc.mIsRenderTarget || desc.mIsShaderResource, false, "Texture MUST be bound.");
+
+		if (desc.mUsage == NGAUsage::IMMUTABLE) {
+			NA_ASSERT_RETURN_VALUE(initialData != nullptr, false, "Immutable textures MUST be provided with texture data.");
+		}
+
+		mDesc = desc;
+
+		D3D11_TEXTURE2D_DESC textureDesc{};
+		textureDesc.Width = desc.mWidth;
+		textureDesc.Height =  desc.mHeight;
+		textureDesc.MipLevels = 1;
+		textureDesc.ArraySize = 1;
+		textureDesc.Format = NGAFormatToDXGI(desc.mFormat);
+		textureDesc.SampleDesc.Count = 1;
+		textureDesc.Usage = NGAUsageToD3D11(desc.mUsage);
+		textureDesc.BindFlags = CreateBindFlags(desc);
+		textureDesc.CPUAccessFlags = 0;
+		textureDesc.MiscFlags = 0;
+
+		HRESULT hr;
+		switch (desc.mType) {
+		case NGATextureType::TEXTURE2D:
+			hr = NgaDx11State.mDevice->CreateTexture2D(&textureDesc, NULL, (ID3D11Texture2D**)&mResource);
+			break;
+
+		default:
+			NA_FATAL_ERROR("Unimplemented.");
+		};
+
+		NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "Failed to create texture.");
+
+		return true;
+	}
+
+	bool NGATexture::ConstructFromFile(const NGATextureDesc &desc, const char *filename)
+	{
+		D3D11_USAGE usage = NGAUsageToD3D11(desc.mUsage);
+		unsigned int bindFlags = CreateBindFlags(desc);
 		unsigned int miscFlags = (desc.mType == NGATextureType::TEXTURECUBE) ? D3D11_RESOURCE_MISC_TEXTURECUBE : 0;
 
 		HRESULT hr = DirectX::CreateDDSTextureFromFileEx(NgaDx11State.mDevice, ToWideString(filename).c_str(),
 			0, usage, bindFlags, 0, miscFlags, false, 
 			&mResource, nullptr);
-		
-		NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "Failed to load texture from file %s (HR: %X)", filename, hr);
+
+		NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "Failed to load texture from file %s (HR: 0x%X)", filename, hr);
 
 		mDesc = desc;
 
 		return true;
-	}
-
-	bool NGATexture::Construct(const NGATextureDesc &desc, void *initialData)
-	{
-		NA_ASSERT_RETURN_VALUE(false, false, "Unimplemented.");
-
-		mDesc = desc;
 	}
 
 	void NGATexture::Destruct()

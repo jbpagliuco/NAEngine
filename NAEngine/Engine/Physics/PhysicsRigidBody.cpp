@@ -27,7 +27,7 @@ namespace na
 	bool PhysicsRigidBody::Initialize(const PhysicsRigidBodyInfo &info, const Transform &transform)
 	{
 		const bool success = CreateShape(info);
-		NA_ASSERT_RETURN_VALUE(success, "Failed to create physics shape.", false);
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to create physics shape.");
 
 		const physx::PxTransform pxTr = GameTransformToPhysX(transform);
 
@@ -72,7 +72,7 @@ namespace na
 		{
 			physx::PxSphereGeometry geo;
 			geo.radius = info.mShapeInfo.mSphereParams.mRadius;
-			NA_ASSERT_RETURN_VALUE(geo.isValid(), "Tried to create an invalid sphere.", false);
+			NA_ASSERT_RETURN_VALUE(geo.isValid(), false, "Tried to create an invalid sphere.");
 
 			mShape = PhysicsGetDevice()->createShape(geo, *info.mMaterial->GetPhysXMaterial());
 			break;
@@ -86,7 +86,7 @@ namespace na
 			geo.halfExtents.x = (params.mMax.x - params.mMin.x) / 2.0f;
 			geo.halfExtents.y = (params.mMax.y - params.mMin.y) / 2.0f;
 			geo.halfExtents.z = (params.mMax.z - params.mMin.z) / 2.0f;
-			NA_ASSERT_RETURN_VALUE(geo.isValid(), "Tried to create an invalid box.", false);
+			NA_ASSERT_RETURN_VALUE(geo.isValid(), false, "Tried to create an invalid box.");
 
 			mShape = PhysicsGetDevice()->createShape(geo, *info.mMaterial->GetPhysXMaterial());
 			break;

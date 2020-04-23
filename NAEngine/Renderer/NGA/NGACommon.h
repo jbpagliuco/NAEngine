@@ -34,8 +34,26 @@ namespace na
 		R32_FLOAT = 0,
 		R32G32_FLOAT,
 		R32G32B32_FLOAT,
-		R32G32B32A32_FLOAT
+		R32G32B32A32_FLOAT,
+		UNKNOWN
 	};
+
+	enum class NGADepthBufferFormat
+	{
+		NONE = 0,
+		DEPTH16,
+		DEPTH24_STENCIL
+	};
+
+	enum class NGAUsage
+	{
+		IMMUTABLE = 0,
+		GPU_WRITE,
+		CPU_WRITE,
+		CPU_READ_WRITE
+	};
+
+
 
 	enum NGAShaderStage
 	{
@@ -44,6 +62,7 @@ namespace na
 		NGA_SHADER_STAGE_ALL		= 0x3 // Keep up to date with above
 	};
 	NA_DEFINE_ENUM_FLAG_OPERATORS(NGAShaderStage);
+
 
 
 	enum class NGATextureFilter
@@ -73,6 +92,7 @@ namespace na
 		MIRROR_ONCE = D3D11_TEXTURE_ADDRESS_MIRROR_ONCE
 #endif
 	};
+
 
 
 

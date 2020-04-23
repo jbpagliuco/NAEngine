@@ -25,11 +25,13 @@ namespace na
 		friend class NGACommandContext;
 	};
 
+
 	class NGARenderTargetView
 	{
 		NGA_GPU_CLASS(NGARenderTargetView);
 
 	public:
+		bool Construct(const NGATexture &texture);
 		bool Construct(const NGASwapChain &swapChain);
 		void Destruct();
 
@@ -43,12 +45,20 @@ namespace na
 		friend class NGACommandContext;
 	};
 
+
+	struct NGADepthStencilViewDesc
+	{
+		NGADepthBufferFormat mFormat;
+		int mWidth;
+		int mHeight;
+	};
+
 	class NGADepthStencilView
 	{
 		NGA_GPU_CLASS(NGADepthStencilView);
 
 	public:
-		bool Construct(int width, int height);
+		bool Construct(const NGADepthStencilViewDesc &desc);
 		void Destruct();
 
 		bool IsConstructed()const;

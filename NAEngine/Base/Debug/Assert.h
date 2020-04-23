@@ -57,6 +57,27 @@ bool NAIsDebuggerPresent();
 		exit(EXIT_FAILURE);												\
 	}																	
 
+
+
+#define NA_ASSERT_RETURN_CLEANUP(cond, shutdownFunc, ...)				\
+	if (!(cond)) {														\
+		if (NA_PRINT_ASSERT_MESSAGE(cond, __VA_ARGS__)) {				\
+			DEBUG_BREAK();												\
+		}																\
+		shutdownFunc();													\
+		return; 														\
+	}																	
+
+#define NA_ASSERT_RETURN_VALUE_CLEANUP(cond, rv, shutdownFunc, ...)		\
+	if (!(cond)) {														\
+		if (NA_PRINT_ASSERT_MESSAGE(cond, __VA_ARGS__)) {				\
+			DEBUG_BREAK();												\
+		}																\
+		shutdownFunc();													\
+		return rv; 														\
+	}																	
+
+
 #else
 
 #define NA_ASSERT(...)

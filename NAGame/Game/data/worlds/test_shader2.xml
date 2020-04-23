@@ -93,7 +93,7 @@
 		<components>
 			<component type="StaticMeshComponent">
 				<mesh>cube.meshx</mesh>
-				<material>normal_debug.matx</material>
+				<material>brick.matx</material>
 			</component>
 		</components>
 	</gameobject>

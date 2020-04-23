@@ -3,6 +3,7 @@
 #include <d3d11.h>
 
 #include "Resources/IndexBuffer.h"
+#include "Resources/RenderTarget.h"
 #include "Resources/VertexBuffer.h"
 #include "Shader/ShaderProgram.h"
 
@@ -140,6 +141,11 @@ namespace na
 	void StateManager::ClearDepthStencilView(const NGADepthStencilView &depthStencilView)
 	{
 		mCommandContext.ClearDepthStencilView(depthStencilView);
+	}
+
+	void StateManager::BindRenderTarget(const RenderTarget &renderTarget)
+	{
+		mCommandContext.BindRenderTarget(renderTarget.mRTV, renderTarget.mDSV);
 	}
 
 	void StateManager::BindRenderTarget(const NGARenderTargetView &renderTargetView, const NGADepthStencilView &depthStencilView)
