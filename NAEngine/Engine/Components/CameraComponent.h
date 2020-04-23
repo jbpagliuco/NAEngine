@@ -23,7 +23,7 @@ namespace na
 
 	private:
 		Camera mCamera;
-		Texture mRenderTarget;
+		AssetID mRenderTargetID = INVALID_ASSET_ID;
 
 		float mPitch;
 		float mYaw;

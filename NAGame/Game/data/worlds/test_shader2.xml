@@ -37,12 +37,7 @@
 				<fov>45</fov>
 				<near>0.1</near>
 				<far>100</far>
-				<renderTarget>
-					<width>1600</width>
-					<height>900</height>
-					<depth>24</depth>
-					<stencil>true</stencil>
-				</renderTarget>
+				<renderTarget>test_render_target.rtx</renderTarget>
 			</component>
 		</components>
 	</gameobject>
@@ -101,7 +96,7 @@
 				<material>
 					tex_dyn.matx
 					<overrides>
-						<override name="DiffuseTexture" type="texture">ice.dds</override>
+						<override name="DiffuseTexture" type="texture">test_render_target.rtx</override>
 					</overrides>
 				</material>
 			</component>

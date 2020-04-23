@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<root>
+	<header>
+		<version>1</version>
+	</header>
+	
+    <width>1600</width>
+    <height>900</height>
+
+    <depth>24</depth>
+    <stencil>true</stencil>
+</root>

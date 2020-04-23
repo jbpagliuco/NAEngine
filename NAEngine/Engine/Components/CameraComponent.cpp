@@ -15,33 +15,8 @@ namespace na
 		mCamera.mFar = params["far"].AsFloat();
 
 		if (params.HasChild("renderTarget")) {
-			DeserializationParameterMap renderTargetParams = params["renderTarget"];
-
-			NGATextureDesc desc;
-			desc.mType = NGATextureType::TEXTURE2D;
-			desc.mFormat = NGAFormat::R32G32B32A32_FLOAT;
-			desc.mBindFlags = NGA_TEXTURE_BIND_SHADER_RESOURCE | NGA_TEXTURE_BIND_RENDER_TARGET;
-			desc.mWidth = renderTargetParams["width"].AsInt();
-			desc.mHeight = renderTargetParams["height"].AsInt();
-
-			int depth = renderTargetParams["depth"].AsInt(-1);
-			bool stencil = renderTargetParams["stencil"].AsBool();
-			if (depth == -1) {
-				desc.mDepthBufferFormat = NGADepthBufferFormat::NONE;
-			}
-			else if (depth == 16 && !stencil) {
-				desc.mDepthBufferFormat = NGADepthBufferFormat::DEPTH16;
-			}
-			else if (depth == 24 && stencil) {
-				desc.mDepthBufferFormat = NGADepthBufferFormat::DEPTH24_STENCIL;
-			}
-			else {
-				NA_ASSERT(false, "Unrecognized depth buffer format.");
-				desc.mDepthBufferFormat = NGADepthBufferFormat::NONE;
-			}
-
-			mRenderTarget.Initialize(desc, NGASamplerStateDesc());
-			mCamera.mRenderTarget = &mRenderTarget;
+			mRenderTargetID = RequestAsset(params["renderTarget"].AsFilepath());
+			mCamera.mRenderTarget = Texture::Get(mRenderTargetID);
 		}
 
 		mSensitivity = params["sensitivity"].AsFloat(3.0f);
@@ -57,7 +32,9 @@ namespace na
 
 	void CameraComponent::Deactivate()
 	{
-		mRenderTarget.Shutdown();
+		if (mRenderTargetID != INVALID_ASSET_ID) {
+			ReleaseAsset(mRenderTargetID);
+		}
 
 		mCamera.mEnabled = false;
 		Scene::Get()->RemoveCamera(&mCamera);

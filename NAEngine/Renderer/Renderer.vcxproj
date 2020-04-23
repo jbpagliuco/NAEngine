@@ -231,7 +231,6 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderingSystem.cpp" />
     <ClCompile Include="Resources\IndexBuffer.cpp" />
-    <ClCompile Include="Resources\RenderTarget.cpp" />
     <ClCompile Include="Scene\Camera.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Shader\Shader.cpp" />
@@ -270,7 +269,6 @@
     <ClInclude Include="RenderDefs.h" />
     <ClInclude Include="RenderingSystem.h" />
     <ClInclude Include="Resources\IndexBuffer.h" />
-    <ClInclude Include="Resources\RenderTarget.h" />
     <ClInclude Include="Scene\Camera.h" />
     <ClInclude Include="Shader\Shader.h" />
     <ClInclude Include="Shader\ShaderProgram.h" />

@@ -31,4 +31,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="data\render_targets\test_render_target.rtx" />
+  </ItemGroup>
 </Project>

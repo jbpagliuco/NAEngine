@@ -229,6 +229,9 @@
   <ItemGroup>
     <ClInclude Include="src\Tools.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="data\render_targets\test_render_target.rtx" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
