@@ -165,7 +165,7 @@ namespace na
 	}
 
 	inline float SIGN(float x) { return (x >= 0.0f) ? +1.0f : -1.0f; }
-	inline float NORM(float a, float b, float c, float d) { return sqrt(a * a + b * b + c * c + d * d); }
+	inline float NORM(float a, float b, float c, float d) { return sqrtf(a * a + b * b + c * c + d * d); }
 
 	Quaternion Quaternion::FromMatrix(const Matrix &rotMatrix)
 	{
@@ -185,10 +185,10 @@ namespace na
 		if (q[1] < 0.0f) q[1] = 0.0f;
 		if (q[2] < 0.0f) q[2] = 0.0f;
 		if (q[3] < 0.0f) q[3] = 0.0f;
-		q[0] = sqrt(q[0]);
-		q[1] = sqrt(q[1]);
-		q[2] = sqrt(q[2]);
-		q[3] = sqrt(q[3]);
+		q[0] = sqrtf(q[0]);
+		q[1] = sqrtf(q[1]);
+		q[2] = sqrtf(q[2]);
+		q[3] = sqrtf(q[3]);
 		if (q[0] >= q[1] && q[0] >= q[2] && q[0] >= q[3]) {
 			q[0] *= +1.0f;
 			q[1] *= SIGN(R[2][1] - R[1][2]);

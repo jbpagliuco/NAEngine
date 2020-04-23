@@ -1,4 +1,13 @@
+#include <shader_common_vs.hlsli>
 #include <shader_common_ps.hlsli>
+
+// Vertex/Pixel inputs
+struct VertexInput {
+	float3 position : POSITION0;
+	float3 normal   : NORMAL0;
+	float2 texCoord : TEXCOORD0;
+	float3 tangent : TANGENT0;
+};
 
 struct PixelInput {
 	float4 svpos : SV_POSITION;
@@ -8,19 +17,39 @@ struct PixelInput {
 	float3 tangent : TANGENT0;
 };
 
-cbuffer cbMaterial : register(PS_CB_USER_REGISTER)
+cbuffer cbMaterial : register(MATERIAL_CB_REGISTER)
 {
 	float4 matDiffuse;
 	float4 matSpecular;
 };
 
-Texture2D DiffuseTexture;
-SamplerState DiffuseSampler;
+Texture2D DiffuseTexture : register(t0);
+SamplerState DiffuseSampler : register(s0);
 
-Texture2D NormalTexture;
-SamplerState NormalSampler;
+Texture2D NormalTexture : register(t1);
+SamplerState NormalSampler : register(s1);
 
-float4 main(PixelInput input) : SV_TARGET
+PixelInput vsMain(VertexInput input)
+{
+	float4 pos = float4(input.position, 1.0f);
+
+	PixelInput output;
+
+	output.svpos = mul(mul(viewProj, world), pos);
+	output.position = mul(world, pos);
+
+	float4 normal = float4(normalize(input.normal), 0.0f);
+	output.normal = mul(normal, worldInverseTranspose).xyz;
+
+	float4 tangent = float4(normalize(input.tangent), 0.0f);
+	output.tangent = mul(worldInverseTranspose, tangent).xyz;
+
+	output.texCoord = input.texCoord;
+
+	return output;
+}
+
+float4 psMain(PixelInput input) : SV_TARGET
 {
 	float2 texCoord = float2(1.0f, 1.0f) - input.texCoord;
 
@@ -28,7 +57,7 @@ float4 main(PixelInput input) : SV_TARGET
 	float3 T = normalize(input.tangent - dot(input.tangent, N) * N);
 	float3 B = cross(N, T);
 	float3 normal = ComputeNormalFromMap(NormalTexture.Sample(NormalSampler, texCoord), T, B, N);
-	
+
 	float3 P = input.position;
 	float3 V = normalize(eyePosition - P).xyz;
 

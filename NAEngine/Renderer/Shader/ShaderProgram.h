@@ -21,7 +21,7 @@ namespace na
 	class VertexShader : public ShaderProgram
 	{
 	public:
-		virtual bool Initialize(const std::string &filename, NGAVertexFormatDesc vertexFormatDesc);
+		virtual bool Initialize(const std::string &filename, NGAVertexFormatDesc vertexFormatDesc, int version);
 
 		NGAVertexFormatDesc GetVertexFormatDesc()const;
 
@@ -32,6 +32,6 @@ namespace na
 	class PixelShader : public ShaderProgram
 	{
 	public:
-		virtual bool Initialize(const std::string &filename);
+		virtual bool Initialize(const std::string &filename, int version);
 	};
 }

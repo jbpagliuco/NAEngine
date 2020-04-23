@@ -14,6 +14,11 @@ namespace na
 {
 	NGA_GPU_CLASS_IMPLEMENT(NGAShader);
 
+	static constexpr const char *SHADER_ENTRYPOINTS[] = {
+		"vsMain",
+		"psMain"
+	};
+
 	static constexpr const char *COMPILE_TARGETS[] = {
 		"vs_5_0",
 		"ps_5_0"
@@ -96,13 +101,45 @@ namespace na
 		return true;
 	}
 
+	static bool CompileShader2(ID3D10Blob **outBuffer, const std::string &file, NGAShaderType type)
+	{
+		const char *entrypoint = SHADER_ENTRYPOINTS[(int)type];
+		const char *target = COMPILE_TARGETS[(int)type];
+
+		const size_t MAX_FILE_LENGTH = 256;
+		wchar_t wfile[MAX_FILE_LENGTH];
+		MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, file.c_str(), -1, wfile, MAX_FILE_LENGTH);
+
+		ShaderProgramInclude includer;
+
+		ID3D10Blob *errorMessage = nullptr;
+		HRESULT hr = D3DCompileFromFile(wfile, nullptr, &includer, entrypoint, target, D3D10_SHADER_ENABLE_STRICTNESS, 0, outBuffer, &errorMessage);
+		if (FAILED(hr)) {
+			if (errorMessage != nullptr) {
+				NA_ASSERT(false, "Failed to compile HLSL shader '%s' with error message: %.*s", file.c_str(), errorMessage->GetBufferSize(), errorMessage->GetBufferPointer());
+			}
+			else {
+				NA_ASSERT(false, "Failed to compile HLSL shader '%s' with unknown error", file.c_str());
+			}
+			return false;
+		}
+
+		return true;
+	}
 
 
-	bool NGAShader::Construct(const char *filename, NGAShaderType type)
+
+	bool NGAShader::Construct(const char *filename, NGAShaderType type, int version)
 	{
 		NA_ASSERT_RETURN_VALUE(!IsConstructed(), false);
 
-		const bool compiled = CompileShader(&mBytecode, filename, COMPILE_TARGETS[(int)type]);
+		bool compiled = false;
+		if (version == 1) {
+			compiled = CompileShader(&mBytecode, filename, COMPILE_TARGETS[(int)type]);
+		} else {
+			compiled = CompileShader2(&mBytecode, filename, type);
+		}
+
 		NA_ASSERT_RETURN_VALUE(compiled, false, "Failed to compile shader %s with target %s", filename, COMPILE_TARGETS[(int)type]);
 
 		mType = type;
@@ -117,6 +154,9 @@ namespace na
 		case NGAShaderType::PIXEL:
 			hr = NgaDx11State.mDevice->CreatePixelShader(mBytecode->GetBufferPointer(), mBytecode->GetBufferSize(), nullptr, &mPixelShader);
 			break;
+
+		default:
+			NA_ASSERT_RETURN_VALUE(false, false, "Unknown shader type (%d)", (int)type);
 		}
 
 		NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "Failed to create shader %s", filename);

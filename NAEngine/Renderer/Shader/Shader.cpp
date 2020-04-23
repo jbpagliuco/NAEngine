@@ -6,10 +6,18 @@ namespace na
 {
 	NA_FACTORY_SETUP(Shader);
 
+	bool Shader::Initialize(const std::string &file, NGAVertexFormatDesc vsFormat)
+	{
+		mVertexShader.Initialize(file, vsFormat, 2);
+		mPixelShader.Initialize(file, 2);
+
+		return true;
+	}
+
 	bool Shader::Initialize(const std::string &vs, NGAVertexFormatDesc vsFormat, const std::string &ps)
 	{
-		mVertexShader.Initialize(vs, vsFormat);
-		mPixelShader.Initialize(ps);
+		mVertexShader.Initialize(vs, vsFormat, 1);
+		mPixelShader.Initialize(ps, 1);
 
 		return true;
 	}

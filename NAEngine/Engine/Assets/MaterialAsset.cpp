@@ -120,6 +120,8 @@ namespace na
 
 		DeserializationParameterMap params = ParseFile(filename);
 
+		const int version = params["version"].AsInt(1);
+
 		auto vsParams = params["vertexShader"];
 		auto psParams = params["pixelShader"];
 
@@ -136,8 +138,13 @@ namespace na
 			vertexFormatDesc.mAttributes.push_back(attr);
 		}
 
-		// SHADER
-		return pShader->Initialize(vsParams["file"].AsFilepath(), vertexFormatDesc, psParams["file"].AsFilepath());
+		if (version == 1) {
+			// SHADER
+			return pShader->Initialize(vsParams["file"].AsFilepath(), vertexFormatDesc, psParams["file"].AsFilepath());
+		}
+		else {
+			return pShader->Initialize(params["file"].AsFilepath(), vertexFormatDesc);
+		}
 	}
 
 	static void OnShaderUnload(const AssetID &id)

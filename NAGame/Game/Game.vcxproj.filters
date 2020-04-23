@@ -24,10 +24,15 @@
   </ItemGroup>
   <ItemGroup>
     <Xml Include="config.xml" />
+    <Xml Include="data\worlds\test_shader2.xml" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Tools.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="data\shaders\normal_map\normal_map.hlsl" />
+    <FxCompile Include="data\shaders\red\red.hlsl" />
   </ItemGroup>
 </Project>

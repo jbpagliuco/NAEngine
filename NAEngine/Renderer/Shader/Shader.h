@@ -8,6 +8,7 @@ namespace na
 	class Shader : public AssetFactory<Shader>
 	{
 	public:
+		bool Initialize(const std::string &file, NGAVertexFormatDesc vsFormat);
 		bool Initialize(const std::string &vs, NGAVertexFormatDesc vsFormat, const std::string &ps);
 		void Shutdown();
 

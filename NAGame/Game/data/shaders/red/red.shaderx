@@ -1,24 +1,31 @@
 <?xml version="1.0"?>
 
 <root>
-    <vertexShader>
-        <file>red_vs.hlsl</file>
-        <inputs>
-            <input>
-                <type>float3</type>
-                <semanticName>POSITION</semanticName>
-            </input>
-            <input>
-                <type>float3</type>
-                <semanticName>NORMAL</semanticName>
-            </input>
-            <input>
-                <type>float2</type>
-                <semanticName>TEXCOORD</semanticName>
-            </input>
-        </inputs>
-    </vertexShader>
+	<file>red.hlsl</file>
+	<version>2</version>
+
+	<vertexShader>
+		<inputs>
+			<input>
+				<type>float3</type>
+				<semanticName>POSITION</semanticName>
+			</input>
+			<input>
+				<type>float3</type>
+				<semanticName>NORMAL</semanticName>
+			</input>
+			<input>
+				<type>float2</type>
+				<semanticName>TEXCOORD</semanticName>
+			</input>
+		</inputs>
+	</vertexShader>
+
     <pixelShader>
-        <file>red_ps.hlsl</file>
     </pixelShader>
+
+	<cbuffer>
+		<field name="diffuse" type="float4" />
+		<field name="specular" type="float4" />
+	</cbuffer>
 </root>

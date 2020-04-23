@@ -76,7 +76,7 @@ namespace na
 		if (lastNonWhitespaceCharacter) {
 			*(lastNonWhitespaceCharacter + 1) = 0;
 		}
-		else {
+		else if (s != nullptr) {
 			// String was all whitespace
 			s[0] = 0;
 		}
@@ -141,7 +141,13 @@ namespace na
 
 	std::wstring ToWideString(const std::string &s)
 	{
-		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-		return converter.from_bytes(s);
+		wchar_t *ws = (wchar_t*)_malloca(sizeof(wchar_t) * s.size());
+		MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, ws, (int)s.size());
+
+		std::wstring _ws(ws);
+
+		_freea(ws);
+
+		return _ws;
 	}
 }

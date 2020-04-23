@@ -6,6 +6,8 @@
 
 #include "Light.h"
 #include "Resources/ConstantBuffer.h"
+
+#define HLSL_CPP_INCLUDE
 #include "Shader/EngineShaders/shader_common.hlsli"
 
 namespace na
