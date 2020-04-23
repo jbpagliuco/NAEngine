@@ -9,7 +9,7 @@ namespace na
 {
 	struct AssetFileHeader
 	{
-		int mVersion = 0;
+		int mVersion = 1;
 	};
 
 	typedef uint64_t AssetID;
@@ -21,7 +21,7 @@ namespace na
 		bool(*mOnLoad)(const AssetID &id, const std::string &filename, const AssetFileHeader &header);
 		void(*mOnUnload)(const AssetID &id);
 
-		int mMinVersion = 0;
+		int mMinVersion = 1;
 		int mMaxVersion = 1;
 	};
 	void RegisterAssetType(const AssetType &type);
