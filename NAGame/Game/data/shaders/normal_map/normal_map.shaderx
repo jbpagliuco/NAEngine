@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 
 <root>
-	<version>2</version>
 	<file>normal_map.hlsl</file>
+	<version>2</version>
+	
     <vertexShader>
         <inputs>
             <input>
@@ -23,16 +24,7 @@
 			</input>
         </inputs>
     </vertexShader>
+	
     <pixelShader>
-		<resources>
-			<resource>
-				<type>Texture2D</type>
-				<index>0</index>
-			</resource>
-			<resource>
-				<type>Texture2D</type>
-				<index>0</index>
-			</resource>
-		</resources>
     </pixelShader>
 </root>
