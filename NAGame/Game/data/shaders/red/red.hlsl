@@ -15,7 +15,7 @@ struct PixelInput {
 	float2 texCoord : TEXCOORD0;
 };
 
-cbuffer cbMaterial : register(MATERIAL_CB_REGISTER)
+cbuffer cbMaterial : register(CB_REGISTER_MATERIAL)
 {
 	float4 matDiffuse;
 	float4 matSpecular;

@@ -4,10 +4,8 @@
 #include <shader_common.hlsli>
 #include <light.hlsli>
 
-#define PS_CB_USER_REGISTER b1
-
 // Constant Buffers
-cbuffer cbLights : register(b0)
+cbuffer cbLights : register(CB_REGISTER_LIGHTS)
 {
 	float4 globalAmbient;
 	float3 eyePosition;

@@ -9,7 +9,6 @@ namespace na
 	{
 	public:
 		bool Initialize(const std::string &file, NGAVertexFormatDesc vsFormat);
-		bool Initialize(const std::string &vs, NGAVertexFormatDesc vsFormat, const std::string &ps);
 		void Shutdown();
 
 		void Bind();

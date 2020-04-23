@@ -3,15 +3,18 @@
 
 #define MAX_LIGHTS 4
 
-#define MATERIAL_CB_REGISTER b2
+#define CB_REGISTER_CAMERA b0
+#define CB_REGISTER_PER_OBJECT b1
+#define CB_REGISTER_LIGHTS b2
+#define CB_REGISTER_MATERIAL b3
 
 #if !defined(HLSL_CPP_INCLUDE)
 // Constant Buffers
-cbuffer cbCamera : register(b0) {
+cbuffer cbCamera : register(CB_REGISTER_CAMERA) {
 	matrix viewProj;
 };
 
-cbuffer cbPerObject : register(b1) {
+cbuffer cbPerObject : register(CB_REGISTER_PER_OBJECT) {
 	matrix world;
 	matrix worldInverseTranspose;
 };

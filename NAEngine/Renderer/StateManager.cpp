@@ -15,16 +15,11 @@ namespace na
 {
 	StateManager RendererStateManager;
 
-	enum class VSConstantBuffers
+	enum class ShaderConstantBuffers
 	{
 		VIEWPROJ = 0,
 		OBJECTDATA,
-		USER
-	};
-
-	enum class PSConstantBuffers
-	{
-		LIGHTS = 0,
+		LIGHTS,
 		USER
 	};
 
@@ -63,7 +58,7 @@ namespace na
 		Matrix viewProj = proj * view;
 		mViewProjBuffer.Map(&viewProj);
 
-		mCommandContext.BindConstantBuffer(mViewProjBuffer.GetBuffer(), NGA_SHADER_STAGE_VERTEX, (int)VSConstantBuffers::VIEWPROJ);
+		mCommandContext.BindConstantBuffer(mViewProjBuffer.GetBuffer(), NGA_SHADER_STAGE_VERTEX, (int)ShaderConstantBuffers::VIEWPROJ);
 	}
 
 	void StateManager::SetObjectTransform(const Matrix &transform)
@@ -74,14 +69,14 @@ namespace na
 
 		mObjectDataBuffer.Map(&data);
 
-		mCommandContext.BindConstantBuffer(mObjectDataBuffer.GetBuffer(), NGA_SHADER_STAGE_VERTEX, (int)VSConstantBuffers::OBJECTDATA);
+		mCommandContext.BindConstantBuffer(mObjectDataBuffer.GetBuffer(), NGA_SHADER_STAGE_VERTEX, (int)ShaderConstantBuffers::OBJECTDATA);
 	}
 
 	void StateManager::SetLightsData(const LightsData &lights)
 	{
 		mLightsBuffer.Map((void*)&lights);
 
-		mCommandContext.BindConstantBuffer(mLightsBuffer.GetBuffer(), NGA_SHADER_STAGE_PIXEL, (int)PSConstantBuffers::LIGHTS);
+		mCommandContext.BindConstantBuffer(mLightsBuffer.GetBuffer(), NGA_SHADER_STAGE_PIXEL, (int)ShaderConstantBuffers::LIGHTS);
 	}
 
 	void StateManager::SetViewport(const NGARect &rect)
@@ -124,11 +119,11 @@ namespace na
 		NA_ASSERT_RETURN(stage != NGA_SHADER_STAGE_ALL, "Need to implement this.");
 
 		if (stage & NGA_SHADER_STAGE_VERTEX) {
-			mCommandContext.BindConstantBuffer(constantBuffer, NGA_SHADER_STAGE_VERTEX, slot + (int)VSConstantBuffers::USER);
+			mCommandContext.BindConstantBuffer(constantBuffer, NGA_SHADER_STAGE_VERTEX, slot + (int)ShaderConstantBuffers::USER);
 		}
 
 		if (stage & NGA_SHADER_STAGE_PIXEL) {
-			mCommandContext.BindConstantBuffer(constantBuffer, NGA_SHADER_STAGE_PIXEL, slot + (int)PSConstantBuffers::USER);
+			mCommandContext.BindConstantBuffer(constantBuffer, NGA_SHADER_STAGE_PIXEL, slot + (int)ShaderConstantBuffers::USER);
 		}
 	}
 
