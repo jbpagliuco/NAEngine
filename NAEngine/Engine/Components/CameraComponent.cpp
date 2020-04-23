@@ -3,14 +3,42 @@
 #include "Engine/Input/Input.h"
 #include "Engine/World/GameObject.h"
 #include "Renderer/Renderer.h"
+#include "Renderer/Scene/Scene.h"
 
 namespace na
 {
-	void CameraComponent::Deserialize(DeserializationParameterMap &params)
+	void CameraComponent::Deserialize(DeserializationParameterMap& params)
 	{
+		mCamera.mEnabled = params["enabled"].AsBool();
 		mCamera.mFOV = ToRadians(params["fov"].AsFloat());
 		mCamera.mNear = params["near"].AsFloat();
 		mCamera.mFar = params["far"].AsFloat();
+
+		if (params.HasChild("renderTarget")) {
+			DeserializationParameterMap renderTargetParams = params["renderTarget"];
+			RenderTargetDesc desc;
+			desc.mWidth = renderTargetParams["width"].AsInt();
+			desc.mHeight = renderTargetParams["height"].AsInt();
+
+			int depth = renderTargetParams["depth"].AsInt(-1);
+			bool stencil = renderTargetParams["stencil"].AsBool();
+			if (depth == -1) {
+				desc.mDepthBufferFormat = NGADepthBufferFormat::NONE;
+			}
+			else if (depth == 16 && !stencil) {
+				desc.mDepthBufferFormat = NGADepthBufferFormat::DEPTH16;
+			}
+			else if (depth == 24 && stencil) {
+				desc.mDepthBufferFormat = NGADepthBufferFormat::DEPTH24_STENCIL;
+			}
+			else {
+				NA_ASSERT(false, "Unrecognized depth buffer format.");
+				desc.mDepthBufferFormat = NGADepthBufferFormat::NONE;
+			}
+
+			mRenderTarget.Initialize(desc);
+			mCamera.mRenderTarget = &mRenderTarget;
+		}
 
 		mSensitivity = params["sensitivity"].AsFloat(3.0f);
 	}
@@ -18,16 +46,17 @@ namespace na
 	void CameraComponent::Activate()
 	{
 		mCamera.mTransform = *mTransform;
-		NA_Renderer->SetActiveCamera(&mCamera);
+		Scene::Get()->AddCamera(&mCamera);
 
 		mPitch = mYaw = mRoll = 0.0f;
 	}
 
 	void CameraComponent::Deactivate()
 	{
-		if (NA_Renderer->GetActiveCamera() == &mCamera) {
-			NA_Renderer->SetActiveCamera(nullptr);
-		}
+		mRenderTarget.Shutdown();
+
+		mCamera.mEnabled = false;
+		Scene::Get()->RemoveCamera(&mCamera);
 	}
 
 	void CameraComponent::Update(float deltaTime)

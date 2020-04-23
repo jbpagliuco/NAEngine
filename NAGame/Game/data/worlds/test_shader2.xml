@@ -13,9 +13,36 @@
 		</transform>
 		<components>
 			<component type="CameraComponent">
+				<enabled>true</enabled>
 				<fov>45</fov>
 				<near>0.1</near>
 				<far>100</far>
+			</component>
+		</components>
+	</gameobject>
+	
+	<gameobject>
+		<name>Camera</name>
+		<transform>
+			<position>
+				<x>0</x>
+				<y>2</y>
+				<z>-10</z>
+			</position>
+			<rotation type="lookat"/>
+		</transform>
+		<components>
+			<component type="CameraComponent">
+				<enabled>true</enabled>
+				<fov>45</fov>
+				<near>0.1</near>
+				<far>100</far>
+				<renderTarget>
+					<width>1600</width>
+					<height>900</height>
+					<depth>24</depth>
+					<stencil>true</stencil>
+				</renderTarget>
 			</component>
 		</components>
 	</gameobject>

@@ -2,5 +2,5 @@
 
 namespace na
 {
-
+	int Camera::NumCameras = 0;
 }

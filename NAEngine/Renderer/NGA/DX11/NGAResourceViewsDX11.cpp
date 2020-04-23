@@ -121,7 +121,7 @@ namespace na
 
 		D3D11_TEXTURE2D_DESC texDesc{};
 		texDesc.Width = desc.mWidth;
-		texDesc.Height = desc.mWidth;
+		texDesc.Height = desc.mHeight;
 		texDesc.MipLevels = 1;
 		texDesc.ArraySize = 1;
 		texDesc.Format = NGAFormatToDXGI(desc.mFormat);

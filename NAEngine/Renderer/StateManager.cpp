@@ -145,7 +145,7 @@ namespace na
 
 	void StateManager::BindRenderTarget(const RenderTarget &renderTarget)
 	{
-		mCommandContext.BindRenderTarget(renderTarget.mRTV, renderTarget.mDSV);
+		mCommandContext.BindRenderTarget(renderTarget.mRenderTargetView, renderTarget.mDepthStencilView);
 	}
 
 	void StateManager::BindRenderTarget(const NGARenderTargetView &renderTargetView, const NGADepthStencilView &depthStencilView)

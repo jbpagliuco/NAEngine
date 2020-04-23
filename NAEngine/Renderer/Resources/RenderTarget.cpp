@@ -6,6 +6,23 @@
 
 namespace na
 {
+	bool RenderTarget::Initialize(const RenderTargetDesc& desc)
+	{
+		bool success = mRenderTargetView.Construct(*NA_RSwapChain);
+		NA_RENDER_ASSERT_RETURN_VALUE(success, false, "Failed to create render target view from back buffer.");
+
+		if (desc.mDepthBufferFormat != NGADepthBufferFormat::NONE) {
+			NGADepthStencilViewDesc dsvDesc;
+			dsvDesc.mFormat = desc.mDepthBufferFormat;
+			dsvDesc.mWidth = desc.mWidth;
+			dsvDesc.mHeight = desc.mHeight;
+			success = mDepthStencilView.Construct(dsvDesc);
+			NA_RENDER_ASSERT_RETURN_VALUE(success, false, "Failed to create depth stencil view.");
+		}
+
+		return true;
+	}
+
 	bool RenderTarget::Initialize(const RenderTargetDesc &desc, const NGASamplerStateDesc &samplerStateDesc)
 	{
 		bool success = mSampler.Construct(samplerStateDesc);
@@ -23,30 +40,31 @@ namespace na
 		success = mTexture.Construct(texDesc, nullptr);
 		NA_RENDER_ASSERT_RETURN_VALUE(success, false, "Failed to construct render target texture.");
 
-		success = mRTV.Construct(mTexture);
+		success = mRenderTargetView.Construct(mTexture);
 		NA_RENDER_ASSERT_RETURN_VALUE(success, false, "Failed to construct render target view.");
-
-		success = mSRV.Construct(mTexture);
-		NA_RENDER_ASSERT_RETURN_VALUE(success, false, "Failed to construct shader resource view.");
 
 		if (desc.mDepthBufferFormat != NGADepthBufferFormat::NONE) {
 			NGADepthStencilViewDesc dsvDesc;
 			dsvDesc.mFormat = desc.mDepthBufferFormat;
 			dsvDesc.mWidth = desc.mWidth;
 			dsvDesc.mHeight = desc.mHeight;
-			
-			success = mDSV.Construct(dsvDesc);
+
+			success = mDepthStencilView.Construct(dsvDesc);
 			NA_RENDER_ASSERT_RETURN_VALUE(success, false, "Failed to construct depth stencil view.");
 		}
+
+		success = mShaderResourceView.Construct(mTexture);
+		NA_RENDER_ASSERT_RETURN_VALUE(success, false, "Failed to construct shader resource view.");
+
 
 		return true;
 	}
 
 	void RenderTarget::Shutdown()
 	{
-		mDSV.Destruct();
-		mSRV.Destruct();
-		mRTV.Destruct();
+		mShaderResourceView.Destruct();
+		mDepthStencilView.Destruct();
+		mRenderTargetView.Destruct();
 		mTexture.Destruct();
 		mSampler.Destruct();
 	}
@@ -63,11 +81,16 @@ namespace na
 
 	const NGARenderTargetView& RenderTarget::GetRenderTargetView()const
 	{
-		return mRTV;
+		return mRenderTargetView;
+	}
+
+	const NGADepthStencilView& RenderTarget::GetDepthStencilView()const
+	{
+		return mDepthStencilView;
 	}
 
 	const NGAShaderResourceView& RenderTarget::GetShaderResourceView()const
 	{
-		return mSRV;
+		return mShaderResourceView;
 	}
 }

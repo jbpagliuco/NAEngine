@@ -8,9 +8,12 @@
 #include "Renderer/NGA/NGAResourceViews.h"
 #include "Renderer/NGA/NGASwapChain.h"
 #include "Renderer/NGA/NGAPipelineState.h"
+#include "Renderer/Resources/RenderTarget.h"
 
 #define NA_Renderer Renderer::Get()
 #define NA_RStateManager Renderer::Get()->GetStateManager()
+#define NA_RSwapChain Renderer::Get()->GetSwapChain()
+#define NA_RMainRenderTarget Renderer::Get()->GetRenderTarget()
 
 namespace na
 {
@@ -32,22 +35,18 @@ namespace na
 		virtual void BeginRender();
 		virtual void EndRender();
 
-		void SetActiveCamera(Camera *camera);
-		Camera* GetActiveCamera();
-
 		const Window& GetWindow() { return mWindow; }
 
 		StateManager* GetStateManager() { return &mStateManager; }
+		NGASwapChain* GetSwapChain() { return &mSwapChain; }
+		RenderTarget* GetRenderTarget() { return &mMainRenderTarget; }
 		
 	private:
 		Window mWindow;
 		NGASwapChain mSwapChain;
 
-		NGARenderTargetView mRenderTargetView;
-		NGADepthStencilView mDepthStencilView;
+		RenderTarget mMainRenderTarget;
 		
 		StateManager mStateManager;
-
-		Camera* mActiveCamera;
 	};
 }
