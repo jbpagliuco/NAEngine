@@ -134,7 +134,7 @@ namespace na
 		}
 	}
 
-	void DynamicMaterialInstance::BindData()
+	void DynamicMaterialInstance::BindDynamicData()
 	{
 		// Map our data to the material's constant buffer.
 		mParent->mConstantBuffer.Map(mParameterData);

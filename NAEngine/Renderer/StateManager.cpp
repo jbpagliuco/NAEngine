@@ -3,8 +3,8 @@
 #include <d3d11.h>
 
 #include "Resources/IndexBuffer.h"
-#include "Resources/RenderTarget.h"
 #include "Resources/VertexBuffer.h"
+#include "Resources/Texture.h"
 #include "Shader/ShaderProgram.h"
 
 #include "Rect.h"
@@ -143,9 +143,9 @@ namespace na
 		mCommandContext.ClearDepthStencilView(depthStencilView);
 	}
 
-	void StateManager::BindRenderTarget(const RenderTarget &renderTarget)
+	void StateManager::BindRenderTarget(const Texture &renderTarget)
 	{
-		mCommandContext.BindRenderTarget(renderTarget.mRenderTargetView, renderTarget.mDepthStencilView);
+		mCommandContext.BindRenderTarget(renderTarget.GetRenderTargetView(), renderTarget.GetDepthStencilView());
 	}
 
 	void StateManager::BindRenderTarget(const NGARenderTargetView &renderTargetView, const NGADepthStencilView &depthStencilView)

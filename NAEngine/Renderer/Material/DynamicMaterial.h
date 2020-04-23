@@ -53,7 +53,7 @@ namespace na
 
 		void Shutdown();
 
-		void BindData();
+		void BindDynamicData();
 
 		void SetFloatParameter(const std::string &name, float value);
 		void SetVectorParameter(const std::string &name, const Vector4f &value);

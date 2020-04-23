@@ -65,6 +65,15 @@ namespace na
 
 
 
+	enum NGATextureBindFlags
+	{
+		NGA_TEXTURE_BIND_NONE				= 0,
+		NGA_TEXTURE_BIND_SHADER_RESOURCE	= 1 << 0,
+		NGA_TEXTURE_BIND_RENDER_TARGET		= 1 << 1,
+		NGA_TEXTURE_BIND_DEPTH_STENCIL		= 1 << 2
+	};
+	NA_DEFINE_ENUM_FLAG_OPERATORS(NGATextureBindFlags);
+
 	enum class NGATextureFilter
 	{
 #if defined(NGA_D3D11)

@@ -85,7 +85,7 @@ namespace na
 		mMaterial->Bind();
 
 		if (mDynMaterialInst) {
-			mDynMaterialInst->BindData();
+			mDynMaterialInst->BindDynamicData();
 		}
 
 		NA_RStateManager->BindInputLayout(mInputLayout);

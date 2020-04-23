@@ -2,7 +2,7 @@
 
 #include "GameComponent.h"
 
-#include "Renderer/Resources/RenderTarget.h"
+#include "Renderer/Resources/Texture.h"
 #include "Renderer/Scene/Camera.h"
 
 namespace na
@@ -23,7 +23,7 @@ namespace na
 
 	private:
 		Camera mCamera;
-		RenderTarget mRenderTarget;
+		Texture mRenderTarget;
 
 		float mPitch;
 		float mYaw;

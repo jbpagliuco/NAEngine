@@ -21,14 +21,15 @@ namespace na
 	{
 		NGATextureType mType = NGATextureType::UNKNOWN;
 
-		NGAUsage mUsage = NGAUsage::IMMUTABLE;
+		NGAUsage mUsage = NGAUsage::GPU_WRITE;
 		NGAFormat mFormat = NGAFormat::UNKNOWN;
+
+		NGATextureBindFlags mBindFlags = NGA_TEXTURE_BIND_NONE;
+
+		NGADepthBufferFormat mDepthBufferFormat = NGADepthBufferFormat::NONE;
 
 		int mWidth = 0;
 		int mHeight = 0;
-
-		unsigned int mIsRenderTarget : 1;
-		unsigned int mIsShaderResource : 1;
 	};
 
 	class NGATexture

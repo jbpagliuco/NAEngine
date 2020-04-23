@@ -19,11 +19,11 @@ namespace na
 		bool success = mSwapChain.Construct(swapChainDesc);
 		NA_FATAL_ERROR(success, "Failed to construct swap chain.");
 
-		RenderTargetDesc rtDesc;
+		NGATextureDesc rtDesc;
 		rtDesc.mDepthBufferFormat = NGADepthBufferFormat::DEPTH24_STENCIL;
 		rtDesc.mWidth = params.mWidth;
 		rtDesc.mHeight = params.mHeight;
-		success = mMainRenderTarget.Initialize(rtDesc);
+		success = mMainRenderTarget.Initialize(rtDesc, mSwapChain);
 		NA_FATAL_ERROR(success, "Failed to create main render target view.");
 
 		if (!mStateManager.Initialize()) {

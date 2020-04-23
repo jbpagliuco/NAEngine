@@ -82,8 +82,12 @@ namespace na
 		Texture *pTex = Texture::Create(id);
 		NA_ASSERT_RETURN_VALUE(pTex != nullptr, false, "Failed to allocate texture");
 
+		NGATextureDesc desc;
+		desc.mBindFlags = NGA_TEXTURE_BIND_SHADER_RESOURCE;
+		desc.mUsage = NGAUsage::IMMUTABLE;
+
 		// Create the texture right from a DDS file, with the normal sampler state parameters
-		return pTex->Initialize(filename, NGASamplerStateDesc());
+		return pTex->Initialize(desc, NGASamplerStateDesc(), filename);
 	}
 
 	static void OnTextureUnload(const AssetID &id)

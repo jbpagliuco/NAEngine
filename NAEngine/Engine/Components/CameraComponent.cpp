@@ -16,7 +16,11 @@ namespace na
 
 		if (params.HasChild("renderTarget")) {
 			DeserializationParameterMap renderTargetParams = params["renderTarget"];
-			RenderTargetDesc desc;
+
+			NGATextureDesc desc;
+			desc.mType = NGATextureType::TEXTURE2D;
+			desc.mFormat = NGAFormat::R32G32B32A32_FLOAT;
+			desc.mBindFlags = NGA_TEXTURE_BIND_SHADER_RESOURCE | NGA_TEXTURE_BIND_RENDER_TARGET;
 			desc.mWidth = renderTargetParams["width"].AsInt();
 			desc.mHeight = renderTargetParams["height"].AsInt();
 
@@ -36,7 +40,7 @@ namespace na
 				desc.mDepthBufferFormat = NGADepthBufferFormat::NONE;
 			}
 
-			mRenderTarget.Initialize(desc);
+			mRenderTarget.Initialize(desc, NGASamplerStateDesc());
 			mCamera.mRenderTarget = &mRenderTarget;
 		}
 

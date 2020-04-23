@@ -17,8 +17,10 @@ namespace na
 	static UINT CreateBindFlags(const NGATextureDesc &desc)
 	{
 		UINT bindFlags = 0;
-		bindFlags |= desc.mIsRenderTarget ? D3D11_BIND_RENDER_TARGET : 0;
-		bindFlags |= desc.mIsShaderResource ? D3D11_BIND_SHADER_RESOURCE : 0;
+
+		bindFlags |= (desc.mBindFlags & NGA_TEXTURE_BIND_RENDER_TARGET) ? D3D11_BIND_RENDER_TARGET : 0;
+		bindFlags |= (desc.mBindFlags & NGA_TEXTURE_BIND_SHADER_RESOURCE) ? D3D11_BIND_SHADER_RESOURCE : 0;
+		bindFlags |= (desc.mBindFlags & NGA_TEXTURE_BIND_DEPTH_STENCIL) ? D3D11_BIND_DEPTH_STENCIL : 0;
 		
 		return bindFlags;
 	}
@@ -26,7 +28,7 @@ namespace na
 	bool NGATexture::Construct(const NGATextureDesc &desc, void *initialData)
 	{
 		NA_ASSERT_RETURN_VALUE(desc.mWidth > 0 && desc.mHeight > 0, false, "Invalid texture dimension: (%d, %d).", desc.mWidth, desc.mHeight);
-		NA_ASSERT_RETURN_VALUE(desc.mIsRenderTarget || desc.mIsShaderResource, false, "Texture MUST be bound.");
+		NA_ASSERT_RETURN_VALUE(desc.mBindFlags != NGA_TEXTURE_BIND_NONE, false, "Texture MUST be bound.");
 
 		if (desc.mUsage == NGAUsage::IMMUTABLE) {
 			NA_ASSERT_RETURN_VALUE(initialData != nullptr, false, "Immutable textures MUST be provided with texture data.");
@@ -53,7 +55,7 @@ namespace na
 			break;
 
 		default:
-			NA_FATAL_ERROR("Unimplemented.");
+			NA_FATAL_ERROR(false, "Unimplemented.");
 		};
 
 		NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "Failed to create texture.");
@@ -74,6 +76,26 @@ namespace na
 		NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "Failed to load texture from file %s (HR: 0x%X)", filename, hr);
 
 		mDesc = desc;
+
+		D3D11_RESOURCE_DIMENSION texDimension;
+		mResource->GetType(&texDimension);
+
+		switch (texDimension) {
+		case D3D11_RESOURCE_DIMENSION_TEXTURE1D:
+			mDesc.mType = NGATextureType::TEXTURE1D;
+			break;
+
+		case D3D11_RESOURCE_DIMENSION_TEXTURE2D:
+			mDesc.mType = NGATextureType::TEXTURE2D;
+			break;
+
+		case D3D11_RESOURCE_DIMENSION_TEXTURE3D:
+			mDesc.mType = NGATextureType::TEXTURE3D;
+			break;
+
+		default:
+			NA_FATAL_ERROR(false, "Unimplemented.");
+		}
 
 		return true;
 	}

@@ -88,7 +88,7 @@
 	</gameobject>
 
 	<gameobject>
-		<name>Sphere</name>
+		<name>Cube</name>
 		<transform>
 			<position>
 				<x>0</x>
@@ -97,8 +97,13 @@
 		</transform>
 		<components>
 			<component type="StaticMeshComponent">
-				<mesh>sphere.meshx</mesh>
-				<material>tex_debug.matx</material>
+				<mesh>cube.meshx</mesh>
+				<material>
+					tex_dyn.matx
+					<overrides>
+						<override name="DiffuseTexture" type="texture">ice.dds</override>
+					</overrides>
+				</material>
 			</component>
 		</components>
 	</gameobject>

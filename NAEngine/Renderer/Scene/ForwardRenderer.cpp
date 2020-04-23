@@ -29,7 +29,7 @@ namespace na
 	void ForwardRenderer::RenderScene(Scene &scene, const Camera &camera)
 	{
 		// Bind render target
-		RenderTarget* rt = (camera.mRenderTarget == nullptr) ? NA_RMainRenderTarget : camera.mRenderTarget;
+		Texture* rt = (camera.mRenderTarget == nullptr) ? NA_RMainRenderTarget : camera.mRenderTarget;
 		NA_RStateManager->BindRenderTarget(rt->GetRenderTargetView(), rt->GetDepthStencilView());
 
 		const ColorF clearColor = COLOR_CORNFLOWERBLUE;
