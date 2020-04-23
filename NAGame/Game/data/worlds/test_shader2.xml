@@ -59,6 +59,22 @@
 			</component>
 		</components>
 	</gameobject>
+
+	<gameobject>
+		<name>Sphere</name>
+		<transform>
+			<position>
+				<x>0</x>
+				<y>3</y>
+			</position>
+		</transform>
+		<components>
+			<component type="StaticMeshComponent">
+				<mesh>sphere.meshx</mesh>
+				<material>tex_map.matx</material>
+			</component>
+		</components>
+	</gameobject>
 	
 	<!-- Lights -->
 	<gameobject>

@@ -8,6 +8,10 @@
 #define CB_REGISTER_LIGHTS b2
 #define CB_REGISTER_MATERIAL b3
 
+#define TEX_REGISTER_USER0 t0
+
+#define SAM_REGISTER_USER0 s0
+
 #if !defined(HLSL_CPP_INCLUDE)
 // Constant Buffers
 cbuffer cbCamera : register(CB_REGISTER_CAMERA) {

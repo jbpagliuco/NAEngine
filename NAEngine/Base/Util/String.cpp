@@ -6,6 +6,7 @@
 #include <codecvt>
 #include <locale>
 
+#include "Debug/Assert.h"
 #include "OS/OSWin32.h"
 
 namespace na
@@ -141,13 +142,11 @@ namespace na
 
 	std::wstring ToWideString(const std::string &s)
 	{
-		wchar_t *ws = (wchar_t*)_malloca(sizeof(wchar_t) * s.size());
-		MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, ws, (int)s.size());
-
-		std::wstring _ws(ws);
-
-		_freea(ws);
-
-		return _ws;
+		wchar_t buffer[1024];
+		
+		const int num = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, buffer, STATIC_ARRAY_SIZE(buffer));
+		NA_ASSERT_RETURN_VALUE(num > 0, L"", "Failed to convert string \"%s\" to UTF8. Error code: 0x%X", s.c_str(), GetLastError());
+		
+		return std::wstring(buffer);
 	}
 }

@@ -22,6 +22,10 @@ cbuffer cbMaterial : register(CB_REGISTER_MATERIAL)
 	float4 matSpecular;
 };
 
+// Resources
+Texture2D DiffuseTexture : register(TEX_REGISTER_USER0);
+SamplerState Sampler : register(SAM_REGISTER_USER0);
+
 // Vertex shader
 PixelInput vsMain(VertexInput input)
 {
@@ -30,7 +34,7 @@ PixelInput vsMain(VertexInput input)
 	PixelInput output;
 
 	output.svpos = mul(mul(viewProj, world), pos);
-	output.position = mul(world, pos);
+	output.position = mul(world, pos).xyz;
 
 	float4 normal = float4(normalize(input.normal), 0.0f);
 	output.normal = mul(normal, worldInverseTranspose).xyz;
@@ -40,7 +44,7 @@ PixelInput vsMain(VertexInput input)
 	return output;
 }
 
-// Pixel shader
+// Pixel Shader
 float4 psMain(PixelInput input) : SV_TARGET
 {
 	float3 P = input.position;
@@ -49,8 +53,11 @@ float4 psMain(PixelInput input) : SV_TARGET
 
 	LightingResult lit = ComputeFullLighting(matSpecular.w, V, P, N);
 
-	float4 ambient = matDiffuse * globalAmbient;
-	float4 diffuse = matDiffuse * lit.diffuse;
+	float2 texCoord = float2(1.0f, 1.0f) - input.texCoord;
+	float4 texColor = DiffuseTexture.Sample(Sampler, texCoord);
+
+	float4 ambient = texColor * matDiffuse * globalAmbient;
+	float4 diffuse = texColor * matDiffuse * lit.diffuse;
 	float4 specular = float4(matSpecular.xyz * lit.specular.xyz, 1.0f);
 
 	return ambient + diffuse + specular;
