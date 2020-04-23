@@ -71,7 +71,7 @@
 		<components>
 			<component type="StaticMeshComponent">
 				<mesh>sphere.meshx</mesh>
-				<material>tex_map.matx</material>
+				<material>tex_debug.matx</material>
 			</component>
 		</components>
 	</gameobject>
