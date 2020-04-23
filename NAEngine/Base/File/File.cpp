@@ -12,6 +12,8 @@ namespace na
 {
 	File::File(const std::string &filename, int mode)
 	{
+		mBinary = mode & std::ios::binary;
+
 		Open(filename, mode);
 
 		// If the file is readable, make sure we can open it.
@@ -35,14 +37,26 @@ namespace na
 		return GetFileExt(mFilename);
 	}
 
-	bool File::ReadBytes(char *buf, size_t size)
+	int64_t File::ReadBytes(char *buf, size_t size)
 	{
-		return !!mFile.read(buf, size);
+		mFile.read(buf, size);
+
+		return mFile.gcount();
 	}
 
 	bool File::ReadLine(std::string &buf)
 	{
 		return !!std::getline(mFile, buf);
+	}
+
+	std::string File::ReadTextFile()
+	{
+		mFile.seekg(std::ios_base::beg);
+
+		std::stringstream buffer;
+		buffer << mFile.rdbuf();
+
+		return buffer.str();
 	}
 
 	bool File::WriteBytes(const char *buf, size_t n)
@@ -64,7 +78,12 @@ namespace na
 	size_t File::GetFileSize()
 	{
 		std::ifstream temp;
-		temp.open(mFilename, std::ios::ate | std::ios::binary);
+		std::ios::openmode openmode = std::ios::ate;
+		if (mBinary) {
+			openmode |= std::ios::binary;
+		}
+
+		temp.open(mFilename, openmode);
 		const size_t size = temp.tellg();
 
 		temp.close();

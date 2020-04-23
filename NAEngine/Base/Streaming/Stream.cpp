@@ -74,7 +74,7 @@ namespace na
 	void RegisterAssetType(const AssetType &type)
 	{
 #if _NA_DEBUG
-		NA_ASSERT(AssetTypes.find(type.mExt) == AssetTypes.end(), false, "Asset type '.%s' is already registered.", type.mExt.c_str());
+		NA_ASSERT(AssetTypes.find(type.mExt) == AssetTypes.end(), "Asset type '.%s' is already registered.", type.mExt.c_str());
 #endif
 
 		AssetTypes[type.mExt] = type;

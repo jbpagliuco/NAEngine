@@ -1,5 +1,7 @@
 #include "ForwardRenderer.h"
 
+#include "Base/Util/Color.h"
+
 #include "Camera.h"
 #include "Renderables/RenderableInstance.h"
 #include "Renderer/Renderer.h"
@@ -24,14 +26,24 @@ namespace na
 	{
 	}
 
-	void ForwardRenderer::RenderScene(Scene *scene)
+	void ForwardRenderer::RenderScene(Scene &scene, const Camera &camera)
 	{
-		auto &lights = scene->GetLights();
+		// Bind render target
+		Texture* rt = (camera.mRenderTarget == nullptr) ? NA_RMainRenderTarget : camera.mRenderTarget;
+		NA_RStateManager->BindRenderTarget(rt->GetRenderTargetView(), rt->GetDepthStencilView());
+
+		const ColorF clearColor = COLOR_CORNFLOWERBLUE;
+		NA_RStateManager->ClearRenderTarget(rt->GetRenderTargetView(), clearColor.vArray);
+		NA_RStateManager->ClearDepthStencilView(rt->GetDepthStencilView());
+
+		// Set up shader data
+		auto &lights = scene.GetLights();
+
+		constexpr float ambient = 0.3f;
+		Vector3f cameraPos = camera.mTransform.mPosition.AsVector3();
 
 		LightsData lightsData;
-		constexpr float ambient = 0.3f;
 		lightsData.globalAmbient = Tuple4f(ambient, ambient, ambient, 1.0f);
-		Vector3f cameraPos = NA_Renderer->GetActiveCamera()->mTransform.mPosition.AsVector3();
 		lightsData.eyePosition = Tuple3f(cameraPos.x, cameraPos.y, cameraPos.z);
 		lightsData.numLights = (int)lights.size();
 		for (int i = 0; i < lightsData.numLights; ++i) {
@@ -39,7 +51,7 @@ namespace na
 		}
 		NA_RStateManager->SetLightsData(lightsData);
 
-		for (auto &r : scene->GetRenderables()) {
+		for (auto &r : scene.GetRenderables()) {
 			NA_RStateManager->SetObjectTransform(r->GetWorldTransform());
 			r->Render();
 		}

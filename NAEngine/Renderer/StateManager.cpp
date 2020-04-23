@@ -4,6 +4,7 @@
 
 #include "Resources/IndexBuffer.h"
 #include "Resources/VertexBuffer.h"
+#include "Resources/Texture.h"
 #include "Shader/ShaderProgram.h"
 
 #include "Rect.h"
@@ -140,6 +141,11 @@ namespace na
 	void StateManager::ClearDepthStencilView(const NGADepthStencilView &depthStencilView)
 	{
 		mCommandContext.ClearDepthStencilView(depthStencilView);
+	}
+
+	void StateManager::BindRenderTarget(const Texture &renderTarget)
+	{
+		mCommandContext.BindRenderTarget(renderTarget.GetRenderTargetView(), renderTarget.GetDepthStencilView());
 	}
 
 	void StateManager::BindRenderTarget(const NGARenderTargetView &renderTargetView, const NGADepthStencilView &depthStencilView)

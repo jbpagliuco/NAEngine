@@ -20,6 +20,8 @@ namespace na
 	};
 
 	DXGI_FORMAT NGAFormatToDXGI(NGAFormat format);
+	DXGI_FORMAT NGAFormatToDXGI(NGADepthBufferFormat format);
+	D3D11_USAGE NGAUsageToD3D11(NGAUsage usage);
 
 	extern NGAInternalStateDX11 NgaDx11State;
 }

@@ -8,6 +8,7 @@
 
 #include "Base/File/File.h"
 #include "Base/Memory/Memory.h"
+#include "Base/Util/String.h"
 #include "NGACoreInternalDX11.h"
 
 namespace na
@@ -55,18 +56,18 @@ namespace na
 				return S_FALSE;
 			}
 
-			const UINT fileSize = (UINT)file.GetFileSize();
+			*ppData = nullptr;
+			*pBytes = 0;
 
-			if(fileSize > 0) {
-				char *buf = (char*)NA_ALLOC(fileSize);
-				file.ReadBytes(buf, fileSize);
+			std::string fileContents = file.ReadTextFile();
 
-				*ppData = buf;
-				*pBytes = fileSize;
-			} else {
-				*ppData = nullptr;
-				*pBytes = 0;
-			}
+			const size_t fileSize = fileContents.size() * sizeof(char);
+			char* buf = (char*)NA_ALLOC(fileSize + 1);
+			strncpy_s(buf, fileSize + 1, fileContents.c_str(), fileContents.size());
+
+			*ppData = buf;
+			*pBytes = (UINT)fileSize;
+
 			return S_OK;
 		}
 
@@ -83,21 +84,19 @@ namespace na
 	{
 		const char *entrypoint = SHADER_ENTRYPOINTS[(int)type];
 		const char *target = COMPILE_TARGETS[(int)type];
-
-		const size_t MAX_FILE_LENGTH = 256;
-		wchar_t wfile[MAX_FILE_LENGTH];
-		MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, file.c_str(), -1, wfile, MAX_FILE_LENGTH);
+		
+		std::wstring wfile = ToWideString(file);
 
 		ShaderProgramInclude includer;
 
 		ID3D10Blob *errorMessage = nullptr;
-		HRESULT hr = D3DCompileFromFile(wfile, nullptr, &includer, entrypoint, target, D3D10_SHADER_ENABLE_STRICTNESS, 0, outBuffer, &errorMessage);
+		HRESULT hr = D3DCompileFromFile(wfile.c_str(), nullptr, &includer, entrypoint, target, D3D10_SHADER_ENABLE_STRICTNESS, 0, outBuffer, &errorMessage);
 		if (FAILED(hr)) {
 			if (errorMessage != nullptr) {
-				NA_ASSERT(false, "Failed to compile HLSL shader '%s' with error message: %.*s", file.c_str(), errorMessage->GetBufferSize(), errorMessage->GetBufferPointer());
+				NA_ASSERT(false, "Failed to compile HLSL shader '%ls' with error message:\r\n\r\n%.*s", wfile.c_str(), errorMessage->GetBufferSize(), errorMessage->GetBufferPointer());
 			}
 			else {
-				NA_ASSERT(false, "Failed to compile HLSL shader '%s' with unknown error", file.c_str());
+				NA_ASSERT(false, "Failed to compile HLSL shader '%ls' with unknown error", wfile.c_str());
 			}
 			return false;
 		}

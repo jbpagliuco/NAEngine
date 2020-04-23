@@ -19,11 +19,12 @@ namespace na
 		bool success = mSwapChain.Construct(swapChainDesc);
 		NA_FATAL_ERROR(success, "Failed to construct swap chain.");
 
-		success = mRenderTargetView.Construct(mSwapChain);
+		NGATextureDesc rtDesc;
+		rtDesc.mDepthBufferFormat = NGADepthBufferFormat::DEPTH24_STENCIL;
+		rtDesc.mWidth = params.mWidth;
+		rtDesc.mHeight = params.mHeight;
+		success = mMainRenderTarget.Initialize(rtDesc, mSwapChain);
 		NA_FATAL_ERROR(success, "Failed to create main render target view.");
-
-		success = mDepthStencilView.Construct(params.mWidth, params.mHeight);
-		NA_FATAL_ERROR(success, "Failed to create main depth stencil view.");
 
 		if (!mStateManager.Initialize()) {
 			return false;
@@ -35,46 +36,22 @@ namespace na
 	void Renderer::Shutdown()
 	{
 		mStateManager.Shutdown();
-		mDepthStencilView.Destruct();
-		mRenderTargetView.Destruct();
+		mMainRenderTarget.Shutdown();
 		mSwapChain.Destruct();
 	}
 
 	void Renderer::BeginRender()
 	{
-		mStateManager.BindRenderTarget(mRenderTargetView, mDepthStencilView);
-
-		const ColorF clearColor = COLOR_CORNFLOWERBLUE;
-		mStateManager.ClearRenderTarget(mRenderTargetView, clearColor.vArray);
-		mStateManager.ClearDepthStencilView(mDepthStencilView);
-
 		NGARect r;
 		r.x = 0.0f;
 		r.y = 0.0f;
 		r.width = (float)mWindow.width;
 		r.height = (float)mWindow.height;
 		mStateManager.SetViewport(r);
-
-		if (mActiveCamera != nullptr) {
-			mStateManager.SetViewProjMatrices(
-				mActiveCamera->mTransform.GetMatrix().Inverted(),
-				Matrix::PerspectiveFOVLH(mActiveCamera->mFOV, mWindow.GetAspectRatio(), mActiveCamera->mNear, mActiveCamera->mFar)
-			);
-		}
 	}
 
 	void Renderer::EndRender()
 	{
 		mSwapChain.Present();
-	}
-
-	void Renderer::SetActiveCamera(Camera *camera)
-	{
-		mActiveCamera = camera;
-	}
-
-	Camera* Renderer::GetActiveCamera()
-	{
-		return mActiveCamera;
 	}
 }

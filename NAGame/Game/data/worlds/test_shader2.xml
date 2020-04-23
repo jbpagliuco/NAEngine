@@ -13,9 +13,31 @@
 		</transform>
 		<components>
 			<component type="CameraComponent">
+				<enabled>true</enabled>
 				<fov>45</fov>
 				<near>0.1</near>
 				<far>100</far>
+			</component>
+		</components>
+	</gameobject>
+	
+	<gameobject>
+		<name>Camera</name>
+		<transform>
+			<position>
+				<x>0</x>
+				<y>2</y>
+				<z>-10</z>
+			</position>
+			<rotation type="lookat"/>
+		</transform>
+		<components>
+			<component type="CameraComponent">
+				<enabled>true</enabled>
+				<fov>45</fov>
+				<near>0.1</near>
+				<far>100</far>
+				<renderTarget>test_render_target.rtx</renderTarget>
 			</component>
 		</components>
 	</gameobject>
@@ -61,7 +83,7 @@
 	</gameobject>
 
 	<gameobject>
-		<name>Sphere</name>
+		<name>Cube</name>
 		<transform>
 			<position>
 				<x>0</x>
@@ -70,8 +92,13 @@
 		</transform>
 		<components>
 			<component type="StaticMeshComponent">
-				<mesh>sphere.meshx</mesh>
-				<material>tex_debug.matx</material>
+				<mesh>cube.meshx</mesh>
+				<material>
+					tex_dyn.matx
+					<overrides>
+						<override name="DiffuseTexture" type="texture">test_render_target.rtx</override>
+					</overrides>
+				</material>
 			</component>
 		</components>
 	</gameobject>
@@ -93,7 +120,7 @@
 		<components>
 			<component type="StaticMeshComponent">
 				<mesh>cube.meshx</mesh>
-				<material>normal_debug.matx</material>
+				<material>brick.matx</material>
 			</component>
 		</components>
 	</gameobject>

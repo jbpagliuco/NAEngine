@@ -1,5 +1,7 @@
 #include "RenderingSystem.h"
 
+#include <algorithm>
+
 #include "Base/Debug/Assert.h"
 #include "Base/OS/OS.h"
 
@@ -7,6 +9,7 @@
 
 #include "ImguiRenderer.h"
 #include "Renderer.h"
+#include "Scene/Camera.h"
 #include "Scene/Scene.h"
 #include "Scene/ForwardRenderer.h"
 
@@ -62,9 +65,28 @@ namespace na
 
 	void RenderingSystemDoFrame()
 	{
-		FRenderer.BeginRender();
-		FRenderer.RenderScene(Scene::Get());
-		FRenderer.EndRender();
+		Scene *mainScene = Scene::Get();
+
+		const auto &cameras = mainScene->GetCameras();
+
+		// Make sure there's only a single camera rendering to the back buffer.
+		size_t numMainCameras = std::count_if(cameras.begin(), cameras.end(), [](const Camera* a) { return a->mEnabled && a->mRenderTarget == nullptr; });
+		NA_ASSERT(numMainCameras == 1, "Only one camera can render to the back buffer.");
+
+		for (const auto& camera : cameras) {
+			if (!camera->mEnabled) {
+				continue;
+			}
+
+			NA_RStateManager->SetViewProjMatrices(
+				camera->mTransform.GetMatrix().Inverted(),
+				Matrix::PerspectiveFOVLH(camera->mFOV, NA_Renderer->GetWindow().GetAspectRatio(), camera->mNear, camera->mFar)
+			);
+
+			FRenderer.BeginRender();
+			FRenderer.RenderScene(*mainScene, *camera);
+			FRenderer.EndRender();
+		}
 	}
 
 	void RenderingSystemEndFrame()

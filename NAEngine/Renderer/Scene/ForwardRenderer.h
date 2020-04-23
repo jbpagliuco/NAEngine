@@ -13,6 +13,6 @@ namespace na
 		virtual void BeginRender() override;
 		virtual void EndRender() override;
 
-		virtual void RenderScene(Scene *scene) override;
+		virtual void RenderScene(Scene &scene, const Camera &camera) override;
 	};
 }

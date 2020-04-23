@@ -32,7 +32,7 @@ namespace na
 		D3D11_MAPPED_SUBRESOURCE res;
 
 		HRESULT hr = NgaDx11State.mContext->Map(buffer.mBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
-		NA_ASSERT_RETURN(SUCCEEDED(hr), false, "ID3D11DeviceContext::Map() failed with HRESULT %X", hr);
+		NA_ASSERT_RETURN(SUCCEEDED(hr), "ID3D11DeviceContext::Map() failed with HRESULT %X", hr);
 
 		memcpy(res.pData, data, buffer.mDesc.mSizeInBytes);
 

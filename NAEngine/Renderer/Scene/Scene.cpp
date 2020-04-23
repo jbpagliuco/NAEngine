@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "Camera.h"
 #include "Renderables/RenderableInstance.h"
 
 namespace na
@@ -28,6 +29,16 @@ namespace na
 		mLights.erase(std::remove(mLights.begin(), mLights.end(), light), mLights.end());
 	}
 
+	void Scene::AddCamera(Camera *camera)
+	{
+		mCameras.push_back(camera);
+	}
+	
+	void Scene::RemoveCamera(Camera *camera)
+	{
+		mCameras.erase(std::remove(mCameras.begin(), mCameras.end(), camera), mCameras.end());
+	}
+
 	const std::vector<RenderableInstance*>& Scene::GetRenderables()const
 	{
 		return mRenderables;
@@ -36,5 +47,10 @@ namespace na
 	const std::vector<Light*>& Scene::GetLights()const
 	{
 		return mLights;
+	}
+
+	const std::vector<Camera*>& Scene::GetCameras()const
+	{
+		return mCameras;
 	}
 }

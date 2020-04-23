@@ -60,9 +60,34 @@ namespace na
 
 
 
+	bool NGARenderTargetView::Construct(const NGATexture &texture)
+	{
+		NA_ASSERT_RETURN_VALUE(!IsConstructed(), false);
+		NA_ASSERT_RETURN_VALUE(texture.IsConstructed(), false);
+
+		const NGATextureDesc &textureDesc = texture.GetDesc();
+
+		const D3D11_RTV_DIMENSION dimension =
+			(textureDesc.mType == NGATextureType::TEXTURE1D) ? D3D11_RTV_DIMENSION_TEXTURE1D :
+			(textureDesc.mType == NGATextureType::TEXTURE2D) ? D3D11_RTV_DIMENSION_TEXTURE2D :
+			(textureDesc.mType == NGATextureType::TEXTURE3D) ? D3D11_RTV_DIMENSION_TEXTURE3D :
+			D3D11_RTV_DIMENSION_UNKNOWN;
+
+		D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc{};
+		renderTargetViewDesc.Format = NGAFormatToDXGI(textureDesc.mFormat);
+		renderTargetViewDesc.ViewDimension = dimension;
+
+		// Create the render target view.
+		HRESULT hr = NgaDx11State.mDevice->CreateRenderTargetView(texture.mResource, &renderTargetViewDesc, &mView);
+		NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "Failed to create render target view.");
+
+		return true;
+	}
+
 	bool NGARenderTargetView::Construct(const NGASwapChain &swapChain)
 	{
 		NA_ASSERT_RETURN_VALUE(!IsConstructed(), false);
+		NA_ASSERT_RETURN_VALUE(swapChain.IsConstructed(), false);
 
 		// TODO: Might be a better way to query the back buffer.
 		ID3D11Texture2D *backBuffer;
@@ -89,16 +114,17 @@ namespace na
 
 
 
-	bool NGADepthStencilView::Construct(int width, int height)
+	bool NGADepthStencilView::Construct(const NGADepthStencilViewDesc &desc)
 	{
 		NA_ASSERT_RETURN_VALUE(!IsConstructed(), false);
+		NA_ASSERT_RETURN_VALUE(desc.mFormat != NGADepthBufferFormat::NONE, false);
 
 		D3D11_TEXTURE2D_DESC texDesc{};
-		texDesc.Width = width;
-		texDesc.Height = height;
+		texDesc.Width = desc.mWidth;
+		texDesc.Height = desc.mHeight;
 		texDesc.MipLevels = 1;
 		texDesc.ArraySize = 1;
-		texDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		texDesc.Format = NGAFormatToDXGI(desc.mFormat);
 		texDesc.SampleDesc.Count = 1;
 		texDesc.SampleDesc.Quality = 0;
 		texDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -110,7 +136,7 @@ namespace na
 		NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "Failed to create depth stencil buffer. HRESULT %X", hr);
 
 		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc{};
-		depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		depthStencilViewDesc.Format = texDesc.Format;
 		depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 		depthStencilViewDesc.Texture2D.MipSlice = 0;
 

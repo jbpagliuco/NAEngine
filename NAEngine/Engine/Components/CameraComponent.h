@@ -2,6 +2,7 @@
 
 #include "GameComponent.h"
 
+#include "Renderer/Resources/Texture.h"
 #include "Renderer/Scene/Camera.h"
 
 namespace na
@@ -22,6 +23,7 @@ namespace na
 
 	private:
 		Camera mCamera;
+		AssetID mRenderTargetID = INVALID_ASSET_ID;
 
 		float mPitch;
 		float mYaw;
