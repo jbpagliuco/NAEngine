@@ -20,6 +20,9 @@ namespace na
 		std::string mExt;
 		bool(*mOnLoad)(const AssetID &id, const std::string &filename, const AssetFileHeader &header);
 		void(*mOnUnload)(const AssetID &id);
+
+		int mMinVersion = 0;
+		int mMaxVersion = 1;
 	};
 	void RegisterAssetType(const AssetType &type);
 

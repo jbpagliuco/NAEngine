@@ -27,6 +27,8 @@ namespace na
 		shaderType.mExt = "shaderx";
 		shaderType.mOnLoad = OnShaderLoad;
 		shaderType.mOnUnload = OnShaderUnload;
+		shaderType.mMinVersion = 2;
+		shaderType.mMaxVersion = 2;
 		RegisterAssetType(shaderType);
 
 		return true;
@@ -119,8 +121,6 @@ namespace na
 		NA_ASSERT_RETURN_VALUE(pShader != nullptr, false, "Failed to allocate shader.");
 
 		DeserializationParameterMap params = ParseFile(filename);
-
-		NA_FATAL_ERROR(header.mVersion == 2);
 
 		auto vsParams = params["vertexShader"];
 		auto psParams = params["pixelShader"];

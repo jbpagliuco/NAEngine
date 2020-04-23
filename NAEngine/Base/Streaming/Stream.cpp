@@ -149,6 +149,10 @@ namespace na
 
 		// Load header
 		AssetFileHeader header = LoadFileHeader(filename);
+
+		// Check version
+		NA_ASSERT(header.mVersion >= type.mMinVersion && header.mVersion <= type.mMaxVersion, "File \"%s\" version (%d) is out-of-date. Must be in range [%d, %d]. Asset may not load properly in game.",
+			filename.c_str(), header.mVersion, type.mMinVersion, type.mMaxVersion);
 		
 		AssetID id = CreateOrGetAssetID(filename);
 		AssetRecord &record = CreateOrGetAssetRecord(id);
