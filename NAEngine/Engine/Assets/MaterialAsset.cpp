@@ -8,10 +8,10 @@
 
 namespace na
 {
-	static bool OnMaterialLoad(const AssetID &id, const std::string &filename);
+	static bool OnMaterialLoad(const AssetID &id, const std::string &filename, const AssetFileHeader &header);
 	static void OnMaterialUnload(const AssetID &id);
 
-	static bool OnShaderLoad(const AssetID &id, const std::string &filename);
+	static bool OnShaderLoad(const AssetID &id, const std::string &filename, const AssetFileHeader &header);
 	static void OnShaderUnload(const AssetID &id);
 
 
@@ -52,7 +52,7 @@ namespace na
 
 
 
-	static bool OnMaterialLoad(const AssetID &id, const std::string &filename)
+	static bool OnMaterialLoad(const AssetID &id, const std::string &filename, const AssetFileHeader &header)
 	{
 		DeserializationParameterMap params = ParseFile(filename);
 
@@ -113,15 +113,14 @@ namespace na
 
 
 
-	static bool OnShaderLoad(const AssetID &id, const std::string &filename)
+	static bool OnShaderLoad(const AssetID &id, const std::string &filename, const AssetFileHeader &header)
 	{
 		Shader *pShader = Shader::Create(id);
 		NA_ASSERT_RETURN_VALUE(pShader != nullptr, false, "Failed to allocate shader.");
 
 		DeserializationParameterMap params = ParseFile(filename);
 
-		const int version = params["version"].AsInt(1);
-		NA_FATAL_ERROR(version == 2);
+		NA_FATAL_ERROR(header.mVersion == 2);
 
 		auto vsParams = params["vertexShader"];
 		auto psParams = params["pixelShader"];
