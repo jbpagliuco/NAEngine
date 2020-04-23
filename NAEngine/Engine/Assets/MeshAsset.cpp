@@ -112,7 +112,7 @@ namespace na
 	static bool LoadMeshFromOBJ(VertexArray &vertices, std::vector<IndexType> &indices, const std::string &filename);
 #endif
 
-	static bool OnMeshxLoad(const AssetID &id, const std::string &filename);
+	static bool OnMeshxLoad(const AssetID &id, const std::string &filename, const AssetFileHeader &header);
 	static void OnMeshUnload(const AssetID &id);
 
 	static bool CreateMeshFromMeshx(Mesh *mesh, const std::string &filename);
@@ -134,7 +134,7 @@ namespace na
 		Mesh::ReleaseAll();
 	}
 	
-	static bool OnMeshxLoad(const AssetID &id, const std::string &filename)
+	static bool OnMeshxLoad(const AssetID &id, const std::string &filename, const AssetFileHeader &header)
 	{
 		Mesh *pMesh = Mesh::Create(id);
 		NA_ASSERT_RETURN_VALUE(pMesh != nullptr, false, "Failed to allocate mesh.");

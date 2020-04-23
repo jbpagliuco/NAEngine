@@ -1,8 +1,11 @@
 <?xml version="1.0"?>
 
 <root>
+	<header>
+		<version>2</version>
+	</header>
+	
 	<file>red.hlsl</file>
-	<version>2</version>
 
 	<vertexShader>
 		<inputs>

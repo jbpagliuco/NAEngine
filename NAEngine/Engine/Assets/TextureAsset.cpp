@@ -6,8 +6,8 @@
 
 namespace na
 {
-	static bool OnTextureTexxLoad(const AssetID &id, const std::string &filename);
-	static bool OnTextureDDSLoad(const AssetID &id, const std::string &filename);
+	static bool OnTextureTexxLoad(const AssetID &id, const std::string &filename, const AssetFileHeader &header);
+	static bool OnTextureDDSLoad(const AssetID &id, const std::string &filename, const AssetFileHeader &header);
 	static void OnTextureUnload(const AssetID &id);
 
 	bool TextureAssetSystemInit()
@@ -34,7 +34,7 @@ namespace na
 	}
 
 
-	static bool OnTextureTexxLoad(const AssetID &id, const std::string &filename)
+	static bool OnTextureTexxLoad(const AssetID &id, const std::string &filename, const AssetFileHeader &header)
 	{
 		/*Texture *pTex = Texture::Create(id);
 		NA_ASSERT_RETURN_VALUE(pTex != nullptr, false, "Failed to allocate texture");
@@ -77,7 +77,7 @@ namespace na
 		return false;
 	}
 
-	static bool OnTextureDDSLoad(const AssetID &id, const std::string &filename)
+	static bool OnTextureDDSLoad(const AssetID &id, const std::string &filename, const AssetFileHeader &header)
 	{
 		Texture *pTex = Texture::Create(id);
 		NA_ASSERT_RETURN_VALUE(pTex != nullptr, false, "Failed to allocate texture");

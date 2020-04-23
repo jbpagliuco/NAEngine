@@ -8,6 +8,7 @@
 #include "File/File.h"
 
 #include "Vendor/imgui/imgui.h"
+#include "Vendor/pugixml-1.9/pugixml.hpp"
 
 namespace na
 {
@@ -115,6 +116,29 @@ namespace na
 	}
 
 
+	static AssetFileHeader LoadFileHeader(const std::string& filename)
+	{
+		AssetFileHeader header;
+
+		pugi::xml_document doc;
+		pugi::xml_parse_result result = doc.load_file(filename.c_str());
+
+		// If the result is false, this file isn't an XML file, so there's no header to parse.
+		// Move on, this is likely a file type that won't be handled by us.
+		if (result) {
+			pugi::xml_node rootXML = doc.child("root");
+			if (rootXML) {
+				// It's not strictly required for a file to have a header.
+				pugi::xml_node headerXML = rootXML.child("header");
+				if (headerXML) {
+					NA_ASSERT(headerXML.child("version"), "Failed to find 'version' node in \"%s\" file header.", filename.c_str());
+					header.mVersion = headerXML.child("version").text().as_int();
+				}
+			}
+		}
+
+		return header;
+	}
 
 	AssetID RequestAsset(const std::string &filename)
 	{
@@ -122,6 +146,13 @@ namespace na
 
 		NA_ASSERT_RETURN_VALUE(AssetTypes.find(ext) != AssetTypes.end(), INVALID_ASSET_ID, "Requesting asset '%s', but no registered asset type was found!", filename.c_str());
 		AssetType &type = AssetTypes[ext];
+
+		// Load header
+		AssetFileHeader header = LoadFileHeader(filename);
+
+		// Check version
+		NA_ASSERT(header.mVersion >= type.mMinVersion && header.mVersion <= type.mMaxVersion, "File \"%s\" version (%d) is out-of-date. Must be in range [%d, %d]. Asset may not load properly in game.",
+			filename.c_str(), header.mVersion, type.mMinVersion, type.mMaxVersion);
 		
 		AssetID id = CreateOrGetAssetID(filename);
 		AssetRecord &record = CreateOrGetAssetRecord(id);
@@ -130,7 +161,7 @@ namespace na
 		if (record.mRefCount == 1) {
 			// The asset hasn't been loaded yet.
 			record.mType = &type;
-			type.mOnLoad(id, filename);
+			type.mOnLoad(id, filename, header);
 		}
 
 		return id;
