@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdint.h>
 #include <fstream>
 
 #define MAX_FILEPATH_SIZE 260
@@ -19,8 +20,10 @@ namespace na
 
 		template <typename T>
 		bool Read(T &out);
-		bool ReadBytes(char *buf, size_t size);
+		int64_t ReadBytes(char *buf, size_t size);
 		bool ReadLine(std::string &buf);
+
+		std::string ReadTextFile();
 		
 		template <typename T>
 		bool Write(const T &val);
@@ -35,6 +38,8 @@ namespace na
 
 	private:
 		void Open(const std::string &filename, int mode);
+
+		bool mBinary;
 	};
 
 	// Dot (.) not included.

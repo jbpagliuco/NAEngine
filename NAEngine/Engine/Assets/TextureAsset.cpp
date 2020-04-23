@@ -26,10 +26,10 @@ namespace na
 		RegisterAssetType(ddsType);
 
 		AssetType rtxType;
-		ddsType.mExt = "rtx";
-		ddsType.mOnLoad = OnRenderTargetLoad;
-		ddsType.mOnUnload = OnTextureUnload;
-		RegisterAssetType(ddsType);
+		rtxType.mExt = "rtx";
+		rtxType.mOnLoad = OnRenderTargetLoad;
+		rtxType.mOnUnload = OnTextureUnload;
+		RegisterAssetType(rtxType);
 
 		return true;
 	}

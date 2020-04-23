@@ -86,4 +86,7 @@ bool NAIsDebuggerPresent();
 #define NA_ASSERT_CONTINUE(cond, ...)				if (!(cond)) { continue; }
 #define NA_FATAL_ERROR(cond, ...)					if (!(cond)) { exit(EXIT_FAILURE); }
 
+#define NA_ASSERT_RETURN_CLEANUP(cond, shutdownFunc, ...)					if (!(cond)) { shutdownFunc(); return; }
+#define NA_ASSERT_RETURN_VALUE_CLEANUP(cond, rv, shutdownFunc, ...)			if (!(cond)) { shutdownFunc(); return rv; }
+
 #endif // defined(_NA_DEBUG)
