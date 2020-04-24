@@ -60,9 +60,11 @@ namespace na
 		mInputLayout.Destruct();
 	}
 
-	void MeshInstance::Render()
+	void MeshInstance::Render(bool bindMaterial)
 	{
-		mMaterialContainer->Bind();
+		if (bindMaterial) {
+			mMaterialContainer->Bind();
+		}
 
 		NA_RStateManager->BindInputLayout(mInputLayout);
 		mMesh->Render();

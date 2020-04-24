@@ -134,7 +134,8 @@ namespace na
 
 	void NGACommandContext::BindRenderTarget(const NGARenderTargetView &renderTarget, const NGADepthStencilView &depthStencilView)
 	{
-		NgaDx11State.mContext->OMSetRenderTargets(1, &renderTarget.mView, depthStencilView.mView);
+		const int numRenderTargets = renderTarget.IsConstructed() ? 1 : 0;
+		NgaDx11State.mContext->OMSetRenderTargets(numRenderTargets, &renderTarget.mView, depthStencilView.mView);
 	}
 }
 

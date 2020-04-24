@@ -2,8 +2,13 @@
 
 #include "SceneRenderer.h"
 
+#include "Renderer/Resources/ConstantBuffer.h"
+#include "Renderer/Resources/RenderTarget.h"
+
 namespace na
 {
+	class Shader;
+
 	class ForwardRenderer : public SceneRenderer
 	{
 	public:
@@ -14,5 +19,13 @@ namespace na
 		virtual void EndRender() override;
 
 		virtual void RenderScene(Scene &scene, const Camera &camera) override;
+
+	private:
+		void BuildShadowMap(Scene &scene, const Camera &camera);
+
+	public:
+		static RenderTarget mShadowMap;
+		Shader* mBuildShadowMapShader;
+		ConstantBuffer mShadowMapLightsBuffers[2];
 	};
 }

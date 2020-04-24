@@ -62,6 +62,6 @@ namespace na
 
 	bool NGAFormatIsTypeless(NGAFormat format)
 	{
-		return format >= NGAFormat::R32_TYPELESS && format <= NGAFormat::R32G32B32A32_TYPELESS;
+		return format >= NGAFormat::R24G8_TYPELESS && format <= NGAFormat::R32G32B32A32_TYPELESS;
 	}
 }

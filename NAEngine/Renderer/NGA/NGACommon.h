@@ -43,6 +43,7 @@ namespace na
 		D32_FLOAT,
 
 		// Typeless formats
+		R24G8_TYPELESS,
 		R32_TYPELESS,
 		R32G32_TYPELESS,
 		R32G32B32_TYPELESS,

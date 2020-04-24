@@ -3,6 +3,7 @@
 namespace na
 {
 	bool RenderingSystemInit();
+	bool RenderingSystemInitLate();
 	void RenderingSystemShutdown();
 
 	void RenderingSystemBeginFrame();

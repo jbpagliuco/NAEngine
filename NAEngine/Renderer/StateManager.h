@@ -57,6 +57,7 @@ namespace na
 		void BindShader(const ShaderProgram &shader);
 
 		void BindConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot);
+		void BindConstantBufferRealSlot(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot);
 		void BindShaderResource(const Texture &texture, NGAShaderStage stage, int slot);
 		void BindShaderResource(const NGAShaderResourceView &view, NGAShaderStage stage, int slot);
 		void BindSamplerState(const NGASamplerState &samplerState, NGAShaderStage stage, int slot);
@@ -81,5 +82,6 @@ namespace na
 		ConstantBuffer mLightsBuffer;
 
 		const NGARenderTargetView *mBoundRenderTarget;
+		const NGADepthStencilView *mBoundDepthStencilView;
 	};
 }

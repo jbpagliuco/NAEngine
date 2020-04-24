@@ -20,27 +20,6 @@
 			</component>
 		</components>
 	</gameobject>
-	
-	<gameobject>
-		<name>Camera</name>
-		<transform>
-			<position>
-				<x>0</x>
-				<y>2</y>
-				<z>-10</z>
-			</position>
-			<rotation type="lookat"/>
-		</transform>
-		<components>
-			<component type="CameraComponent">
-				<enabled>true</enabled>
-				<fov>45</fov>
-				<near>0.1</near>
-				<far>100</far>
-				<renderTarget>test_render_target.rtx</renderTarget>
-			</component>
-		</components>
-	</gameobject>
 
 	<!-- Objects -->
 	<gameobject>
@@ -89,16 +68,16 @@
 				<x>0</x>
 				<y>3</y>
 			</position>
+			<scale>
+				<x>5</x>
+				<y>5</y>
+				<z>1</z>
+			</scale>
 		</transform>
 		<components>
 			<component type="StaticMeshComponent">
 				<mesh>cube.meshx</mesh>
-				<material>
-					tex_dyn.matx
-					<overrides>
-						<override name="DiffuseTexture" type="renderTarget" map="color">test_render_target.rtx</override>
-					</overrides>
-				</material>
+				<material>render_depth.matx</material>
 			</component>
 		</components>
 	</gameobject>

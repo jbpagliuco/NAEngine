@@ -7,6 +7,6 @@ namespace na
 	class RenderableInstance : public SceneEntity
 	{
 	public:
-		virtual void Render() = 0;
+		virtual void Render(bool bindMaterial = true) = 0;
 	};
 }

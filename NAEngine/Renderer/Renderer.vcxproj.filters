@@ -246,9 +246,9 @@
     <None Include="Shader\HLSL\shader_common_ps.hlsli" />
     <None Include="Shader\HLSL\shader_common_vs.hlsli" />
     <None Include="Shader\EngineShaders\material.hlsli" />
-    <None Include="Shader\EngineShaders\user_shader.hlsli" />
+    <None Include="Shader\EngineShaders\build_shadow_map\build_shadow_map.shaderx" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shader\EngineShaders\shadow.hlsl" />
+    <FxCompile Include="Shader\EngineShaders\build_shadow_map\build_shadow_map.hlsl" />
   </ItemGroup>
 </Project>

@@ -11,6 +11,7 @@ namespace na
 {
 	NGA_GPU_CLASS_IMPLEMENT(NGAShaderResourceView);
 	NGA_GPU_CLASS_IMPLEMENT(NGARenderTargetView);
+	NGA_GPU_CLASS_IMPLEMENT(NGADepthStencilView);
 
 	bool NGAShaderResourceView::Construct(const NGATexture &texture)
 	{

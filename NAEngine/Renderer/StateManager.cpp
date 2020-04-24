@@ -33,7 +33,8 @@ namespace na
 
 
 	StateManager::StateManager() :
-		mBoundRenderTarget(&NGARenderTargetView::INVALID)
+		mBoundRenderTarget(&NGARenderTargetView::INVALID),
+		mBoundDepthStencilView(&NGADepthStencilView::INVALID)
 	{
 	}
 
@@ -116,8 +117,13 @@ namespace na
 
 	void StateManager::BindShaderResource(const Texture &texture, NGAShaderStage stage, int slot)
 	{
-		// Can't bind a shader resource if it's already been bound as a render target
+		// Can't bind a shader resource if it's already been bound as an output
 		if (texture.GetRenderTargetView() == *mBoundRenderTarget) {
+			mCommandContext.BindShaderResource(NGAShaderResourceView::INVALID, stage, slot);
+			return;
+		}
+
+		if (texture.GetDepthStencilView() == *mBoundDepthStencilView) {
 			mCommandContext.BindShaderResource(NGAShaderResourceView::INVALID, stage, slot);
 			return;
 		}
@@ -132,14 +138,19 @@ namespace na
 
 	void StateManager::BindConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot)
 	{
+		BindConstantBufferRealSlot(constantBuffer, stage, slot + (int)ShaderConstantBuffers::USER);
+	}
+
+	void StateManager::BindConstantBufferRealSlot(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot)
+	{
 		NA_ASSERT_RETURN(stage != NGA_SHADER_STAGE_ALL, "Need to implement this.");
 
 		if (stage & NGA_SHADER_STAGE_VERTEX) {
-			mCommandContext.BindConstantBuffer(constantBuffer, NGA_SHADER_STAGE_VERTEX, slot + (int)ShaderConstantBuffers::USER);
+			mCommandContext.BindConstantBuffer(constantBuffer, NGA_SHADER_STAGE_VERTEX, slot);
 		}
 
 		if (stage & NGA_SHADER_STAGE_PIXEL) {
-			mCommandContext.BindConstantBuffer(constantBuffer, NGA_SHADER_STAGE_PIXEL, slot + (int)ShaderConstantBuffers::USER);
+			mCommandContext.BindConstantBuffer(constantBuffer, NGA_SHADER_STAGE_PIXEL, slot);
 		}
 	}
 
@@ -170,12 +181,14 @@ namespace na
 	void StateManager::BindRenderTarget(const RenderTarget &renderTarget)
 	{
 		mBoundRenderTarget = &renderTarget.GetColorMap().GetRenderTargetView();
+		mBoundDepthStencilView = &renderTarget.GetDepthMap().GetDepthStencilView();
 		mCommandContext.BindRenderTarget(renderTarget.GetColorMap().GetRenderTargetView(), renderTarget.GetDepthMap().GetDepthStencilView());
 	}
 
 	void StateManager::BindRenderTarget(const NGARenderTargetView &renderTargetView, const NGADepthStencilView &depthStencilView)
 	{
 		mBoundRenderTarget = &renderTargetView;
+		mBoundDepthStencilView = &depthStencilView;
 		mCommandContext.BindRenderTarget(renderTargetView, depthStencilView);
 	}
 

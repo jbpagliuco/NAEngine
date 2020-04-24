@@ -16,7 +16,7 @@ namespace na
 		bool Initialize(Mesh *mesh, MaterialContainer *materialContainer);
 		void Shutdown();
 
-		virtual void Render() override;
+		virtual void Render(bool bindMaterial = true) override;
 
 	private:
 		Mesh *mMesh;

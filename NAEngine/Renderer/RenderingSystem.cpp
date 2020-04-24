@@ -41,6 +41,11 @@ namespace na
 			NA_ASSERT(false, "Failed to initialize ImGui renderer.");
 		}
 
+		return true;
+	}
+
+	bool RenderingSystemInitLate()
+	{
 		FRenderer.Initialize();
 
 		return true;
@@ -77,11 +82,6 @@ namespace na
 			if (!camera->mEnabled) {
 				continue;
 			}
-
-			NA_RStateManager->SetViewProjMatrices(
-				camera->mTransform.GetMatrix().Inverted(),
-				Matrix::PerspectiveFOVLH(camera->mFOV, NA_Renderer->GetWindow().GetAspectRatio(), camera->mNear, camera->mFar)
-			);
 
 			FRenderer.BeginRender();
 			FRenderer.RenderScene(*mainScene, *camera);

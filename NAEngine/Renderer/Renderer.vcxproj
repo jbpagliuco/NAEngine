@@ -290,17 +290,15 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shader\EngineShaders\build_shadow_map\build_shadow_map.shaderx" />
     <None Include="Shader\EngineShaders\material.hlsli" />
-    <None Include="Shader\EngineShaders\user_shader.hlsli">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </None>
     <None Include="Shader\HLSL\light.hlsli" />
     <None Include="Shader\HLSL\shader_common.hlsli" />
     <None Include="Shader\HLSL\shader_common_ps.hlsli" />
     <None Include="Shader\HLSL\shader_common_vs.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shader\EngineShaders\shadow.hlsl">
+    <FxCompile Include="Shader\EngineShaders\build_shadow_map\build_shadow_map.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>

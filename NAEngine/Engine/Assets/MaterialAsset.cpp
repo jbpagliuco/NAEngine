@@ -7,6 +7,8 @@
 #include "Renderer/Material/DynamicMaterial.h"
 #include "Renderer/Resources/Texture.h"
 
+#include "Renderer/Scene/ForwardRenderer.h"
+
 namespace na
 {
 	static bool OnMaterialLoad(const AssetID &id, const std::string &filename, const AssetFileHeader &header);
@@ -75,8 +77,13 @@ namespace na
 				std::string type = parameter.meta["type"];
 
 				if (type == "texture") {
-					AssetID texID = RequestAsset(parameter.AsFilepath());
-					textures.push_back(Texture::Get(texID));
+					if (parameter.AsString() == ":depth") {
+						textures.push_back(&ForwardRenderer::mShadowMap.GetDepthMap());
+					}
+					else {
+						AssetID texID = RequestAsset(parameter.AsFilepath());
+						textures.push_back(Texture::Get(texID));
+					}
 				} else {
 					parameter.AsHLSLType((unsigned char*)parameterData + calculatedSize, type);
 				}

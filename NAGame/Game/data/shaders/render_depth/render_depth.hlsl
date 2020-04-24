@@ -15,12 +15,9 @@ struct PixelInput {
 	float2 texCoord : TEXCOORD0;
 };
 
-// Material data
-cbuffer cbMaterial : register(CB_REGISTER_MATERIAL)
-{
-	float4 matDiffuse;
-	float4 matSpecular;
-};
+// Resources
+Texture2D DepthMap : register(TEX_REGISTER_USER0);
+SamplerState Sampler : register(SAM_REGISTER_USER0);
 
 // Vertex shader
 PixelInput vsMain(VertexInput input)
@@ -30,7 +27,7 @@ PixelInput vsMain(VertexInput input)
 	PixelInput output;
 
 	output.svpos = mul(mul(viewProj, world), pos);
-	output.position = mul(world, pos);
+	output.position = mul(world, pos).xyz;
 
 	float4 normal = float4(normalize(input.normal), 0.0f);
 	output.normal = mul(normal, worldInverseTranspose).xyz;
@@ -40,18 +37,12 @@ PixelInput vsMain(VertexInput input)
 	return output;
 }
 
-// Pixel shader
+// Pixel Shader
 float4 psMain(PixelInput input) : SV_TARGET
 {
-	float3 P = input.position;
-	float3 N = normalize(input.normal);
-	float3 V = normalize(eyePosition - P).xyz;
+	float2 texCoord = float2(1.0f, 1.0f) - input.texCoord;
+	float4 texColor = DepthMap.Sample(Sampler, texCoord);
 
-	LightingResult lit = ComputeFullLighting(matSpecular.w, V, P, N);
-
-	float4 ambient = matDiffuse * globalAmbient;
-	float4 diffuse = matDiffuse * lit.diffuse;
-	float4 specular = float4(matSpecular.xyz * lit.specular.xyz, 1.0f);
-
-	return ambient + diffuse + specular;
+	float depth = texColor.x;
+	return float4(depth, depth, depth, 1.0f);
 }
