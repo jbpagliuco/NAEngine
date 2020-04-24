@@ -9,6 +9,7 @@
 namespace na
 {
 	class DynamicMaterialInstance;
+	class RenderTarget;
 	class Texture;
 
 	struct DynamicMaterialParameterInfo
@@ -61,11 +62,22 @@ namespace na
 		void SetTextureParameter(const std::string &name, const std::string &filename);
 		void SetTextureParameter(const std::string &name, Texture *pTexture);
 
+		void SetRenderTargetParameter(const std::string &name, const std::string &filename, bool useColorMap);
+		void SetRenderTargetParameter(const std::string &name, RenderTarget *pRenderTarget, bool useColorMap);
+
+	private:
+		struct RenderTargetContainer
+		{
+			RenderTarget* mRenderTarget;
+			bool mUseColorMap;
+		};
+		
 	private:
 		DynamicMaterial *mParent;
 
 		void *mParameterData;
 		std::vector<Texture*> mTextures;
+		std::vector<RenderTargetContainer> mRenderTargets;
 	};
 
 	DynamicMaterialInstance* CreateDynamicMaterialInstance(DynamicMaterial *pParent);

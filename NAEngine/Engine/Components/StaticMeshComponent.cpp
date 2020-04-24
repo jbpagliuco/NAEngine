@@ -26,6 +26,9 @@ namespace na
 
 				if (type == "texture") {
 					dynMat->SetTextureParameter(overrideParam.meta["name"], overrideParam.AsFilepath());
+				}
+				else if (type == "render_target") {
+					dynMat->SetRenderTargetParameter(overrideParam.meta["name"], overrideParam.AsFilepath(), overrideParam.meta["map"] == "color");
 				} else {
 					NA_ASSERT(false, "Type %s not implemented.", type.c_str());
 				}

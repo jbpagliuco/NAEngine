@@ -1,6 +1,7 @@
 #include "DynamicMaterial.h"
 
 #include "Renderer/Renderer.h"
+#include "Renderer/Resources/RenderTarget.h"
 #include "Renderer/Resources/Texture.h"
 
 namespace na
@@ -122,6 +123,7 @@ namespace na
 		for (auto &assetId : mParent->GetDefaultTextures()) {
 			AddAssetRef(assetId);
 			mTextures.push_back(Texture::Get(assetId));
+			mRenderTargets.push_back({ nullptr, false });
 		}
 	}
 
@@ -130,7 +132,15 @@ namespace na
 		NA_FREE(mParameterData);
 
 		for (auto &pTex : mTextures) {
-			ReleaseAsset(pTex->GetID());
+			if (pTex != nullptr) {
+				ReleaseAsset(pTex->GetID());
+			}
+		}
+
+		for (auto &rt : mRenderTargets) {
+			if (rt.mRenderTarget != nullptr) {
+				ReleaseAsset(rt.mRenderTarget->GetID());
+			}
 		}
 	}
 
@@ -141,8 +151,19 @@ namespace na
 
 		// Bind textures
 		for (int i = 0; i < mTextures.size(); ++i) {
-			NA_RStateManager->BindShaderResource(mTextures[i]->GetShaderResourceView(), NGA_SHADER_STAGE_PIXEL, i);
-			NA_RStateManager->BindSamplerState(mTextures[i]->GetSamplerState(), NGA_SHADER_STAGE_PIXEL, i);
+			if (mTextures[i] != nullptr) {
+				NA_RStateManager->BindShaderResource(mTextures[i]->GetShaderResourceView(), NGA_SHADER_STAGE_PIXEL, i);
+				NA_RStateManager->BindSamplerState(mTextures[i]->GetSamplerState(), NGA_SHADER_STAGE_PIXEL, i);
+			}
+		}
+
+		for (int i = 0; i < mRenderTargets.size(); ++i) {
+			if (mRenderTargets[i].mRenderTarget != nullptr) {
+				const Texture &texture = mRenderTargets[i].mUseColorMap ? mRenderTargets[i].mRenderTarget->GetColorMap() : mRenderTargets[i].mRenderTarget->GetDepthMap();
+
+				NA_RStateManager->BindShaderResource(texture.GetShaderResourceView(), NGA_SHADER_STAGE_PIXEL, i);
+				NA_RStateManager->BindSamplerState(texture.GetSamplerState(), NGA_SHADER_STAGE_PIXEL, i);
+			}
 		}
 	}
 
@@ -179,6 +200,24 @@ namespace na
 		ReleaseAsset(mTextures[index]->GetID());
 
 		mTextures[index] = pTexture;
+		mRenderTargets[index] = { nullptr, false };
+	}
+
+	void DynamicMaterialInstance::SetRenderTargetParameter(const std::string& name, const std::string& filename, bool useColorMap)
+	{
+		AssetID assetID = RequestAsset(filename);
+		SetRenderTargetParameter(name, RenderTarget::Get(assetID), useColorMap);
+	}
+
+	void DynamicMaterialInstance::SetRenderTargetParameter(const std::string& name, RenderTarget* pRenderTarget, bool useColorMap)
+	{
+		int index = mParent->GetTextureParameterIndex(name);
+		NA_ASSERT_RETURN(index >= 0 && index < mTextures.size(), "Failed to find valid index for a texure parameter with name '%s'", name);
+
+		ReleaseAsset(mTextures[index]->GetID());
+
+		mRenderTargets[index] = { pRenderTarget, useColorMap };
+		mTextures[index] = nullptr;
 	}
 
 
