@@ -3,6 +3,7 @@
 #include "Renderer/Scene/Renderables/MeshInstance.h"
 
 #include "GameComponent.h"
+#include "Engine/Material/MaterialManager.h"
 
 namespace na
 {
@@ -17,6 +18,9 @@ namespace na
 		virtual void UpdateLate(float deltaTime) override;
 
 	private:
+		AssetID mMeshID;
+
 		MeshInstance mMeshInstance;
+		MaterialManager mMaterialManager;
 	};
 }

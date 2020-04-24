@@ -21,19 +21,22 @@ namespace na
 	class DynamicMaterial : public Material, public AssetFactory<DynamicMaterial>
 	{
 	public:
-		virtual bool Initialize(AssetID shaderID, size_t parameterByteLength, const DeserializationParameterMap &map, void *defaultParameterData, const std::vector<AssetID> &defaultTextures);
+		virtual bool Initialize(Shader *shader, size_t parameterByteLength, const DeserializationParameterMap &map, void *defaultParameterData, const std::vector<const Texture*> &defaultTextures);
 		virtual void Shutdown() override;
 
 		virtual void Bind() override;
 
+		virtual AssetID GetID()const override { return AssetFactory<DynamicMaterial>::GetID(); }
 		virtual int GetMaterialType()const override { return MATERIAL_TYPE_DYNAMIC; }
+
+		const std::vector<const Texture*>& GetTextures()const { return mDefaultTextures; }
 
 	protected:
 		bool GetParameterInfo(DynamicMaterialParameterInfo &info, const std::string &name);
 		int GetTextureParameterIndex(const std::string &name);
 
 		void* GetDefaultParameterData()const;
-		std::vector<AssetID> GetDefaultTextures()const;
+		std::vector<const Texture*> GetDefaultTextures()const;
 
 		ConstantBuffer mConstantBuffer;
 
@@ -42,10 +45,12 @@ namespace na
 		std::map<std::string, int> mTextureParameterMap;
 
 		void *mDefaultParameterData;
-		std::vector<Texture*> mDefaultTextures;
+		std::vector<const Texture*> mDefaultTextures;
 
 		friend class DynamicMaterialInstance;
 	};
+
+
 
 	class DynamicMaterialInstance
 	{
@@ -57,27 +62,14 @@ namespace na
 		void BindDynamicData();
 
 		void SetFloatParameter(const std::string &name, float value);
-		void SetVectorParameter(const std::string &name, const Vector4f &value);
-
-		void SetTextureParameter(const std::string &name, const std::string &filename);
-		void SetTextureParameter(const std::string &name, Texture *pTexture);
-
-		void SetRenderTargetParameter(const std::string &name, const std::string &filename, bool useColorMap);
-		void SetRenderTargetParameter(const std::string &name, RenderTarget *pRenderTarget, bool useColorMap);
-
-	private:
-		struct RenderTargetContainer
-		{
-			RenderTarget* mRenderTarget;
-			bool mUseColorMap;
-		};
+		void SetVectorParameter(const std::string& name, const Vector4f& value);
+		void SetTextureParameter(const std::string &name, const Texture *pTexture);
 		
 	private:
 		DynamicMaterial *mParent;
 
 		void *mParameterData;
-		std::vector<Texture*> mTextures;
-		std::vector<RenderTargetContainer> mRenderTargets;
+		std::vector<const Texture*> mTextures;
 	};
 
 	DynamicMaterialInstance* CreateDynamicMaterialInstance(DynamicMaterial *pParent);

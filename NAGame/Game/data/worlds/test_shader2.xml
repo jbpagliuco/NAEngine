@@ -96,7 +96,7 @@
 				<material>
 					tex_dyn.matx
 					<overrides>
-						<override name="DiffuseTexture" type="render_target" map="color">test_render_target.rtx</override>
+						<override name="DiffuseTexture" type="renderTarget" map="color">test_render_target.rtx</override>
 					</overrides>
 				</material>
 			</component>

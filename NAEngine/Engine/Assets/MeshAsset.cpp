@@ -130,7 +130,7 @@ namespace na
 
 	void MeshSystemShutdown()
 	{
-		NA_ASSERT(Mesh::NumInstances() == 0, "There were still meshes allocated during shutdown!");
+		NA_ASSERT(Mesh::ReportEmpty(), "There were still meshes allocated during shutdown!");
 		Mesh::ReleaseAll();
 	}
 	

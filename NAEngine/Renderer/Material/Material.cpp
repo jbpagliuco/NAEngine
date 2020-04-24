@@ -5,16 +5,16 @@
 
 namespace na
 {
-	bool Material::Initialize(AssetID shaderID)
+	bool Material::Initialize(Shader *shader)
 	{
-		mShader = Shader::Get(shaderID);
+		mShader = shader;
 
 		return true;
 	}
 	
 	void Material::Shutdown()
 	{
-		NA_SAFE_RELEASE_ASSET_OBJECT(mShader);
+		mShader = nullptr;
 	}
 
 	void Material::Bind()

@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "Base/Debug/Log.h"
 #include "Base/Memory/Memory.h"
 
 namespace na
@@ -64,6 +65,19 @@ namespace na
 	size_t AssetFactory<AssetType>::NumInstances()
 	{
 		return _Instances.size();
+	}
+
+	template <typename AssetType>
+	bool AssetFactory<AssetType>::ReportEmpty()
+	{
+		if (NumInstances() > 0) {
+			LogInfo("AssetFactory", "Found the following assets at shutdown:");
+			for (auto& it : _Instances) {
+				LogInfo("AssetFactory", "%s", GetAssetFilename(it.first));
+			}
+		}
+
+		return true;
 	}
 
 	template <typename AssetType>

@@ -8,9 +8,9 @@ namespace na
 {
 	NA_FACTORY_SETUP(DynamicMaterial);
 
-	bool DynamicMaterial::Initialize(AssetID shaderID, size_t parameterByteLength, const DeserializationParameterMap &map, void *defaultParameterData, const std::vector<AssetID> &defaultTextures)
+	bool DynamicMaterial::Initialize(Shader *shader, size_t parameterByteLength, const DeserializationParameterMap &map, void *defaultParameterData, const std::vector<const Texture*> &defaultTextures)
 	{
-		if (!Material::Initialize(shaderID)) {
+		if (!Material::Initialize(shader)) {
 			return false;
 		}
 
@@ -43,9 +43,7 @@ namespace na
 		mDefaultParameterData = NA_ALLOC(parameterByteLength);
 		memcpy(mDefaultParameterData, defaultParameterData, parameterByteLength);
 
-		for (auto &texID : defaultTextures) {
-			mDefaultTextures.push_back(Texture::Get(texID));
-		}
+		mDefaultTextures = defaultTextures;
 
 		return true;
 	}
@@ -57,9 +55,6 @@ namespace na
 		mConstantBuffer.Shutdown();
 
 		NA_FREE(mDefaultParameterData);
-		for (auto &texture : mDefaultTextures) {
-			ReleaseAsset(texture->GetID());
-		}
 	}
 
 	void DynamicMaterial::Bind() 
@@ -99,14 +94,9 @@ namespace na
 		return mDefaultParameterData;
 	}
 
-	std::vector<AssetID> DynamicMaterial::GetDefaultTextures()const
+	std::vector<const Texture*> DynamicMaterial::GetDefaultTextures()const
 	{
-		std::vector<AssetID> textures;
-		for (auto &it : mDefaultTextures) {
-			textures.push_back(it->GetID());
-		}
-
-		return textures;
+		return mDefaultTextures;
 	}
 
 
@@ -120,10 +110,8 @@ namespace na
 		mParameterData = NA_ALLOC(mParent->mConstantBuffer.GetSize());
 		memcpy(mParameterData, mParent->GetDefaultParameterData(), mParent->mConstantBuffer.GetSize());
 		
-		for (auto &assetId : mParent->GetDefaultTextures()) {
-			AddAssetRef(assetId);
-			mTextures.push_back(Texture::Get(assetId));
-			mRenderTargets.push_back({ nullptr, false });
+		for (auto &tex : mParent->GetDefaultTextures()) {
+			mTextures.push_back(tex);
 		}
 	}
 
@@ -131,17 +119,7 @@ namespace na
 	{
 		NA_FREE(mParameterData);
 
-		for (auto &pTex : mTextures) {
-			if (pTex != nullptr) {
-				ReleaseAsset(pTex->GetID());
-			}
-		}
-
-		for (auto &rt : mRenderTargets) {
-			if (rt.mRenderTarget != nullptr) {
-				ReleaseAsset(rt.mRenderTarget->GetID());
-			}
-		}
+		mTextures.erase(mTextures.begin(), mTextures.end());
 	}
 
 	void DynamicMaterialInstance::BindDynamicData()
@@ -154,15 +132,6 @@ namespace na
 			if (mTextures[i] != nullptr) {
 				NA_RStateManager->BindShaderResource(mTextures[i]->GetShaderResourceView(), NGA_SHADER_STAGE_PIXEL, i);
 				NA_RStateManager->BindSamplerState(mTextures[i]->GetSamplerState(), NGA_SHADER_STAGE_PIXEL, i);
-			}
-		}
-
-		for (int i = 0; i < mRenderTargets.size(); ++i) {
-			if (mRenderTargets[i].mRenderTarget != nullptr) {
-				const Texture &texture = mRenderTargets[i].mUseColorMap ? mRenderTargets[i].mRenderTarget->GetColorMap() : mRenderTargets[i].mRenderTarget->GetDepthMap();
-
-				NA_RStateManager->BindShaderResource(texture.GetShaderResourceView(), NGA_SHADER_STAGE_PIXEL, i);
-				NA_RStateManager->BindSamplerState(texture.GetSamplerState(), NGA_SHADER_STAGE_PIXEL, i);
 			}
 		}
 	}
@@ -186,38 +155,12 @@ namespace na
 		}
 	}
 
-	void DynamicMaterialInstance::SetTextureParameter(const std::string &name, const std::string &filename)
-	{
-		AssetID textureID = RequestAsset(filename);
-		SetTextureParameter(name, Texture::Get(textureID));
-	}
-
-	void DynamicMaterialInstance::SetTextureParameter(const std::string &name, Texture *pTexture)
+	void DynamicMaterialInstance::SetTextureParameter(const std::string &name, const Texture *pTexture)
 	{
 		int index = mParent->GetTextureParameterIndex(name);
 		NA_ASSERT_RETURN(index >= 0 && index < mTextures.size(), "Failed to find valid index for a texture parameter with name '%s'", name);
 
-		ReleaseAsset(mTextures[index]->GetID());
-
 		mTextures[index] = pTexture;
-		mRenderTargets[index] = { nullptr, false };
-	}
-
-	void DynamicMaterialInstance::SetRenderTargetParameter(const std::string& name, const std::string& filename, bool useColorMap)
-	{
-		AssetID assetID = RequestAsset(filename);
-		SetRenderTargetParameter(name, RenderTarget::Get(assetID), useColorMap);
-	}
-
-	void DynamicMaterialInstance::SetRenderTargetParameter(const std::string& name, RenderTarget* pRenderTarget, bool useColorMap)
-	{
-		int index = mParent->GetTextureParameterIndex(name);
-		NA_ASSERT_RETURN(index >= 0 && index < mTextures.size(), "Failed to find valid index for a texure parameter with name '%s'", name);
-
-		ReleaseAsset(mTextures[index]->GetID());
-
-		mRenderTargets[index] = { pRenderTarget, useColorMap };
-		mTextures[index] = nullptr;
 	}
 
 

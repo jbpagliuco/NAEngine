@@ -210,6 +210,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Material\MaterialContainer.cpp" />
     <ClCompile Include="NGA\DX11\NGAPipelineStateDX11.cpp" />
     <ClCompile Include="NGA\DX11\NGASwapChainDX11.cpp" />
     <ClCompile Include="Resources\ConstantBuffer.cpp" />
@@ -244,6 +245,7 @@
     <ClCompile Include="Scene\SceneEntity.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Material\MaterialContainer.h" />
     <ClInclude Include="NGA\NGAPipelineState.h" />
     <ClInclude Include="NGA\NGAPipelineStateDefs.h" />
     <ClInclude Include="NGA\NGAShapes.h" />

@@ -7,9 +7,9 @@ namespace na
 {
 	NA_FACTORY_SETUP(StaticMaterial);
 
-	bool StaticMaterial::Initialize(AssetID shaderID, void *parameterData, size_t parameterByteLength, const std::vector<AssetID> &textures)
+	bool StaticMaterial::Initialize(Shader *shader, void *parameterData, size_t parameterByteLength, const std::vector<const Texture*> &textures)
 	{
-		if (!Material::Initialize(shaderID)) {
+		if (!Material::Initialize(shader)) {
 			return false;
 		}
 
@@ -17,9 +17,7 @@ namespace na
 			return false;
 		}
 
-		for (auto &texID : textures) {
-			mTextures.push_back(Texture::Get(texID));
-		}
+		mTextures = textures;
 
 		return true;
 	}
@@ -29,10 +27,6 @@ namespace na
 		Material::Shutdown();
 
 		mConstantBuffer.Shutdown();
-
-		for (auto &texture : mTextures) {
-			ReleaseAsset(texture->GetID());
-		}
 	}
 
 	void StaticMaterial::Bind()

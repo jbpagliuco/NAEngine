@@ -2,9 +2,10 @@
 
 #include "Base/Streaming/Stream.h"
 
-#include "Renderer/Scene/Scene.h"
 #include "Renderer/Material/Material.h"
 #include "Renderer/Material/DynamicMaterial.h"
+#include "Renderer/Mesh.h"
+#include "Renderer/Scene/Scene.h"
 
 #include "Engine/World/GameObject.h"
 
@@ -12,23 +13,27 @@ namespace na
 {
 	void StaticMeshComponent::Deserialize(DeserializationParameterMap &params)
 	{
-		AssetID meshID = RequestAsset(params["mesh"].AsFilepath());
-		AssetID matID = RequestAsset(params["material"].AsFilepath());
+		mMeshID = RequestAsset(params["mesh"].AsFilepath());
+
+		mMaterialManager.Initialize(params["material"].AsFilepath());
 		
-		mMeshInstance.Initialize(meshID, matID);
+		Mesh* mesh = Mesh::Get(mMeshID);
+		MaterialContainer* materialContainer = mMaterialManager.GetMaterialContainer();
+
+		mMeshInstance.Initialize(mesh, materialContainer);
 
 		auto &materialParams = params["material"];
 		if (materialParams.HasChild("overrides")) {
-			DynamicMaterialInstance *dynMat = mMeshInstance.CreateDynamicMaterialInstance();
+			materialContainer->CreateDynamicMaterialInstance();
 
 			for (auto &overrideParam : materialParams["overrides"].childrenArray) {
 				const std::string type = overrideParam.meta["type"];
 
 				if (type == "texture") {
-					dynMat->SetTextureParameter(overrideParam.meta["name"], overrideParam.AsFilepath());
+					mMaterialManager.SetTextureParameter(overrideParam.meta["name"], overrideParam.AsFilepath());
 				}
-				else if (type == "render_target") {
-					dynMat->SetRenderTargetParameter(overrideParam.meta["name"], overrideParam.AsFilepath(), overrideParam.meta["map"] == "color");
+				else if (type == "renderTarget") {
+					mMaterialManager.SetRenderTargetParameter(overrideParam.meta["name"], overrideParam.AsFilepath(), overrideParam.meta["map"] == "color");
 				} else {
 					NA_ASSERT(false, "Type %s not implemented.", type.c_str());
 				}
@@ -46,6 +51,9 @@ namespace na
 		Scene::Get()->RemoveRenderable(&mMeshInstance);
 
 		mMeshInstance.Shutdown();
+		mMaterialManager.Shutdown();
+
+		ReleaseAsset(mMeshID);
 	}
 
 	void StaticMeshComponent::UpdateLate(float deltaTime)

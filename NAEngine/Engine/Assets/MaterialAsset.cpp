@@ -5,6 +5,7 @@
 #include "Base/Util/Serialize.h"
 #include "Renderer/Material/StaticMaterial.h"
 #include "Renderer/Material/DynamicMaterial.h"
+#include "Renderer/Resources/Texture.h"
 
 namespace na
 {
@@ -36,10 +37,10 @@ namespace na
 
 	void MaterialSystemShutdown()
 	{
-		NA_ASSERT(StaticMaterial::NumInstances() == 0, "There were still materials allocated during shutdown!");
+		NA_ASSERT(StaticMaterial::ReportEmpty(), "There were still materials allocated during shutdown!");
 		StaticMaterial::ReleaseAll();
 
-		NA_ASSERT(Shader::NumInstances() == 0, "There were still shaders allocated during shutdown!");
+		NA_ASSERT(Shader::ReportEmpty(), "There were still shaders allocated during shutdown!");
 		Shader::ReleaseAll();
 	}
 
@@ -59,11 +60,12 @@ namespace na
 		DeserializationParameterMap params = ParseFile(filename);
 
 		const AssetID shaderID = RequestAsset(params["shaderFile"].AsFilepath());
+		Shader* shader = Shader::Get(shaderID);
 
 		void *parameterData = nullptr;
 		size_t calculatedSize = 0;
 
-		std::vector<AssetID> textures;
+		std::vector<const Texture*> textures;
 		
 		if (params.HasChild("parameters")) {
 			constexpr size_t MAX_MATERIAL_PARAMETER_BYTE_LENGTH = 128;
@@ -74,7 +76,7 @@ namespace na
 
 				if (type == "texture") {
 					AssetID texID = RequestAsset(parameter.AsFilepath());
-					textures.push_back(texID);
+					textures.push_back(Texture::Get(texID));
 				} else {
 					parameter.AsHLSLType((unsigned char*)parameterData + calculatedSize, type);
 				}
@@ -87,11 +89,11 @@ namespace na
 		if (params["dynamic"].AsBool(false)) {
 			DynamicMaterial *pMat = DynamicMaterial::Create(id);
 			NA_ASSERT_RETURN_VALUE(pMat != nullptr, false, "Failed to allocate dynamic material.");
-			success = pMat->Initialize(shaderID, calculatedSize, params["parameters"], parameterData, textures);
+			success = pMat->Initialize(shader, calculatedSize, params["parameters"], parameterData, textures);
 		} else {
 			StaticMaterial *pMat = StaticMaterial::Create(id);
 			NA_ASSERT_RETURN_VALUE(pMat != nullptr, false, "Failed to allocate static material.");
-			success = pMat->Initialize(shaderID, parameterData, calculatedSize, textures);
+			success = pMat->Initialize(shader, parameterData, calculatedSize, textures);
 		}
 
 		if (parameterData != nullptr) {
@@ -104,8 +106,21 @@ namespace na
 	static void OnMaterialUnload(const AssetID &id)
 	{
 		if (StaticMaterial::Exists(id)) {
+			// Release assets here
+			StaticMaterial* material = StaticMaterial::Get(id);
+			ReleaseAsset(material->GetShader()->GetID());
+			for (auto& tex : material->GetTextures()) {
+				ReleaseAsset(tex->GetID());
+			}
+
 			return StaticMaterial::Release(id);
 		} else if (DynamicMaterial::Exists(id)) {
+			DynamicMaterial* material = DynamicMaterial::Get(id);
+			ReleaseAsset(material->GetShader()->GetID());
+			for (auto& tex : material->GetTextures()) {
+				ReleaseAsset(tex->GetID());
+			}
+
 			return DynamicMaterial::Release(id);
 		} else {
 			NA_ASSERT(false, "Unknown material type for material %s", GetAssetFilename(id));

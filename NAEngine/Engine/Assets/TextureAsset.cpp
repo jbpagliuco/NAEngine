@@ -39,7 +39,7 @@ namespace na
 
 	void TextureAssetSystemShutdown()
 	{
-		NA_ASSERT(Texture::NumInstances() == 0, "There were still textures allocated during shutdown!");
+		NA_ASSERT(Texture::ReportEmpty(), "There were still textures allocated during shutdown!");
 		Texture::ReleaseAll();
 	}
 
