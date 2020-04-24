@@ -19,6 +19,7 @@ namespace na
 	class IndexBuffer;
 	class RenderTarget;
 	class ShaderProgram;
+	class Texture;
 	class VertexBuffer;
 
 	struct Rect;
@@ -34,6 +35,8 @@ namespace na
 	class StateManager
 	{
 	public:
+		StateManager();
+
 		bool Initialize();
 		void Shutdown();
 		
@@ -54,6 +57,7 @@ namespace na
 		void BindShader(const ShaderProgram &shader);
 
 		void BindConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot);
+		void BindShaderResource(const Texture &texture, NGAShaderStage stage, int slot);
 		void BindShaderResource(const NGAShaderResourceView &view, NGAShaderStage stage, int slot);
 		void BindSamplerState(const NGASamplerState &samplerState, NGAShaderStage stage, int slot);
 
@@ -75,5 +79,7 @@ namespace na
 		ConstantBuffer mObjectDataBuffer;
 
 		ConstantBuffer mLightsBuffer;
+
+		const NGARenderTargetView *mBoundRenderTarget;
 	};
 }

@@ -62,6 +62,10 @@ namespace na
 		return mView != nullptr;
 	}
 
+	bool NGAShaderResourceView::operator==(const NGAShaderResourceView& other)const
+	{
+		return mView == other.mView;
+	}
 
 
 	bool NGARenderTargetView::Construct(const NGATexture &texture)
@@ -116,6 +120,11 @@ namespace na
 		return mView != nullptr;
 	}
 
+	bool NGARenderTargetView::operator==(const NGARenderTargetView& other)const
+	{
+		return mView == other.mView;
+	}
+
 
 	bool NGADepthStencilView::Construct(const NGATexture& texture)
 	{
@@ -149,6 +158,11 @@ namespace na
 	bool NGADepthStencilView::IsConstructed()const
 	{
 		return mView != nullptr;
+	}
+
+	bool NGADepthStencilView::operator==(const NGADepthStencilView& other)const
+	{
+		return mView == other.mView;
 	}
 }
 

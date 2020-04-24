@@ -69,7 +69,7 @@ namespace na
 
 		// Bind textures
 		for (int i = 0; i < mDefaultTextures.size(); ++i) {
-			NA_RStateManager->BindShaderResource(mDefaultTextures[i]->GetShaderResourceView(), NGA_SHADER_STAGE_PIXEL, i);
+			NA_RStateManager->BindShaderResource(*mDefaultTextures[i], NGA_SHADER_STAGE_PIXEL, i);
 			NA_RStateManager->BindSamplerState(mDefaultTextures[i]->GetSamplerState(), NGA_SHADER_STAGE_PIXEL, i);
 		}
 	}
@@ -130,7 +130,7 @@ namespace na
 		// Bind textures
 		for (int i = 0; i < mTextures.size(); ++i) {
 			if (mTextures[i] != nullptr) {
-				NA_RStateManager->BindShaderResource(mTextures[i]->GetShaderResourceView(), NGA_SHADER_STAGE_PIXEL, i);
+				NA_RStateManager->BindShaderResource(*mTextures[i], NGA_SHADER_STAGE_PIXEL, i);
 				NA_RStateManager->BindSamplerState(mTextures[i]->GetSamplerState(), NGA_SHADER_STAGE_PIXEL, i);
 			}
 		}

@@ -41,7 +41,7 @@ namespace na
 
 		// Bind textures
 		for (int i = 0; i < mTextures.size(); ++i) {
-			NA_RStateManager->BindShaderResource(mTextures[i]->GetShaderResourceView(), NGA_SHADER_STAGE_PIXEL, i);
+			NA_RStateManager->BindShaderResource(*mTextures[i], NGA_SHADER_STAGE_PIXEL, i);
 			NA_RStateManager->BindSamplerState(mTextures[i]->GetSamplerState(), NGA_SHADER_STAGE_PIXEL, i);
 		}
 	}

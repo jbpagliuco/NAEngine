@@ -32,6 +32,10 @@ namespace na
 	
 
 
+	StateManager::StateManager() :
+		mBoundRenderTarget(&NGARenderTargetView::INVALID)
+	{
+	}
 
 	bool StateManager::Initialize()
 	{
@@ -110,6 +114,17 @@ namespace na
 		mCommandContext.BindShader(shader.GetShader());
 	}
 
+	void StateManager::BindShaderResource(const Texture &texture, NGAShaderStage stage, int slot)
+	{
+		// Can't bind a shader resource if it's already been bound as a render target
+		if (texture.GetRenderTargetView() == *mBoundRenderTarget) {
+			mCommandContext.BindShaderResource(NGAShaderResourceView::INVALID, stage, slot);
+			return;
+		}
+
+		mCommandContext.BindShaderResource(texture.GetShaderResourceView(), stage, slot);
+	}
+
 	void StateManager::BindShaderResource(const NGAShaderResourceView &view, NGAShaderStage stage, int slot)
 	{
 		mCommandContext.BindShaderResource(view, stage, slot);
@@ -154,11 +169,13 @@ namespace na
 
 	void StateManager::BindRenderTarget(const RenderTarget &renderTarget)
 	{
+		mBoundRenderTarget = &renderTarget.GetColorMap().GetRenderTargetView();
 		mCommandContext.BindRenderTarget(renderTarget.GetColorMap().GetRenderTargetView(), renderTarget.GetDepthMap().GetDepthStencilView());
 	}
 
 	void StateManager::BindRenderTarget(const NGARenderTargetView &renderTargetView, const NGADepthStencilView &depthStencilView)
 	{
+		mBoundRenderTarget = &renderTargetView;
 		mCommandContext.BindRenderTarget(renderTargetView, depthStencilView);
 	}
 
