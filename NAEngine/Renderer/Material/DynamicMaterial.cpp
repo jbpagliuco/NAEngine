@@ -43,6 +43,11 @@ namespace na
 
 		mDefaultTextures = defaultTextures;
 
+		// Make sure all of these textures are shader resources
+		for (auto& texture : mDefaultTextures) {
+			NA_RENDER_ASSERT_RETURN_VALUE(texture->IsShaderResource(), false, "Static material was given a texture that is not a shader resource.");
+		}
+
 		return true;
 	}
 
@@ -155,6 +160,8 @@ namespace na
 
 	void DynamicMaterialInstance::SetTextureParameter(const std::string &name, const Texture *pTexture)
 	{
+		NA_ASSERT_RETURN(pTexture->IsShaderResource(), "Texture is not a shader resource.");
+
 		int index = mParent->GetTextureParameterIndex(name);
 		NA_ASSERT_RETURN(index >= 0 && index < mTextures.size(), "Failed to find valid index for a texture parameter with name '%s'", name);
 

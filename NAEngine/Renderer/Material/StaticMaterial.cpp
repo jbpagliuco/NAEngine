@@ -17,6 +17,11 @@ namespace na
 
 		mTextures = textures;
 
+		// Make sure all of these textures are shader resources
+		for (auto& texture : mTextures) {
+			NA_RENDER_ASSERT_RETURN_VALUE(texture->IsShaderResource(), false, "Static material was given a texture that is not a shader resource.");
+		}
+
 		return true;
 	}
 	

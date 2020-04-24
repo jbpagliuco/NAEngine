@@ -21,27 +21,6 @@
 		</components>
 	</gameobject>
 
-	<gameobject>
-		<name>Camera</name>
-		<transform>
-			<position>
-				<x>0</x>
-				<y>2</y>
-				<z>-10</z>
-			</position>
-			<rotation type="lookat"/>
-		</transform>
-		<components>
-			<component type="CameraComponent">
-				<enabled>true</enabled>
-				<fov>45</fov>
-				<near>0.1</near>
-				<far>100</far>
-				<renderTarget>test_render_target.rtx</renderTarget>
-			</component>
-		</components>
-	</gameobject>
-
 	<!-- Objects -->
 	<gameobject>
 		<name>Ground</name>

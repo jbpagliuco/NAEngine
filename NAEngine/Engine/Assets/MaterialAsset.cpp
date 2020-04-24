@@ -5,12 +5,15 @@
 #include "Base/Util/Serialize.h"
 #include "Renderer/Material/StaticMaterial.h"
 #include "Renderer/Material/DynamicMaterial.h"
+#include "Renderer/RenderingSystem.h"
 #include "Renderer/Resources/RenderTarget.h"
 
 #include "TextureAsset.h"
 
 namespace na
 {
+#define MATERIAL_ASSERT_CLEANUP(cond, rv, ...) NA_ASSERT_RETURN_VALUE_CLEANUP(cond, rv, Shutdown, __VA_ARGS__)
+
 	NA_FACTORY_SETUP(StaticMaterialAsset);
 	NA_FACTORY_SETUP(DynamicMaterialAsset);
 
@@ -133,10 +136,10 @@ namespace na
 		}
 
 		bool success = mMaterial.Initialize(&GetShader(), parameterData, parameterByteLength, textures);
-		NA_ASSERT_RETURN_VALUE(success, false, "Failed to create static material.");
+		MATERIAL_ASSERT_CLEANUP(success, false, "Failed to create static material.");
 
 		mMaterialContainer.Initialize(&mMaterial);
-		NA_ASSERT_RETURN_VALUE(success, false, "Failed to material container.");
+		MATERIAL_ASSERT_CLEANUP(success, false, "Failed to material container.");
 
 		return true;
 	}
@@ -165,10 +168,10 @@ namespace na
 		}
 
 		bool success = mMaterial.Initialize(&GetShader(), parameterByteLength, parameterMap, parameterData, textures);
-		NA_ASSERT_RETURN_VALUE(success, false, "Failed to create static material.");
+		MATERIAL_ASSERT_CLEANUP(success, false, "Failed to create static material.");
 
 		mMaterialContainer.Initialize(&mMaterial);
-		NA_ASSERT_RETURN_VALUE(success, false, "Failed to material container.");
+		MATERIAL_ASSERT_CLEANUP(success, false, "Failed to material container.");
 
 		return true;
 	}
@@ -259,21 +262,37 @@ namespace na
 		if (params.HasChild("parameters")) {
 			for (auto &parameter : params["parameters"].childrenArray) {
 				const std::string type = parameter.meta["type"];
-
+				
+				// If the resource starts with a colon, it's a special engine resource.
+				const bool isEngineResource = parameter.AsString()[0] == ':';
+				
 				if (type == "texture") {
-					AssetID texID = RequestAsset(parameter.AsFilepath());
-					TextureAsset *textureAsset = TextureAsset::Get(texID);
+					if (isEngineResource) {
+						Texture* texture = GetEngineTexture(parameter.AsString().substr(1));
+						textures.push_back(texture);
+					}
+					else {
+						AssetID texID = RequestAsset(parameter.AsFilepath());
+						TextureAsset* textureAsset = TextureAsset::Get(texID);
 
-					assets.push_back(texID);
-					textures.push_back(&textureAsset->GetTexture());
+						assets.push_back(texID);
+						textures.push_back(&textureAsset->GetTexture());
+					}
 				}
 				else if (type == "renderTarget") {
 					const bool useColorMap = parameter.meta["map"] == "color";
+					RenderTarget* renderTarget;
 
-					AssetID rtID = RequestAsset(parameter.AsFilepath());
-					RenderTarget* renderTarget = RenderTarget::Get(rtID);
+					if (isEngineResource) {
+						renderTarget = GetEngineRenderTarget(parameter.AsString().substr(1));
+					}
+					else {
+						AssetID rtID = RequestAsset(parameter.AsFilepath());
+						renderTarget = RenderTarget::Get(rtID);
 
-					assets.push_back(rtID);
+						assets.push_back(rtID);
+					}
+
 					if (useColorMap) {
 						textures.push_back(&renderTarget->GetColorMap());
 					}

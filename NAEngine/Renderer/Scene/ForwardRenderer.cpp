@@ -3,11 +3,12 @@
 #include "Base/File/File.h"
 #include "Base/Util/Color.h"
 
-#include "Camera.h"
-#include "Renderables/RenderableInstance.h"
 #include "Renderer/Renderer.h"
+#include "Renderer/RenderingSystem.h"
+#include "Renderer/Scene/Camera.h"
+#include "Renderer/Scene/Renderables/RenderableInstance.h"
+#include "Renderer/Scene/Scene.h"
 #include "Renderer/Shader/Shader.h"
-#include "Scene.h"
 
 namespace na
 {
@@ -47,6 +48,8 @@ namespace na
 
 		success = mShadowMapLightsBuffers[1].Initialize(ConstantBufferUsage::CPU_WRITE, nullptr, sizeof(Matrix));
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to create shadow map object buffer.");
+
+		RegisterEngineRenderTarget("shadowMap", &mShadowMap);
 
 		return true;
 	}

@@ -1,6 +1,7 @@
 #include "RenderingSystem.h"
 
 #include <algorithm>
+#include <map>
 
 #include "Base/Debug/Assert.h"
 #include "Base/OS/OS.h"
@@ -18,6 +19,10 @@ namespace na
 	Scene MainScene;
 	ForwardRenderer FRenderer;
 
+	static std::map<std::string, Texture*> EngineTextures;
+	static std::map<std::string, RenderTarget*> EngineRenderTargets;
+
+
 	bool RenderingSystemInit()
 	{
 		constexpr int width = 1600;
@@ -32,7 +37,7 @@ namespace na
 
 		NGAInitParams ngaParams;
 		NGAInitialize(ngaParams);
-		
+
 		bool success = NA_Renderer->Initialize(p);
 		NA_FATAL_ERROR(success, "Failed to initialize renderer.");
 
@@ -70,9 +75,9 @@ namespace na
 
 	void RenderingSystemDoFrame()
 	{
-		Scene *mainScene = Scene::Get();
+		Scene* mainScene = Scene::Get();
 
-		const auto &cameras = mainScene->GetCameras();
+		const auto& cameras = mainScene->GetCameras();
 
 		// Make sure there's only a single camera rendering to the back buffer.
 		size_t numMainCameras = std::count_if(cameras.begin(), cameras.end(), [](const Camera* a) { return a->mEnabled && a->mRenderTarget == nullptr; });
@@ -95,4 +100,34 @@ namespace na
 		NA_Renderer->EndRender();
 	}
 
+
+
+
+	void RegisterEngineTexture(const std::string& name, Texture* texture)
+	{
+		NA_ASSERT(EngineTextures.find(name) == EngineTextures.end(), "Registering engine texture (%s) multiple times.", name.c_str());
+
+		EngineTextures[name] = texture;
+	}
+
+	Texture* GetEngineTexture(const std::string& name)
+	{
+		NA_ASSERT_RETURN_VALUE(EngineTextures.find(name) != EngineTextures.end(), nullptr, "Failed to find engine texture %s", name.c_str());
+
+		return EngineTextures[name];
+	}
+
+	void RegisterEngineRenderTarget(const std::string& name, RenderTarget* renderTarget)
+	{
+		NA_ASSERT(EngineRenderTargets.find(name) == EngineRenderTargets.end(), "Registering engine render target (%s) multiple times.", name.c_str());
+
+		EngineRenderTargets[name] = renderTarget;
+	}
+	
+	RenderTarget* GetEngineRenderTarget(const std::string& name)
+	{
+		NA_ASSERT_RETURN_VALUE(EngineRenderTargets.find(name) != EngineRenderTargets.end(), nullptr, "Failed to find engine render target %s", name.c_str());
+
+		return EngineRenderTargets[name];
+	}
 }

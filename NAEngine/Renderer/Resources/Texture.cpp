@@ -92,6 +92,11 @@ namespace na
 		return mShaderResourceView;
 	}
 
+	bool Texture::IsShaderResource()const
+	{
+		return mShaderResourceView != NGAShaderResourceView::INVALID;
+	}
+
 
 	bool Texture::CreateViews(const TextureDesc& textureDesc)
 	{

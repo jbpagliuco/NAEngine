@@ -4,6 +4,7 @@
 
 #include "Rect.h"
 #include "Scene/Camera.h"
+#include "RenderingSystem.h"
 
 namespace na
 {
@@ -26,6 +27,9 @@ namespace na
 
 		success = mMainRenderTarget.Initialize(mSwapChain, depthBufferDesc, params.mWidth, params.mHeight);
 		NA_FATAL_ERROR(success, "Failed to create main render target view.");
+
+		// Register the back buffer render target as an engine resource
+		RegisterEngineRenderTarget("backBuffer", &mMainRenderTarget);
 
 		if (!mStateManager.Initialize()) {
 			return false;

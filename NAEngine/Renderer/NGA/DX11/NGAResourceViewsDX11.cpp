@@ -68,6 +68,11 @@ namespace na
 		return mView == other.mView;
 	}
 
+	bool NGAShaderResourceView::operator!=(const NGAShaderResourceView& other)const
+	{
+		return mView != other.mView;
+	}
+
 
 	bool NGARenderTargetView::Construct(const NGATexture &texture)
 	{

@@ -31,6 +31,8 @@ namespace na
 		const NGADepthStencilView& GetDepthStencilView()const;
 		const NGAShaderResourceView& GetShaderResourceView()const;
 
+		bool IsShaderResource()const;
+
 	private:
 		bool CreateViews(const TextureDesc& textureDesc);
 

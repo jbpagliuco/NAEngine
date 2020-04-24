@@ -18,6 +18,7 @@ namespace na
 		bool IsConstructed()const;
 
 		bool operator==(const NGAShaderResourceView& other)const;
+		bool operator!=(const NGAShaderResourceView& other)const;
 
 #if defined(NGA_D3D11)
 	private:
