@@ -18,12 +18,13 @@ namespace na
 		swapChainDesc.mWindow = params.mWindow;
 		bool success = mSwapChain.Construct(swapChainDesc);
 		NA_FATAL_ERROR(success, "Failed to construct swap chain.");
+				
+		RenderTargetTextureDesc depthBufferDesc;
+		depthBufferDesc.mFormat = NGAFormat::D24_UNORM_S8_UINT;
+		depthBufferDesc.mType = NGATextureType::TEXTURE2D;
+		depthBufferDesc.mUsage = NGAUsage::GPU_WRITE;
 
-		NGATextureDesc rtDesc;
-		rtDesc.mDepthBufferFormat = NGADepthBufferFormat::DEPTH24_STENCIL;
-		rtDesc.mWidth = params.mWidth;
-		rtDesc.mHeight = params.mHeight;
-		success = mMainRenderTarget.Initialize(rtDesc, mSwapChain);
+		success = mMainRenderTarget.Initialize(mSwapChain, depthBufferDesc, params.mWidth, params.mHeight);
 		NA_FATAL_ERROR(success, "Failed to create main render target view.");
 
 		if (!mStateManager.Initialize()) {

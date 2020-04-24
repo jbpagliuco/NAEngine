@@ -8,6 +8,7 @@
 #include "Renderer/NGA/NGAResourceViews.h"
 #include "Renderer/NGA/NGASwapChain.h"
 #include "Renderer/NGA/NGAPipelineState.h"
+#include "Renderer/Resources/RenderTarget.h"
 #include "Renderer/Resources/Texture.h"
 
 #define NA_Renderer Renderer::Get()
@@ -39,13 +40,13 @@ namespace na
 
 		StateManager* GetStateManager() { return &mStateManager; }
 		NGASwapChain* GetSwapChain() { return &mSwapChain; }
-		Texture* GetRenderTarget() { return &mMainRenderTarget; }
+		RenderTarget* GetRenderTarget() { return &mMainRenderTarget; }
 		
 	private:
 		Window mWindow;
 		NGASwapChain mSwapChain;
 
-		Texture mMainRenderTarget;
+		RenderTarget mMainRenderTarget;
 		
 		StateManager mStateManager;
 	};

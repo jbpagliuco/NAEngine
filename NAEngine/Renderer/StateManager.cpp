@@ -3,8 +3,8 @@
 #include <d3d11.h>
 
 #include "Resources/IndexBuffer.h"
+#include "Resources/RenderTarget.h"
 #include "Resources/VertexBuffer.h"
-#include "Resources/Texture.h"
 #include "Shader/ShaderProgram.h"
 
 #include "Rect.h"
@@ -133,6 +133,15 @@ namespace na
 		mCommandContext.BindSamplerState(samplerState, stage, slot);
 	}
 
+	void StateManager::ClearRenderTarget(const RenderTarget &renderTarget, const float *clearColor, bool clearDepth)
+	{
+		mCommandContext.ClearRenderTarget(renderTarget.GetColorMap().GetRenderTargetView(), clearColor);
+
+		if (clearDepth) {
+			mCommandContext.ClearDepthStencilView(renderTarget.GetDepthMap().GetDepthStencilView());
+		}
+	}
+
 	void StateManager::ClearRenderTarget(const NGARenderTargetView &renderTargetView, const float *clearColor)
 	{
 		mCommandContext.ClearRenderTarget(renderTargetView, clearColor);
@@ -143,9 +152,9 @@ namespace na
 		mCommandContext.ClearDepthStencilView(depthStencilView);
 	}
 
-	void StateManager::BindRenderTarget(const Texture &renderTarget)
+	void StateManager::BindRenderTarget(const RenderTarget &renderTarget)
 	{
-		mCommandContext.BindRenderTarget(renderTarget.GetRenderTargetView(), renderTarget.GetDepthStencilView());
+		mCommandContext.BindRenderTarget(renderTarget.GetColorMap().GetRenderTargetView(), renderTarget.GetDepthMap().GetDepthStencilView());
 	}
 
 	void StateManager::BindRenderTarget(const NGARenderTargetView &renderTargetView, const NGADepthStencilView &depthStencilView)

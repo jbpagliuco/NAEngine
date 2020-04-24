@@ -5,7 +5,7 @@
 
 namespace na
 {
-	class Texture;
+	class RenderTarget;
 
 	class Camera
 	{
@@ -26,7 +26,7 @@ namespace na
 		float mNear;
 		float mFar;
 
-		Texture *mRenderTarget;
+		RenderTarget *mRenderTarget;
 
 		bool operator==(const Camera& other) { return other.mId == mId; }
 

@@ -48,7 +48,7 @@ namespace na
 
 	struct NGADepthStencilViewDesc
 	{
-		NGADepthBufferFormat mFormat;
+		NGAFormat mFormat;
 		int mWidth;
 		int mHeight;
 	};
@@ -58,14 +58,13 @@ namespace na
 		NGA_GPU_CLASS(NGADepthStencilView);
 
 	public:
-		bool Construct(const NGADepthStencilViewDesc &desc);
+		bool Construct(const NGATexture &texture);
 		void Destruct();
 
 		bool IsConstructed()const;
 
 #if defined(NGA_D3D11)
 	private:
-		struct ID3D11Texture2D *mBuffer;
 		struct ID3D11DepthStencilView *mView;
 #endif
 

@@ -2,6 +2,8 @@
 
 #if defined(NGA_D3D11)
 
+#include <map>
+
 namespace na
 {
 	NGAInternalStateDX11 NgaDx11State;
@@ -9,25 +11,48 @@ namespace na
 	DXGI_FORMAT NGAFormatToDXGI(NGAFormat format)
 	{
 		static constexpr DXGI_FORMAT CONV[] = {
+			// Color formats
 			DXGI_FORMAT_R32_FLOAT,
 			DXGI_FORMAT_R32G32_FLOAT,
 			DXGI_FORMAT_R32G32B32_FLOAT,
 			DXGI_FORMAT_R32G32B32A32_FLOAT,
+
+			// Depth formats
+			DXGI_FORMAT_D16_UNORM,
+			DXGI_FORMAT_D24_UNORM_S8_UINT,
+			DXGI_FORMAT_D32_FLOAT,
+
+			// Typeless formats
+			DXGI_FORMAT_R32_TYPELESS,
+			DXGI_FORMAT_R32G32_TYPELESS,
+			DXGI_FORMAT_R32G32B32_TYPELESS,
+			DXGI_FORMAT_R32G32B32A32_TYPELESS,
+
 			DXGI_FORMAT_UNKNOWN
 		};
 
 		return CONV[(int)format];
 	}
 
-	DXGI_FORMAT NGAFormatToDXGI(NGADepthBufferFormat format)
+	DXGI_FORMAT NGATypelessFormatToColorDXGI(NGAFormat format)
 	{
-		static constexpr DXGI_FORMAT CONV[] = {
-			DXGI_FORMAT_UNKNOWN,
-			DXGI_FORMAT_D16_UNORM,
-			DXGI_FORMAT_D24_UNORM_S8_UINT
+		static std::map<NGAFormat, DXGI_FORMAT> CONV = {
+			{ NGAFormat::R32_TYPELESS, DXGI_FORMAT_R32_FLOAT },
+			{ NGAFormat::R32G32_TYPELESS, DXGI_FORMAT_R32G32_FLOAT },
+			{ NGAFormat::R32G32B32_TYPELESS, DXGI_FORMAT_R32G32B32_FLOAT },
+			{ NGAFormat::R32G32B32A32_TYPELESS, DXGI_FORMAT_R32G32B32A32_FLOAT },
 		};
 
-		return CONV[(int)format];
+		return CONV[format];
+	}
+
+	DXGI_FORMAT NGATypelessFormatToDepthDXGI(NGAFormat format)
+	{
+		static std::map<NGAFormat, DXGI_FORMAT> CONV = {
+			{ NGAFormat::R32_TYPELESS, DXGI_FORMAT_D32_FLOAT }
+		};
+
+		return CONV[format];
 	}
 
 	D3D11_USAGE NGAUsageToD3D11(NGAUsage usage)

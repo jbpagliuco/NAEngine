@@ -29,12 +29,11 @@ namespace na
 	void ForwardRenderer::RenderScene(Scene &scene, const Camera &camera)
 	{
 		// Bind render target
-		Texture* rt = (camera.mRenderTarget == nullptr) ? NA_RMainRenderTarget : camera.mRenderTarget;
-		NA_RStateManager->BindRenderTarget(rt->GetRenderTargetView(), rt->GetDepthStencilView());
+		RenderTarget* rt = (camera.mRenderTarget == nullptr) ? NA_RMainRenderTarget : camera.mRenderTarget;
+		NA_RStateManager->BindRenderTarget(*rt);
 
 		const ColorF clearColor = COLOR_CORNFLOWERBLUE;
-		NA_RStateManager->ClearRenderTarget(rt->GetRenderTargetView(), clearColor.vArray);
-		NA_RStateManager->ClearDepthStencilView(rt->GetDepthStencilView());
+		NA_RStateManager->ClearRenderTarget(*rt, clearColor.vArray, true);
 
 		// Set up shader data
 		auto &lights = scene.GetLights();

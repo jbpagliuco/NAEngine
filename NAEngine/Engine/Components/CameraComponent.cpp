@@ -16,7 +16,7 @@ namespace na
 
 		if (params.HasChild("renderTarget")) {
 			mRenderTargetID = RequestAsset(params["renderTarget"].AsFilepath());
-			mCamera.mRenderTarget = Texture::Get(mRenderTargetID);
+			mCamera.mRenderTarget = RenderTarget::Get(mRenderTargetID);
 		}
 
 		mSensitivity = params["sensitivity"].AsFloat(3.0f);
