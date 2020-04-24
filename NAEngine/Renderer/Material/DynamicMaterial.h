@@ -18,7 +18,7 @@ namespace na
 		size_t mLength;
 	};
 
-	class DynamicMaterial : public Material, public AssetFactory<DynamicMaterial>
+	class DynamicMaterial : public Material
 	{
 	public:
 		virtual bool Initialize(Shader *shader, size_t parameterByteLength, const DeserializationParameterMap &map, void *defaultParameterData, const std::vector<const Texture*> &defaultTextures);
@@ -26,10 +26,7 @@ namespace na
 
 		virtual void Bind() override;
 
-		virtual AssetID GetID()const override { return AssetFactory<DynamicMaterial>::GetID(); }
 		virtual int GetMaterialType()const override { return MATERIAL_TYPE_DYNAMIC; }
-
-		const std::vector<const Texture*>& GetTextures()const { return mDefaultTextures; }
 
 	protected:
 		bool GetParameterInfo(DynamicMaterialParameterInfo &info, const std::string &name);

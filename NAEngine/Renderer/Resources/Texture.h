@@ -16,7 +16,7 @@ namespace na
 		NGASamplerStateDesc mSamplerStateDesc;
 	};
 
-	class Texture : public AssetFactory<Texture>
+	class Texture
 	{
 	public:
 		bool Initialize(const TextureDesc& textureDesc, bool releaseTextureReference);

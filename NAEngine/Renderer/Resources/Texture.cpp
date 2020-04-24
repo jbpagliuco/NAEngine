@@ -6,8 +6,6 @@
 
 namespace na
 {
-	NA_FACTORY_SETUP(Texture);
-
 	bool Texture::Initialize(const TextureDesc& textureDesc, bool releaseTextureReference)
 	{
 		if (textureDesc.mTextureDesc.mBindFlags & NGA_TEXTURE_BIND_SHADER_RESOURCE) {

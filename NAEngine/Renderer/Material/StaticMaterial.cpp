@@ -5,8 +5,6 @@
 
 namespace na
 {
-	NA_FACTORY_SETUP(StaticMaterial);
-
 	bool StaticMaterial::Initialize(Shader *shader, void *parameterData, size_t parameterByteLength, const std::vector<const Texture*> &textures)
 	{
 		if (!Material::Initialize(shader)) {

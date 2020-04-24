@@ -3,10 +3,11 @@
 #include "Renderer/Scene/Renderables/MeshInstance.h"
 
 #include "GameComponent.h"
-#include "Engine/Material/MaterialManager.h"
 
 namespace na
 {
+	class MaterialAsset;
+
 	class StaticMeshComponent : public GameComponent
 	{
 	public:
@@ -19,8 +20,8 @@ namespace na
 
 	private:
 		AssetID mMeshID;
+		MaterialAsset *mMaterialAsset;
 
 		MeshInstance mMeshInstance;
-		MaterialManager mMaterialManager;
 	};
 }

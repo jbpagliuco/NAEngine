@@ -7,12 +7,45 @@
 
 namespace na
 {
+	NA_FACTORY_SETUP(TextureAsset);
+
+
 	static bool OnTextureTexxLoad(const AssetID &id, const std::string &filename, const AssetFileHeader &header);
 	static bool OnTextureDDSLoad(const AssetID &id, const std::string &filename, const AssetFileHeader &header);
 	static void OnTextureUnload(const AssetID &id);
 
 	static bool OnRenderTargetLoad(const AssetID &id, const std::string &filename, const AssetFileHeader &header);
 	static void OnRenderTargetUnload(const AssetID &id);
+
+
+
+
+	bool TextureAsset::Initialize(const std::string& filename)
+	{
+		TextureDesc desc;
+		desc.mTextureDesc.mBindFlags = NGA_TEXTURE_BIND_SHADER_RESOURCE;
+		desc.mTextureDesc.mUsage = NGAUsage::IMMUTABLE;
+		desc.mSamplerStateDesc = NGASamplerStateDesc();
+
+		bool success = mTexture.Initialize(desc, filename, true);
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to create texture %s", filename.c_str());
+
+		return true;
+	}
+
+	void TextureAsset::Shutdown()
+	{
+		mTexture.Shutdown();
+	}
+
+	const Texture& TextureAsset::GetTexture()const
+	{
+		return mTexture;
+	}
+
+
+
+
 
 	bool TextureAssetSystemInit()
 	{
@@ -39,8 +72,8 @@ namespace na
 
 	void TextureAssetSystemShutdown()
 	{
-		NA_ASSERT(Texture::ReportEmpty(), "There were still textures allocated during shutdown!");
-		Texture::ReleaseAll();
+		NA_ASSERT(TextureAsset::ReportEmpty(), "There were still textures allocated during shutdown!");
+		TextureAsset::ReleaseAll();
 	}
 
 
@@ -89,21 +122,16 @@ namespace na
 
 	static bool OnTextureDDSLoad(const AssetID &id, const std::string &filename, const AssetFileHeader &header)
 	{
-		Texture *pTex = Texture::Create(id);
+		TextureAsset *pTex = TextureAsset::Create(id);
 		NA_ASSERT_RETURN_VALUE(pTex != nullptr, false, "Failed to allocate texture");
 
-		TextureDesc desc;
-		desc.mTextureDesc.mBindFlags = NGA_TEXTURE_BIND_SHADER_RESOURCE;
-		desc.mTextureDesc.mUsage = NGAUsage::IMMUTABLE;
-		desc.mSamplerStateDesc = NGASamplerStateDesc();
-
 		// Create the texture right from a DDS file, with the normal sampler state parameters
-		return pTex->Initialize(desc, filename, true);
+		return pTex->Initialize(filename);
 	}
 
 	static void OnTextureUnload(const AssetID &id)
 	{
-		Texture::Release(id);
+		TextureAsset::Release(id);
 	}
 
 

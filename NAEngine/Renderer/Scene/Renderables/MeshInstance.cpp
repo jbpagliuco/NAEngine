@@ -39,7 +39,7 @@ namespace na
 
 			NA_ASSERT_RETURN_VALUE(found, false,
 				"Shader '%s' requires %s%d, but mesh '%s' does not supply it.",
-				GetAssetFilename(material->GetID()),
+				GetAssetFilename(material->GetShader()->GetID()),
 				GetSemanticName(shaderInput.mSemanticType),
 				shaderInput.mSemanticIndex,
 				GetAssetFilename(mMesh->GetID()));

@@ -5,17 +5,193 @@
 #include "Base/Util/Serialize.h"
 #include "Renderer/Material/StaticMaterial.h"
 #include "Renderer/Material/DynamicMaterial.h"
-#include "Renderer/Resources/Texture.h"
+#include "Renderer/Resources/RenderTarget.h"
 
-#include "Renderer/Scene/ForwardRenderer.h"
+#include "TextureAsset.h"
 
 namespace na
 {
+	NA_FACTORY_SETUP(StaticMaterialAsset);
+	NA_FACTORY_SETUP(DynamicMaterialAsset);
+
 	static bool OnMaterialLoad(const AssetID &id, const std::string &filename, const AssetFileHeader &header);
 	static void OnMaterialUnload(const AssetID &id);
 
 	static bool OnShaderLoad(const AssetID &id, const std::string &filename, const AssetFileHeader &header);
 	static void OnShaderUnload(const AssetID &id);
+
+
+
+
+	bool MaterialAsset::Initialize(const std::string& shaderName, const std::vector<AssetID>& assets)
+	{
+		mShaderID = RequestAsset(shaderName);
+		
+		mStaticAssets = assets;
+
+		return true;
+	}
+
+	void MaterialAsset::ReleaseAssets()
+	{
+		for (auto& asset : mStaticAssets) {
+			ReleaseAsset(asset);
+		}
+
+		for (auto& it : mDynamicAssets) {
+			ReleaseAsset(it.second);
+		}
+
+		ReleaseAsset(mShaderID);
+	}
+
+	MaterialContainer& MaterialAsset::GetMaterialContainer()
+	{
+		return mMaterialContainer;
+	}
+
+	Shader& MaterialAsset::GetShader()const
+	{
+		return *Shader::Get(mShaderID);
+	}
+
+	bool MaterialAsset::SetFloatParameter(const std::string& name, float value)
+	{
+		return mMaterialContainer.SetFloatParameter(name, value);
+	}
+
+	bool MaterialAsset::SetVectorParameter(const std::string& name, const Vector4f& value)
+	{
+		return mMaterialContainer.SetVectorParameter(name, value);
+	}
+
+	bool MaterialAsset::SetTextureParameter(const std::string& name, const std::string &filename)
+	{
+		AssetID texID = RequestAsset(filename);
+		TextureAsset* texture = TextureAsset::Get(texID);
+
+		ReleaseAssetByKey(name);
+		mDynamicAssets[name] = texID;
+
+		return mMaterialContainer.SetTextureParameter(name, &texture->GetTexture());
+	}
+
+	bool MaterialAsset::SetTextureParameter(const std::string& name, TextureAsset* texture)
+	{
+		AddAssetRef(texture->GetID());
+
+		ReleaseAssetByKey(name);
+		mDynamicAssets[name] = texture->GetID();
+
+		return mMaterialContainer.SetTextureParameter(name, &texture->GetTexture());
+	}
+
+	bool MaterialAsset::SetRenderTargetParameter(const std::string& name, const std::string& filename, bool useColorMap)
+	{
+		AssetID rtID = RequestAsset(filename);
+		RenderTarget* renderTarget = RenderTarget::Get(rtID);
+
+		ReleaseAssetByKey(name);
+		mDynamicAssets[name] = rtID;
+
+		if (useColorMap) {
+			return mMaterialContainer.SetTextureParameter(name, &renderTarget->GetColorMap());
+		}
+		else {
+			return mMaterialContainer.SetTextureParameter(name, &renderTarget->GetDepthMap());
+		}
+	}
+
+	bool MaterialAsset::SetRenderTargetParameter(const std::string& name, RenderTarget* renderTarget, bool useColorMap)
+	{
+		AddAssetRef(renderTarget->GetID());
+
+		ReleaseAssetByKey(name);
+		mDynamicAssets[name] = renderTarget->GetID();
+
+		if (useColorMap) {
+			return mMaterialContainer.SetTextureParameter(name, &renderTarget->GetColorMap());
+		}
+		else {
+			return mMaterialContainer.SetTextureParameter(name, &renderTarget->GetDepthMap());
+		}
+	}
+
+	void MaterialAsset::ReleaseAssetByKey(const std::string& parameterName)
+	{
+		if (mDynamicAssets.find(parameterName) != mDynamicAssets.end()) {
+			ReleaseAsset(mDynamicAssets[parameterName]);
+			mDynamicAssets.erase(parameterName);
+		}
+	}
+
+
+	bool StaticMaterialAsset::Initialize(const std::string& shaderName, const std::vector<AssetID>& assets, void* parameterData, size_t parameterByteLength, const std::vector<const Texture*>& textures)
+	{
+		if (!MaterialAsset::Initialize(shaderName, assets)) {
+			return false;
+		}
+
+		bool success = mMaterial.Initialize(&GetShader(), parameterData, parameterByteLength, textures);
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to create static material.");
+
+		mMaterialContainer.Initialize(&mMaterial);
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to material container.");
+
+		return true;
+	}
+
+	void StaticMaterialAsset::Shutdown()
+	{
+		mMaterial.Shutdown();
+		ReleaseAssets();
+	}
+
+	AssetID StaticMaterialAsset::GetMaterialAssetID()
+	{
+		return GetID();
+	}
+
+	Material& StaticMaterialAsset::GetMaterial()
+	{
+		return mMaterial;
+	}
+
+
+	bool DynamicMaterialAsset::Initialize(const std::string& shaderName, const std::vector<AssetID>& assets, DeserializationParameterMap parameterMap, void* parameterData, size_t parameterByteLength, const std::vector<const Texture*>& textures)
+	{
+		if (!MaterialAsset::Initialize(shaderName, assets)) {
+			return false;
+		}
+
+		bool success = mMaterial.Initialize(&GetShader(), parameterByteLength, parameterMap, parameterData, textures);
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to create static material.");
+
+		mMaterialContainer.Initialize(&mMaterial);
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to material container.");
+
+		return true;
+	}
+
+	void DynamicMaterialAsset::Shutdown()
+	{
+		mMaterial.Shutdown();
+		ReleaseAssets();
+	}
+
+	AssetID DynamicMaterialAsset::GetMaterialAssetID()
+	{
+		return GetID();
+	}
+
+	Material& DynamicMaterialAsset::GetMaterial()
+	{
+		return mMaterial;
+	}
+
+
+
+
 
 
 	bool MaterialSystemInit()
@@ -39,17 +215,23 @@ namespace na
 
 	void MaterialSystemShutdown()
 	{
-		NA_ASSERT(StaticMaterial::ReportEmpty(), "There were still materials allocated during shutdown!");
-		StaticMaterial::ReleaseAll();
+		NA_ASSERT(StaticMaterialAsset::ReportEmpty(), "There were still materials allocated during shutdown!");
+		StaticMaterialAsset::ReleaseAll();
+
+		NA_ASSERT(DynamicMaterialAsset::ReportEmpty(), "There were still materials allocated during shutdown!");
+		DynamicMaterialAsset::ReleaseAll();
 
 		NA_ASSERT(Shader::ReportEmpty(), "There were still shaders allocated during shutdown!");
 		Shader::ReleaseAll();
 	}
 
-	Material* GetMaterialByAssetID(AssetID id)
+	MaterialAsset* GetMaterialByAssetID(AssetID id)
 	{
-		if (StaticMaterial::Exists(id)) {
-			return StaticMaterial::Get(id);
+		if (StaticMaterialAsset::Exists(id)) {
+			return StaticMaterialAsset::Get(id);
+		}
+		else if (DynamicMaterialAsset::Exists(id)) {
+			return DynamicMaterialAsset::Get(id);
 		}
 
 		return nullptr;
@@ -61,30 +243,45 @@ namespace na
 	{
 		DeserializationParameterMap params = ParseFile(filename);
 
-		const AssetID shaderID = RequestAsset(params["shaderFile"].AsFilepath());
-		Shader* shader = Shader::Get(shaderID);
+		const std::string shaderFilename = params["shaderFile"].AsFilepath();
+		const bool isDynamic = params["dynamic"].AsBool();
 
-		void *parameterData = nullptr;
+		// We will use this function as a common place to load in assets for the materials.
+		// But it is the material's responsibility to release the assets.
+		std::vector<AssetID> assets;
+		std::vector<const Texture*> textures;
+
+		// Read in parameters
+		constexpr size_t MAX_MATERIAL_PARAMETER_BYTE_LENGTH = 1024;
+		void *parameterData = NA_ALLOC(MAX_MATERIAL_PARAMETER_BYTE_LENGTH);;
 		size_t calculatedSize = 0;
 
-		std::vector<const Texture*> textures;
-		
 		if (params.HasChild("parameters")) {
-			constexpr size_t MAX_MATERIAL_PARAMETER_BYTE_LENGTH = 128;
-			parameterData = NA_ALLOC(MAX_MATERIAL_PARAMETER_BYTE_LENGTH);
-
 			for (auto &parameter : params["parameters"].childrenArray) {
-				std::string type = parameter.meta["type"];
+				const std::string type = parameter.meta["type"];
 
 				if (type == "texture") {
-					if (parameter.AsString() == ":depth") {
-						textures.push_back(&ForwardRenderer::mShadowMap.GetDepthMap());
+					AssetID texID = RequestAsset(parameter.AsFilepath());
+					TextureAsset *textureAsset = TextureAsset::Get(texID);
+
+					assets.push_back(texID);
+					textures.push_back(&textureAsset->GetTexture());
+				}
+				else if (type == "renderTarget") {
+					const bool useColorMap = parameter.meta["map"] == "color";
+
+					AssetID rtID = RequestAsset(parameter.AsFilepath());
+					RenderTarget* renderTarget = RenderTarget::Get(rtID);
+
+					assets.push_back(rtID);
+					if (useColorMap) {
+						textures.push_back(&renderTarget->GetColorMap());
 					}
 					else {
-						AssetID texID = RequestAsset(parameter.AsFilepath());
-						textures.push_back(Texture::Get(texID));
+						textures.push_back(&renderTarget->GetDepthMap());
 					}
-				} else {
+				}
+				else {
 					parameter.AsHLSLType((unsigned char*)parameterData + calculatedSize, type);
 				}
 
@@ -92,43 +289,32 @@ namespace na
 			}
 		}
 
+		// Create the material asset
 		bool success = false;
-		if (params["dynamic"].AsBool(false)) {
-			DynamicMaterial *pMat = DynamicMaterial::Create(id);
+		if (isDynamic) {
+			DynamicMaterialAsset *pMat = DynamicMaterialAsset::Create(id);
 			NA_ASSERT_RETURN_VALUE(pMat != nullptr, false, "Failed to allocate dynamic material.");
-			success = pMat->Initialize(shader, calculatedSize, params["parameters"], parameterData, textures);
-		} else {
-			StaticMaterial *pMat = StaticMaterial::Create(id);
-			NA_ASSERT_RETURN_VALUE(pMat != nullptr, false, "Failed to allocate static material.");
-			success = pMat->Initialize(shader, parameterData, calculatedSize, textures);
-		}
 
-		if (parameterData != nullptr) {
-			NA_FREE(parameterData);
+			success = pMat->Initialize(shaderFilename, assets, params["parameters"], parameterData, calculatedSize, textures);
+		} else {
+			StaticMaterialAsset *pMat = StaticMaterialAsset::Create(id);
+			NA_ASSERT_RETURN_VALUE(pMat != nullptr, false, "Failed to allocate static material.");
+
+			success = pMat->Initialize(shaderFilename, assets, parameterData, calculatedSize, textures);
 		}
+		
+		// Release temp data
+		NA_FREE(parameterData);
 
 		return success;
 	}
 
 	static void OnMaterialUnload(const AssetID &id)
 	{
-		if (StaticMaterial::Exists(id)) {
-			// Release assets here
-			StaticMaterial* material = StaticMaterial::Get(id);
-			ReleaseAsset(material->GetShader()->GetID());
-			for (auto& tex : material->GetTextures()) {
-				ReleaseAsset(tex->GetID());
-			}
-
-			return StaticMaterial::Release(id);
-		} else if (DynamicMaterial::Exists(id)) {
-			DynamicMaterial* material = DynamicMaterial::Get(id);
-			ReleaseAsset(material->GetShader()->GetID());
-			for (auto& tex : material->GetTextures()) {
-				ReleaseAsset(tex->GetID());
-			}
-
-			return DynamicMaterial::Release(id);
+		if (StaticMaterialAsset::Exists(id)) {
+			return StaticMaterialAsset::Release(id);
+		} else if (DynamicMaterialAsset::Exists(id)) {
+			return DynamicMaterialAsset::Release(id);
 		} else {
 			NA_ASSERT(false, "Unknown material type for material %s", GetAssetFilename(id));
 		}

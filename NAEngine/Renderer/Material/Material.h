@@ -14,8 +14,7 @@ namespace na
 		virtual void Shutdown();
 
 		virtual void Bind();
-
-		virtual AssetID GetID()const = 0;
+		
 		virtual int GetMaterialType()const = 0;
 
 		inline Shader* GetShader()const { return mShader; }
@@ -23,7 +22,4 @@ namespace na
 	private:
 		Shader *mShader;
 	};
-
-	Material* GetMaterialByID(AssetID matID);
-	void ReleaseMaterial(Material *pMaterial);
 }

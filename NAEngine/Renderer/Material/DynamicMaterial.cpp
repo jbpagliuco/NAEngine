@@ -6,8 +6,6 @@
 
 namespace na
 {
-	NA_FACTORY_SETUP(DynamicMaterial);
-
 	bool DynamicMaterial::Initialize(Shader *shader, size_t parameterByteLength, const DeserializationParameterMap &map, void *defaultParameterData, const std::vector<const Texture*> &defaultTextures)
 	{
 		if (!Material::Initialize(shader)) {

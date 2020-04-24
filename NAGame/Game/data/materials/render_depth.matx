@@ -3,8 +3,8 @@
 <root>
     <shaderFile>render_depth.shaderx</shaderFile>
 	<parameters>
-		<parameter name="DiffuseTexture" type="texture">
-			:depth
+		<parameter name="DiffuseTexture" type="renderTarget" map="color">
+			test_render_target.rtx
 		</parameter>
 	</parameters>
 </root>
