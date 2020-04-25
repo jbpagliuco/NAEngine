@@ -39,18 +39,38 @@ namespace na
 
 	void ForwardRenderer::RenderScene(Scene &scene, const Camera &camera)
 	{
-		// TEMP: Grab the first directional light for shadows
-		Light *directionalLight = nullptr;
+		//////////////////////////////////////////////////////////////
+		// Gather all the shadow casting lights
+		Light *shadowCasters[MAX_SHADOWMAPS];
+		for (int i = 0; i < MAX_SHADOWMAPS; ++i) {
+			shadowCasters[i] = nullptr;
+		}
+
+		int shadowCasterIndex = 0;
 		for (auto& light : scene.GetLights()) {
-			if (light->mType == (int)LightType::DIRECTIONAL && light->mEnabled) {
-				directionalLight = light;
+			// Invalidate shadow casting index
+			light->mShadowCastingIndex = -1;
+
+			// Add this light to the list of shadow casters, if possible.
+			if (shadowCasterIndex < MAX_SHADOWMAPS) {
+				// Is this a shadow casting light?
+				if (light->mType == (int)LightType::DIRECTIONAL && light->mEnabled) {
+					shadowCasters[shadowCasterIndex] = light;
+					shadowCasters[shadowCasterIndex]->mShadowCastingIndex = shadowCasterIndex;
+
+					++shadowCasterIndex;
+				}
 			}
 		}
 
 		//////////////////////////////////////////////////////////////
 		// Build our shadow maps
 		for (int i = 0; i < MAX_SHADOWMAPS; ++i) {
-			mShadowMaps[i].Build(scene, *directionalLight);
+			if (shadowCasters[i] == nullptr) {
+				break;
+			}
+
+			mShadowMaps[i].Build(scene, *shadowCasters[i]);
 		}
 
 		//////////////////////////////////////////////////////////////
@@ -62,9 +82,18 @@ namespace na
 		r.height = (float)NA_Renderer->GetWindow().height;
 		NA_RStateManager->SetViewport(r);
 
+		// Set per frame data
 		Matrix cameraView = camera.mTransform.GetMatrix().Inverted();
 		Matrix cameraProj = Matrix::PerspectiveFOVLH(camera.mFOV, NA_Renderer->GetWindow().GetAspectRatio(), camera.mNear, camera.mFar);
-		NA_RStateManager->SetPerFrameData(cameraProj * cameraView, &directionalLight->GetViewProj());
+		
+		Matrix shadowCasterMatrices[MAX_SHADOWMAPS];
+		for (int i = 0; i < MAX_SHADOWMAPS; ++i) {
+			if (shadowCasters[i] != nullptr) {
+				shadowCasterMatrices[i] = shadowCasters[i]->GetViewProj();
+			}
+		}
+
+		NA_RStateManager->SetPerFrameData(cameraProj * cameraView, shadowCasterMatrices, shadowCasterIndex);
 
 		// Bind render target
 		RenderTarget* rt = (camera.mRenderTarget == nullptr) ? NA_RMainRenderTarget : camera.mRenderTarget;

@@ -29,11 +29,7 @@ PixelInput vsMain(VertexInput input)
 // Pixel shader
 float4 psMain(PixelInput input) : SV_TARGET
 {
-	float3 P = input.position;
-	float3 N = normalize(input.normal);
-	float3 V = normalize(eyePosition - P).xyz;
-
-	LightingResult lit = ComputeFullLighting(matSpecular.w, V, P, N, input.projTexCoord);
+	LightingResult lit = ComputeFullLighting(input, matSpecular.w);
 
 	float4 ambient = matDiffuse * globalAmbient;
 	float4 diffuse = matDiffuse * lit.diffuse;

@@ -17,6 +17,7 @@ namespace na
 	{
 		Matrix cameraViewProj;
 		Matrix lightViewProj[MAX_SHADOWMAPS];
+		int mNumShadowCasters;
 	};
 
 	struct PerObjectData
@@ -54,7 +55,7 @@ namespace na
 		mLightsBuffer.Shutdown();
 	}
 	
-	void StateManager::SetPerFrameData(const Matrix &cameraViewProj, Matrix lightViewProj[MAX_SHADOWMAPS])
+	void StateManager::SetPerFrameData(const Matrix &cameraViewProj, Matrix lightViewProj[MAX_SHADOWMAPS], int numShadowCasters)
 	{
 		PerFrameData data;
 		data.cameraViewProj = cameraViewProj;
@@ -62,6 +63,8 @@ namespace na
 		for (int i = 0; i < STATIC_ARRAY_SIZE(data.lightViewProj); ++i) {
 			data.lightViewProj[i] = lightViewProj[i];
 		}
+
+		data.mNumShadowCasters = numShadowCasters;
 
 		mPerFrameBuffer.Map(&data);
 

@@ -19,7 +19,7 @@ namespace na
 		int32_t mType;
 		int32_t mEnabled;
 		float mIntensity;
-		int32_t _padding0;
+		int32_t mShadowCastingIndex = -1;
 
 		Tuple3<float> mPosition;
 		float _padding1;
