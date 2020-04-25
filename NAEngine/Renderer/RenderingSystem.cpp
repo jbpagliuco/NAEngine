@@ -6,6 +6,7 @@
 #include "Base/Debug/Assert.h"
 #include "Base/File/File.h"
 #include "Base/OS/OS.h"
+#include "Base/Util/Timer.h"
 
 #include "NGA/NGACore.h"
 
@@ -18,6 +19,9 @@
 
 namespace na
 {
+	static constexpr int MAX_FRAMERATE = 1000;
+	static Timer RenderFrameTimer;
+
 	Scene MainScene;
 	ForwardRenderer FRenderer;
 
@@ -51,6 +55,8 @@ namespace na
 
 	bool RenderingSystemInit()
 	{
+		RenderFrameTimer.Start((int)((1.0f / MAX_FRAMERATE) * 1000.0f));
+
 		constexpr int width = 1600;
 		constexpr int height = 900;
 
@@ -110,22 +116,26 @@ namespace na
 
 	void RenderingSystemDoFrame()
 	{
-		Scene* mainScene = Scene::Get();
+		if (RenderFrameTimer.Elapsed()) {
+			Scene* mainScene = Scene::Get();
 
-		const auto& cameras = mainScene->GetCameras();
+			const auto& cameras = mainScene->GetCameras();
 
-		// Make sure there's only a single camera rendering to the back buffer.
-		size_t numMainCameras = std::count_if(cameras.begin(), cameras.end(), [](const Camera* a) { return a->mEnabled && a->mRenderTarget == nullptr; });
-		NA_ASSERT(numMainCameras == 1, "Only one camera can render to the back buffer.");
+			// Make sure there's only a single camera rendering to the back buffer.
+			size_t numMainCameras = std::count_if(cameras.begin(), cameras.end(), [](const Camera* a) { return a->mEnabled && a->mRenderTarget == nullptr; });
+			NA_ASSERT(numMainCameras == 1, "Only one camera can render to the back buffer.");
 
-		for (const auto& camera : cameras) {
-			if (!camera->mEnabled) {
-				continue;
+			for (const auto& camera : cameras) {
+				if (!camera->mEnabled) {
+					continue;
+				}
+
+				FRenderer.BeginRender();
+				FRenderer.RenderScene(*mainScene, *camera);
+				FRenderer.EndRender();
 			}
 
-			FRenderer.BeginRender();
-			FRenderer.RenderScene(*mainScene, *camera);
-			FRenderer.EndRender();
+			RenderFrameTimer.Start();
 		}
 	}
 

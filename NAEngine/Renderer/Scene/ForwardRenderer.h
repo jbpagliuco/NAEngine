@@ -3,9 +3,7 @@
 #include "SceneRenderer.h"
 
 #include "Renderer/Scene/ShadowMap.h"
-
-#define HLSL_CPP_INCLUDE
-#include "Renderer/Shader/EngineShaders/shader_common.hlsli"
+#include "Renderer/Shader/EngineShaders/shader_constants.h"
 
 namespace na
 {

@@ -4,11 +4,9 @@
 
 #include "NGA/NGACommandContext.h"
 
-#include "Light.h"
-#include "Resources/ConstantBuffer.h"
-
-#define HLSL_CPP_INCLUDE
-#include "Shader/EngineShaders/shader_common.hlsli"
+#include "Renderer/Light.h"
+#include "Renderer/Resources/ConstantBuffer.h"
+#include "Renderer/Shader/EngineShaders/shader_constants.h"
 
 namespace na
 {
@@ -38,6 +36,8 @@ namespace na
 		USER
 	};
 
+	static_assert((int)TextureRegisters::SHADOWMAP0 - (int)TextureRegisters::SHADOWMAP0 + 1 == MAX_SHADOWMAPS);
+
 
 	struct LightsData
 	{
@@ -55,7 +55,7 @@ namespace na
 		bool Initialize();
 		void Shutdown();
 		
-		void SetPerFrameData(const Matrix &cameraViewProj, const Matrix &lightViewProj);
+		void SetPerFrameData(const Matrix &cameraViewProj, Matrix lightViewProj[MAX_SHADOWMAPS]);
 		void SetObjectTransform(const Matrix &transform);
 
 		void SetLightsData(const LightsData &lights);

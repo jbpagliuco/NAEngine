@@ -276,6 +276,7 @@
     <ClInclude Include="Resources\RenderTarget.h" />
     <ClInclude Include="Scene\Camera.h" />
     <ClInclude Include="Scene\ShadowMap.h" />
+    <ClInclude Include="Shader\EngineShaders\shader_constants.h" />
     <ClInclude Include="Shader\Shader.h" />
     <ClInclude Include="Shader\ShaderProgram.h" />
     <ClInclude Include="StateManager.h" />

@@ -9,10 +9,8 @@
 #include "Renderer/Resources/ConstantBuffer.h"
 #include "Renderer/Scene/Scene.h"
 #include "Renderer/Scene/Renderables/RenderableInstance.h"
+#include "Renderer/Shader/EngineShaders/shader_constants.h"
 #include "Renderer/Shader/Shader.h"
-
-#define HLSL_CPP_INCLUDE
-#include "Renderer/Shader/EngineShaders/shader_common.hlsli"
 
 namespace na
 {

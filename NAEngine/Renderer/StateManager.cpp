@@ -1,16 +1,12 @@
 #include "StateManager.h"
 
-#include <d3d11.h>
-
-#include "Resources/IndexBuffer.h"
-#include "Resources/RenderTarget.h"
-#include "Resources/VertexBuffer.h"
-#include "Shader/ShaderProgram.h"
-
-#include "Rect.h"
-#include "Renderer.h"
-
-#include "Light.h"
+#include "Renderer/Light.h"
+#include "Renderer/Rect.h"
+#include "Renderer/Renderer.h"
+#include "Renderer/Resources/IndexBuffer.h"
+#include "Renderer/Resources/RenderTarget.h"
+#include "Renderer/Resources/VertexBuffer.h"
+#include "Renderer/Shader/ShaderProgram.h"
 
 namespace na
 {
@@ -20,7 +16,7 @@ namespace na
 	struct PerFrameData
 	{
 		Matrix cameraViewProj;
-		Matrix lightViewProj;
+		Matrix lightViewProj[MAX_SHADOWMAPS];
 	};
 
 	struct PerObjectData
@@ -58,11 +54,14 @@ namespace na
 		mLightsBuffer.Shutdown();
 	}
 	
-	void StateManager::SetPerFrameData(const Matrix &cameraViewProj, const Matrix &lightViewProj)
+	void StateManager::SetPerFrameData(const Matrix &cameraViewProj, Matrix lightViewProj[MAX_SHADOWMAPS])
 	{
 		PerFrameData data;
 		data.cameraViewProj = cameraViewProj;
-		data.lightViewProj = lightViewProj;
+
+		for (int i = 0; i < STATIC_ARRAY_SIZE(data.lightViewProj); ++i) {
+			data.lightViewProj[i] = lightViewProj[i];
+		}
 
 		mPerFrameBuffer.Map(&data);
 

@@ -1,26 +1,7 @@
 #if !defined(SHADER_COMMON_HLSLI)
 #define SHADER_COMMON_HLSLI
 
-#define MAX_LIGHTS 4
-
-#define CB_REGISTER_PER_FRAME b0
-#define CB_REGISTER_PER_OBJECT b1
-#define CB_REGISTER_LIGHTS b2
-#define CB_REGISTER_MATERIAL b3
-
-#define TEX_REGISTER_SHADOWMAP t0
-#define TEX_REGISTER_USER0 t1
-#define TEX_REGISTER_USER1 t2
-
-#define SAM_REGISTER_SHADOWMAP s0
-#define SAM_REGISTER_USER0 s1
-#define SAM_REGISTER_USER1 s2
-
-#define SHADOWMAP_SIZE 1024
-#define MAX_SHADOWMAPS 1
-
-#if !defined(HLSL_CPP_INCLUDE)
-
+#include <shader_constants.h>
 #include <light.hlsli>
 
 // Constant Buffers
@@ -44,8 +25,8 @@ cbuffer cbLights : register(CB_REGISTER_LIGHTS)
 	Light lights[MAX_LIGHTS];
 };
 
-Texture2D shadowMap : register(TEX_REGISTER_SHADOWMAP);
-SamplerState shadowMapSampler : register(SAM_REGISTER_SHADOWMAP);
+Texture2D shadowMap : register(TEX_REGISTER_SHADOWMAP0);
+SamplerState shadowMapSampler : register(SAM_REGISTER_SHADOWMAP0);
 
 struct CommonVertexInput
 {
@@ -65,7 +46,5 @@ struct CommonPixelInput
 	float2 texCoord : TEXCOORD0;
 	float4 projTexCoord : TEXCOORD1;
 };
-
-#endif // !defined(HLSL_CPP_INCLUDE)
 
 #endif // defined(SHADER_COMMON_HLSLI)

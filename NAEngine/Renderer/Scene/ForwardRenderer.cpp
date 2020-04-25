@@ -64,7 +64,7 @@ namespace na
 
 		Matrix cameraView = camera.mTransform.GetMatrix().Inverted();
 		Matrix cameraProj = Matrix::PerspectiveFOVLH(camera.mFOV, NA_Renderer->GetWindow().GetAspectRatio(), camera.mNear, camera.mFar);
-		NA_RStateManager->SetPerFrameData(cameraProj * cameraView, directionalLight->GetViewProj());
+		NA_RStateManager->SetPerFrameData(cameraProj * cameraView, &directionalLight->GetViewProj());
 
 		// Bind render target
 		RenderTarget* rt = (camera.mRenderTarget == nullptr) ? NA_RMainRenderTarget : camera.mRenderTarget;
