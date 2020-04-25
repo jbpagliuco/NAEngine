@@ -28,6 +28,8 @@ namespace na
 
 		int mWidth = 0;
 		int mHeight = 0;
+
+		int mArraySize = 1;
 	};
 
 	class NGATexture
