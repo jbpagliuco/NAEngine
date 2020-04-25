@@ -17,6 +17,7 @@
 #define SAM_REGISTER_USER1 s2
 
 #define SHADOWMAP_SIZE 1024
+#define MAX_SHADOWMAPS 1
 
 #if !defined(HLSL_CPP_INCLUDE)
 

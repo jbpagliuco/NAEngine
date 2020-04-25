@@ -4,12 +4,13 @@
 
 #include "Renderer/Scene/ShadowMap.h"
 
+#define HLSL_CPP_INCLUDE
+#include "Renderer/Shader/EngineShaders/shader_common.hlsli"
+
 namespace na
 {
 	class Matrix;
 	class Shader;
-
-	constexpr int MAX_SHADOWMAPS = 1;
 
 	class ForwardRenderer : public SceneRenderer
 	{
