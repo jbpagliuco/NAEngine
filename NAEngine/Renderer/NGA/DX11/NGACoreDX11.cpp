@@ -44,6 +44,8 @@ namespace na
 		debugInfoQueue->SetBreakOnCategory(D3D11_MESSAGE_CATEGORY_RESOURCE_MANIPULATION, true);
 		debugInfoQueue->SetBreakOnCategory(D3D11_MESSAGE_CATEGORY_EXECUTION, true);
 		debugInfoQueue->SetBreakOnCategory(D3D11_MESSAGE_CATEGORY_SHADER, true);
+
+		NGA_DX11_SAFE_RELEASE(debugInfoQueue);
 #endif
 	}
 
