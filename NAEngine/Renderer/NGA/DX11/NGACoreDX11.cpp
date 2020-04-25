@@ -28,6 +28,23 @@ namespace na
 
 		HRESULT hr = D3D11CreateDevice(nullptr, driverType, nullptr, creationFlags, &featureLevel, 1, sdkVersion, &NgaDx11State.mDevice, nullptr, &NgaDx11State.mContext);
 		NA_FATAL_ERROR(SUCCEEDED(hr), "Failed to create DirectX 11 device.");
+
+#if defined(_NA_DEBUG)
+		ID3D11InfoQueue* debugInfoQueue;
+		hr = NgaDx11State.mDevice->QueryInterface(__uuidof(ID3D11InfoQueue), (void **)&debugInfoQueue);
+		NA_ASSERT(SUCCEEDED(hr));
+
+		debugInfoQueue->SetBreakOnCategory(D3D11_MESSAGE_CATEGORY_MISCELLANEOUS, true);
+		debugInfoQueue->SetBreakOnCategory(D3D11_MESSAGE_CATEGORY_INITIALIZATION, true);
+		debugInfoQueue->SetBreakOnCategory(D3D11_MESSAGE_CATEGORY_CLEANUP, true);
+		debugInfoQueue->SetBreakOnCategory(D3D11_MESSAGE_CATEGORY_COMPILATION, true);
+		debugInfoQueue->SetBreakOnCategory(D3D11_MESSAGE_CATEGORY_STATE_CREATION, true);
+		debugInfoQueue->SetBreakOnCategory(D3D11_MESSAGE_CATEGORY_STATE_SETTING, true);
+		debugInfoQueue->SetBreakOnCategory(D3D11_MESSAGE_CATEGORY_STATE_GETTING, true);
+		debugInfoQueue->SetBreakOnCategory(D3D11_MESSAGE_CATEGORY_RESOURCE_MANIPULATION, true);
+		debugInfoQueue->SetBreakOnCategory(D3D11_MESSAGE_CATEGORY_EXECUTION, true);
+		debugInfoQueue->SetBreakOnCategory(D3D11_MESSAGE_CATEGORY_SHADER, true);
+#endif
 	}
 
 	void NGAShutdown()
