@@ -4,15 +4,17 @@
 #include <map>
 
 #include "Base/Debug/Assert.h"
+#include "Base/File/File.h"
 #include "Base/OS/OS.h"
 
 #include "NGA/NGACore.h"
 
-#include "ImguiRenderer.h"
-#include "Renderer.h"
-#include "Scene/Camera.h"
-#include "Scene/Scene.h"
-#include "Scene/ForwardRenderer.h"
+#include "Renderer/ImguiRenderer.h"
+#include "Renderer/Renderer.h"
+#include "Renderer/Scene/Camera.h"
+#include "Renderer/Scene/ForwardRenderer.h"
+#include "Renderer/Scene/Scene.h"
+#include "Renderer/Shader/Shader.h"
 
 namespace na
 {
@@ -21,6 +23,30 @@ namespace na
 
 	static std::map<std::string, Texture*> EngineTextures;
 	static std::map<std::string, RenderTarget*> EngineRenderTargets;
+
+	static std::map<EngineShader, Shader*> EngineShaders;
+
+
+	static void RegisterEngineShader(EngineShader name, const std::string& shaderFilename)
+	{
+		NA_ASSERT_RETURN(EngineShaders.find(name) == EngineShaders.end(), "Registering engine shader (%d) multiple times.", name);
+
+		std::string fullPath;
+		bool success = GetFullFilepath(fullPath, shaderFilename);
+		NA_ASSERT_RETURN(success, "Failed to find %s", shaderFilename);
+
+		AssetID id = RequestAsset(fullPath);
+		EngineShaders[name] = Shader::Get(id);
+	}
+
+	static void UnregisterAllEngineShaders()
+	{
+		for (auto& it : EngineShaders) {
+			ReleaseAsset(it.second->GetID());
+		}
+
+		EngineShaders.erase(EngineShaders.begin(), EngineShaders.end());
+	}
 
 
 	bool RenderingSystemInit()
@@ -51,6 +77,11 @@ namespace na
 
 	bool RenderingSystemInitLate()
 	{
+		// Create engine shaders
+		RegisterEngineShader(EngineShader::SHADOWMAP, "build_shadow_map.shaderx");
+
+		ShadowMapSystemInitialize();
+
 		FRenderer.Initialize();
 
 		return true;
@@ -59,6 +90,10 @@ namespace na
 	void RenderingSystemShutdown()
 	{
 		FRenderer.Shutdown();
+
+		ShadowMapSystemShutdown();
+
+		UnregisterAllEngineShaders();
 
 		ImguiRendererSystemShutdown();
 
@@ -129,5 +164,13 @@ namespace na
 		NA_ASSERT_RETURN_VALUE(EngineRenderTargets.find(name) != EngineRenderTargets.end(), nullptr, "Failed to find engine render target %s", name.c_str());
 
 		return EngineRenderTargets[name];
+	}
+
+
+	Shader* GetEngineShader(EngineShader shader)
+	{
+		NA_ASSERT_RETURN_VALUE(EngineShaders.find(shader) != EngineShaders.end(), nullptr, "Failed to find engine shader (%d)", shader);
+
+		return EngineShaders[shader];
 	}
 }

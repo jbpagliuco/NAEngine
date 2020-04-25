@@ -39,7 +39,7 @@ namespace na
 		// Bind constant data
 		const NGABuffer& constantBuffer = mConstantBuffer.GetBuffer();
 		if (constantBuffer.IsConstructed()) {
-			NA_RStateManager->BindConstantBuffer(constantBuffer, NGA_SHADER_STAGE_PIXEL, 0);
+			NA_RStateManager->BindUserConstantBuffer(constantBuffer, NGA_SHADER_STAGE_PIXEL, 0);
 		}
 
 		// Bind textures

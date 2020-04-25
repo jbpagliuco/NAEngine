@@ -235,6 +235,7 @@
     <ClCompile Include="Resources\RenderTarget.cpp" />
     <ClCompile Include="Scene\Camera.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
+    <ClCompile Include="Scene\ShadowMap.cpp" />
     <ClCompile Include="Shader\Shader.cpp" />
     <ClCompile Include="Shader\ShaderProgram.cpp" />
     <ClCompile Include="StateManager.cpp" />
@@ -274,6 +275,7 @@
     <ClInclude Include="Resources\IndexBuffer.h" />
     <ClInclude Include="Resources\RenderTarget.h" />
     <ClInclude Include="Scene\Camera.h" />
+    <ClInclude Include="Scene\ShadowMap.h" />
     <ClInclude Include="Shader\Shader.h" />
     <ClInclude Include="Shader\ShaderProgram.h" />
     <ClInclude Include="StateManager.h" />

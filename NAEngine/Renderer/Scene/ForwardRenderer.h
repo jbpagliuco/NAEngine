@@ -2,13 +2,14 @@
 
 #include "SceneRenderer.h"
 
-#include "Renderer/Resources/ConstantBuffer.h"
-#include "Renderer/Resources/RenderTarget.h"
+#include "Renderer/Scene/ShadowMap.h"
 
 namespace na
 {
 	class Matrix;
 	class Shader;
+
+	constexpr int MAX_SHADOWMAPS = 1;
 
 	class ForwardRenderer : public SceneRenderer
 	{
@@ -21,12 +22,7 @@ namespace na
 
 		virtual void RenderScene(Scene &scene, const Camera &camera) override;
 
-	private:
-		void BuildShadowMap(Scene &scene, const Camera &camera, const Matrix &lightVP);
-
 	public:
-		static RenderTarget mShadowMap;
-		Shader* mBuildShadowMapShader;
-		ConstantBuffer mShadowMapLightsBuffers[2];
+		ShadowMap mShadowMaps[MAX_SHADOWMAPS];
 	};
 }

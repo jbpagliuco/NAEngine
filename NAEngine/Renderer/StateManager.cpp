@@ -150,12 +150,12 @@ namespace na
 	}
 
 
-	void StateManager::BindConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot)
+	void StateManager::BindUserConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot)
 	{
-		BindConstantBufferRealSlot(constantBuffer, stage, slot + (int)ShaderConstantBuffers::USER);
+		BindConstantBuffer(constantBuffer, stage, slot + (int)ShaderConstantBuffers::USER);
 	}
 
-	void StateManager::BindConstantBufferRealSlot(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot)
+	void StateManager::BindConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot)
 	{
 		NA_ASSERT_RETURN(stage != NGA_SHADER_STAGE_ALL, "Need to implement this.");
 

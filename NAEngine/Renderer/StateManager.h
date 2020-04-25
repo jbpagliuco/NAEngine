@@ -34,7 +34,7 @@ namespace na
 
 	enum class TextureRegisters
 	{
-		SHADOWMAP,
+		SHADOWMAP0,
 		USER
 	};
 
@@ -71,8 +71,8 @@ namespace na
 
 		void BindShader(const ShaderProgram &shader);
 
+		void BindUserConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot);
 		void BindConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot);
-		void BindConstantBufferRealSlot(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot);
 
 		void BindUserShaderResource(const Texture &texture, NGAShaderStage stage, int slot);
 		void BindUserShaderResource(const NGAShaderResourceView &view, NGAShaderStage stage, int slot);

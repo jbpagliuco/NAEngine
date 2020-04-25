@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 
+#include "Base/Math/Matrix.h"
 #include "Base/Util/Util.h"
 
 namespace na
@@ -32,6 +33,8 @@ namespace na
 		float mConstantAttenuation;
 		float mLinearAttenuation;
 		float mQuadraticAttenuation;
+
+		Matrix GetViewProj()const;
 	};
 
 	Light* CreateLight(LightType type);
