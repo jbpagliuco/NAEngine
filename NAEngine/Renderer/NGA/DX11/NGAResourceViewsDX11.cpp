@@ -18,36 +18,33 @@ namespace na
 		NA_ASSERT_RETURN_VALUE(!IsConstructed(), false);
 		NA_ASSERT_RETURN_VALUE(texture.IsConstructed(), false);
 
-		D3D11_SHADER_RESOURCE_VIEW_DESC desc{};
-		
+		HRESULT hr;
+
 		const NGATextureDesc &texDesc = texture.GetDesc();
-		switch (texDesc.mType) {
-		case NGATextureType::TEXTURE2D:
-		{
-			ID3D11Texture2D *tex;
-			texture.mResource->QueryInterface(&tex);
-
-			D3D11_TEXTURE2D_DESC texDesc;
-			tex->GetDesc(&texDesc);
-
-			desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-			desc.Format = texDesc.Format;
-			desc.Texture2D.MipLevels = -1;
-			
-			tex->Release();
-			break;
+		if (!NGAFormatIsTypeless(texDesc.mFormat)) {
+			// We can just create the view without any description.
+			hr = NgaDx11State.mDevice->CreateShaderResourceView(texture.mResource, nullptr, &mView);
 		}
+		else {
+			D3D11_SHADER_RESOURCE_VIEW_DESC desc{};
 
-		default:
-			NA_ASSERT_RETURN_VALUE(false, false, "Unimplemented texture type.");
-		};
-
-		// Convert typeless format to strict format
-		if (NGAFormatIsTypeless(texture.mDesc.mFormat)) {
 			desc.Format = NGATypelessFormatToColorDXGI(texture.mDesc.mFormat);
+
+			switch (texDesc.mType) {
+			case NGATextureType::TEXTURE2D:
+			{
+				desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+				desc.Texture2D.MipLevels = -1;
+				break;
+			}
+
+			default:
+				NA_ASSERT_RETURN_VALUE(false, false, "Unimplemented texture type.");
+			};
+
+			hr = NgaDx11State.mDevice->CreateShaderResourceView(texture.mResource, &desc, &mView);
 		}
 		
-		const HRESULT hr = NgaDx11State.mDevice->CreateShaderResourceView(texture.mResource, &desc, &mView);
 		NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "ID3D11Device::CreateShaderResourceView() failed with HRESULT %X", hr);
 
 		return true;
