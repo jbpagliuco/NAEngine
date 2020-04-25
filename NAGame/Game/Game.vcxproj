@@ -225,12 +225,19 @@
     <FxCompile Include="*.hlsl">
       <ExcludedFromBuild Condition="true">true</ExcludedFromBuild>
     </FxCompile>
+    <FxCompile Include="data\shaders\render_depth\render_depth.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Tools.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="data\materials\earth.matx" />
+    <None Include="data\materials\ice.matx" />
+    <None Include="data\materials\render_depth.matx" />
     <None Include="data\render_targets\test_render_target.rtx" />
+    <None Include="data\shaders\render_depth\render_depth.shaderx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

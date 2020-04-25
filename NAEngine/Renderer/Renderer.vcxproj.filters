@@ -108,6 +108,12 @@
     <ClCompile Include="NGA\DX11\NGAPipelineStateDX11.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Resources\RenderTarget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Material\MaterialContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RenderingSystem.h">
@@ -224,6 +230,12 @@
     <ClInclude Include="NGA\NGAPipelineStateDefs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Resources\RenderTarget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Material\MaterialContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -234,5 +246,9 @@
     <None Include="Shader\HLSL\shader_common_ps.hlsli" />
     <None Include="Shader\HLSL\shader_common_vs.hlsli" />
     <None Include="Shader\EngineShaders\material.hlsli" />
+    <None Include="Shader\EngineShaders\build_shadow_map\build_shadow_map.shaderx" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shader\EngineShaders\build_shadow_map\build_shadow_map.hlsl" />
   </ItemGroup>
 </Project>

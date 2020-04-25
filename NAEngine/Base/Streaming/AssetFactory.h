@@ -21,6 +21,7 @@ namespace na
 		static bool Exists(AssetID id);
 
 		static size_t NumInstances();
+		static bool ReportEmpty();
 
 		AssetID GetID()const;
 

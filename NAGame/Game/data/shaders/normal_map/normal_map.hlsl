@@ -2,19 +2,13 @@
 #include <shader_common_ps.hlsli>
 
 // Vertex/Pixel inputs
-struct VertexInput {
-	float3 position : POSITION0;
-	float3 normal   : NORMAL0;
-	float2 texCoord : TEXCOORD0;
+struct VertexInput : CommonVertexInput
+{
 	float3 tangent : TANGENT0;
 };
 
-struct PixelInput {
-	float4 svpos : SV_POSITION;
-	float3 position : POSITION0;
-	float3 normal : NORMAL0;
-	float2 texCoord : TEXCOORD0;
-	float3 tangent : TANGENT0;
+struct PixelInput : CommonPixelInput
+{
 };
 
 // Material data
@@ -33,20 +27,11 @@ SamplerState NormalSampler : register(SAM_REGISTER_USER1);
 
 PixelInput vsMain(VertexInput input)
 {
-	float4 pos = float4(input.position, 1.0f);
-
-	PixelInput output;
-
-	output.svpos = mul(mul(viewProj, world), pos);
-	output.position = mul(world, pos);
-
-	float4 normal = float4(normalize(input.normal), 0.0f);
-	output.normal = mul(normal, worldInverseTranspose).xyz;
+	PixelInput output = (PixelInput)0;
+	SetCommonPixelInputValues((CommonPixelInput)output, (CommonVertexInput)input);
 
 	float4 tangent = float4(normalize(input.tangent), 0.0f);
 	output.tangent = mul(worldInverseTranspose, tangent).xyz;
-
-	output.texCoord = input.texCoord;
 
 	return output;
 }
@@ -63,7 +48,7 @@ float4 psMain(PixelInput input) : SV_TARGET
 	float3 P = input.position;
 	float3 V = normalize(eyePosition - P).xyz;
 
-	LightingResult lit = ComputeFullLighting(matSpecular, V, P, normal);
+	LightingResult lit = ComputeFullLighting(matSpecular, V, P, normal, input.projTexCoord);
 
 	float4 texColor = DiffuseTexture.Sample(DiffuseSampler, texCoord);
 

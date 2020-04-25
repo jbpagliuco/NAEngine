@@ -26,8 +26,6 @@ namespace na
 
 		NGATextureBindFlags mBindFlags = NGA_TEXTURE_BIND_NONE;
 
-		NGADepthBufferFormat mDepthBufferFormat = NGADepthBufferFormat::NONE;
-
 		int mWidth = 0;
 		int mHeight = 0;
 	};
@@ -55,6 +53,7 @@ namespace na
 
 		friend class NGAShaderResourceView;
 		friend class NGARenderTargetView;
+		friend class NGADepthStencilView;
 	};
 
 

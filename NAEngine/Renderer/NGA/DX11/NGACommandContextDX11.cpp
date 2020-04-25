@@ -24,7 +24,7 @@ namespace na
 		NgaDx11State.mContext->DrawIndexed(indexCount, 0, 0);
 	}
 
-	void NGACommandContext::MapBufferData(const NGABuffer &buffer, void *data)
+	void NGACommandContext::MapBufferData(const NGABuffer &buffer, const void *data)
 	{
 		const NGABufferUsage usage = buffer.mDesc.mUsage;
 		NA_ASSERT_RETURN((usage & NGA_BUFFER_USAGE_CPU_WRITE) || (usage & NGA_BUFFER_USAGE_CPU_READ_WRITE));
@@ -134,7 +134,8 @@ namespace na
 
 	void NGACommandContext::BindRenderTarget(const NGARenderTargetView &renderTarget, const NGADepthStencilView &depthStencilView)
 	{
-		NgaDx11State.mContext->OMSetRenderTargets(1, &renderTarget.mView, depthStencilView.mView);
+		const int numRenderTargets = renderTarget.IsConstructed() ? 1 : 0;
+		NgaDx11State.mContext->OMSetRenderTargets(numRenderTargets, &renderTarget.mView, depthStencilView.mView);
 	}
 }
 

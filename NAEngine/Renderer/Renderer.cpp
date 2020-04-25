@@ -4,6 +4,7 @@
 
 #include "Rect.h"
 #include "Scene/Camera.h"
+#include "RenderingSystem.h"
 
 namespace na
 {
@@ -18,13 +19,17 @@ namespace na
 		swapChainDesc.mWindow = params.mWindow;
 		bool success = mSwapChain.Construct(swapChainDesc);
 		NA_FATAL_ERROR(success, "Failed to construct swap chain.");
+				
+		RenderTargetTextureDesc depthBufferDesc;
+		depthBufferDesc.mFormat = NGAFormat::D24_UNORM_S8_UINT;
+		depthBufferDesc.mType = NGATextureType::TEXTURE2D;
+		depthBufferDesc.mUsage = NGAUsage::GPU_WRITE;
 
-		NGATextureDesc rtDesc;
-		rtDesc.mDepthBufferFormat = NGADepthBufferFormat::DEPTH24_STENCIL;
-		rtDesc.mWidth = params.mWidth;
-		rtDesc.mHeight = params.mHeight;
-		success = mMainRenderTarget.Initialize(rtDesc, mSwapChain);
+		success = mMainRenderTarget.Initialize(mSwapChain, depthBufferDesc, params.mWidth, params.mHeight);
 		NA_FATAL_ERROR(success, "Failed to create main render target view.");
+
+		// Register the back buffer render target as an engine resource
+		RegisterEngineRenderTarget("backBuffer", &mMainRenderTarget);
 
 		if (!mStateManager.Initialize()) {
 			return false;
@@ -42,12 +47,12 @@ namespace na
 
 	void Renderer::BeginRender()
 	{
-		NGARect r;
+		/*NGARect r;
 		r.x = 0.0f;
 		r.y = 0.0f;
 		r.width = (float)mWindow.width;
 		r.height = (float)mWindow.height;
-		mStateManager.SetViewport(r);
+		mStateManager.SetViewport(r);*/
 	}
 
 	void Renderer::EndRender()

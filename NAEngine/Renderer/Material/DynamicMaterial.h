@@ -9,6 +9,7 @@
 namespace na
 {
 	class DynamicMaterialInstance;
+	class RenderTarget;
 	class Texture;
 
 	struct DynamicMaterialParameterInfo
@@ -17,10 +18,10 @@ namespace na
 		size_t mLength;
 	};
 
-	class DynamicMaterial : public Material, public AssetFactory<DynamicMaterial>
+	class DynamicMaterial : public Material
 	{
 	public:
-		virtual bool Initialize(AssetID shaderID, size_t parameterByteLength, const DeserializationParameterMap &map, void *defaultParameterData, const std::vector<AssetID> &defaultTextures);
+		virtual bool Initialize(Shader *shader, size_t parameterByteLength, const DeserializationParameterMap &map, void *defaultParameterData, const std::vector<const Texture*> &defaultTextures);
 		virtual void Shutdown() override;
 
 		virtual void Bind() override;
@@ -32,7 +33,7 @@ namespace na
 		int GetTextureParameterIndex(const std::string &name);
 
 		void* GetDefaultParameterData()const;
-		std::vector<AssetID> GetDefaultTextures()const;
+		std::vector<const Texture*> GetDefaultTextures()const;
 
 		ConstantBuffer mConstantBuffer;
 
@@ -41,10 +42,12 @@ namespace na
 		std::map<std::string, int> mTextureParameterMap;
 
 		void *mDefaultParameterData;
-		std::vector<Texture*> mDefaultTextures;
+		std::vector<const Texture*> mDefaultTextures;
 
 		friend class DynamicMaterialInstance;
 	};
+
+
 
 	class DynamicMaterialInstance
 	{
@@ -56,16 +59,14 @@ namespace na
 		void BindDynamicData();
 
 		void SetFloatParameter(const std::string &name, float value);
-		void SetVectorParameter(const std::string &name, const Vector4f &value);
-
-		void SetTextureParameter(const std::string &name, const std::string &filename);
-		void SetTextureParameter(const std::string &name, Texture *pTexture);
-
+		void SetVectorParameter(const std::string& name, const Vector4f& value);
+		void SetTextureParameter(const std::string &name, const Texture *pTexture);
+		
 	private:
 		DynamicMaterial *mParent;
 
 		void *mParameterData;
-		std::vector<Texture*> mTextures;
+		std::vector<const Texture*> mTextures;
 	};
 
 	DynamicMaterialInstance* CreateDynamicMaterialInstance(DynamicMaterial *pParent);

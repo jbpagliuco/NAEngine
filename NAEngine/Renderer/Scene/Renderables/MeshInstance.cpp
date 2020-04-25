@@ -4,6 +4,7 @@
 
 #include "Renderer/Material/Material.h"
 #include "Renderer/Material/DynamicMaterial.h"
+#include "Renderer/Material/MaterialContainer.h"
 #include "Renderer/Mesh.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/Resources/IndexBuffer.h"
@@ -11,12 +12,14 @@
 
 namespace na
 {
-	bool MeshInstance::Initialize(AssetID meshID, AssetID matID)
+	bool MeshInstance::Initialize(Mesh *mesh, MaterialContainer *materialContainer)
 	{
-		mMesh = Mesh::Get(meshID);
-		mMaterial = GetMaterialByID(matID);
+		mMesh = mesh;
+		mMaterialContainer = materialContainer;
 
-		const VertexShader &vs = mMaterial->GetShader()->GetVertexShader();
+		Material* material = mMaterialContainer->GetMaterial();
+
+		const VertexShader &vs = material->GetShader()->GetVertexShader();
 
 		// Build the input layout
 		NGAVertexFormatDesc vDesc;
@@ -36,10 +39,10 @@ namespace na
 
 			NA_ASSERT_RETURN_VALUE(found, false,
 				"Shader '%s' requires %s%d, but mesh '%s' does not supply it.",
-				GetAssetFilename(matID),
+				GetAssetFilename(material->GetShader()->GetID()),
 				GetSemanticName(shaderInput.mSemanticType),
 				shaderInput.mSemanticIndex,
-				GetAssetFilename(meshID));
+				GetAssetFilename(mMesh->GetID()));
 
 			vDesc.mAttributes.push_back(attr);
 		}
@@ -51,41 +54,16 @@ namespace na
 	
 	void MeshInstance::Shutdown()
 	{
-		NA_SAFE_RELEASE_ASSET_OBJECT(mMesh);
-
-		if (mDynMaterialInst) {
-			mDynMaterialInst->Shutdown();
-			DestroyDynamicMaterialInstance(mDynMaterialInst);
-			mDynMaterialInst = nullptr;
-		}
-
-		ReleaseMaterial(mMaterial);
-		mMaterial = nullptr;
+		mMesh = nullptr;
+		mMaterialContainer = nullptr;
 
 		mInputLayout.Destruct();
 	}
 
-	DynamicMaterialInstance* MeshInstance::CreateDynamicMaterialInstance()
+	void MeshInstance::Render(bool bindMaterial)
 	{
-		NA_ASSERT_RETURN_VALUE(mMaterial->GetMaterialType() == MATERIAL_TYPE_DYNAMIC, nullptr);
-
-		mDynMaterialInst = na::CreateDynamicMaterialInstance(static_cast<DynamicMaterial*>(mMaterial));
-		NA_ASSERT(mDynMaterialInst != nullptr, "Failed to create dynamic material instance");
-
-		return mDynMaterialInst;
-	}
-
-	DynamicMaterialInstance* MeshInstance::GetDynamicMaterialInstance()
-	{
-		return mDynMaterialInst;
-	}
-
-	void MeshInstance::Render()
-	{
-		mMaterial->Bind();
-
-		if (mDynMaterialInst) {
-			mDynMaterialInst->BindDynamicData();
+		if (bindMaterial) {
+			mMaterialContainer->Bind();
 		}
 
 		NA_RStateManager->BindInputLayout(mInputLayout);

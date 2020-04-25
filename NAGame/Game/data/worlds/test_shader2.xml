@@ -5,11 +5,15 @@
 		<name>Camera</name>
 		<transform>
 			<position>
-				<x>0</x>
-				<y>2</y>
+				<x>10</x>
+				<y>5</y>
 				<z>-10</z>
 			</position>
-			<rotation type="lookat"/>
+			<rotation>
+				<x>10</x>
+				<y>-45</y>
+				<z>0</z>
+			</rotation>
 		</transform>
 		<components>
 			<component type="CameraComponent">
@@ -18,26 +22,7 @@
 				<near>0.1</near>
 				<far>100</far>
 			</component>
-		</components>
-	</gameobject>
-	
-	<gameobject>
-		<name>Camera</name>
-		<transform>
-			<position>
-				<x>0</x>
-				<y>2</y>
-				<z>-10</z>
-			</position>
-			<rotation type="lookat"/>
-		</transform>
-		<components>
-			<component type="CameraComponent">
-				<enabled>true</enabled>
-				<fov>45</fov>
-				<near>0.1</near>
-				<far>100</far>
-				<renderTarget>test_render_target.rtx</renderTarget>
+			<component type="BasicMovementComponent">
 			</component>
 		</components>
 	</gameobject>
@@ -86,6 +71,22 @@
 		<name>Cube</name>
 		<transform>
 			<position>
+				<x>-3</x>
+				<y>3</y>
+			</position>
+		</transform>
+		<components>
+			<component type="StaticMeshComponent">
+				<mesh>cube.meshx</mesh>
+				<material>ice.matx</material>
+			</component>
+		</components>
+	</gameobject>
+
+	<gameobject>
+		<name>Cube1</name>
+		<transform>
+			<position>
 				<x>0</x>
 				<y>3</y>
 			</position>
@@ -93,12 +94,23 @@
 		<components>
 			<component type="StaticMeshComponent">
 				<mesh>cube.meshx</mesh>
-				<material>
-					tex_dyn.matx
-					<overrides>
-						<override name="DiffuseTexture" type="texture">test_render_target.rtx</override>
-					</overrides>
-				</material>
+				<material>ice.matx</material>
+			</component>
+		</components>
+	</gameobject>
+
+	<gameobject>
+		<name>Sphere</name>
+		<transform>
+			<position>
+				<x>3</x>
+				<y>3</y>
+			</position>
+		</transform>
+		<components>
+			<component type="StaticMeshComponent">
+				<mesh>sphere.meshx</mesh>
+				<material>earth.matx</material>
 			</component>
 		</components>
 	</gameobject>
@@ -112,7 +124,7 @@
 				<z>4</z>
 			</position>
 			<scale>
-				<x>10</x>
+				<x>10.1</x>
 				<y>10</y>
 				<z>1</z>
 			</scale>
@@ -130,7 +142,7 @@
 		<name>PointLight</name>
 		<transform>
 			<position>
-				<x>1</x>
+				<x>3</x>
 				<y>2</y>
 				<z>3</z>
 			</position>
@@ -158,11 +170,12 @@
 		<name>DirectionalLight</name>
 		<transform>
 			<position>
-				<x>1</x>
-				<y>3</y>
-				<z>-10</z>
+				<x>0</x>
+				<y>5</y>
+				<z>-5</z>
 			</position>
 			<rotation type="lookat">
+				<z>3</z>
 			</rotation>
 			<scale>
 				<x>0.25</x>

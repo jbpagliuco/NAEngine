@@ -163,6 +163,15 @@ namespace na
 		return IsSystemKeyDown(keyCode, ctrl, shift, alt);
 	}
 
+	bool IsKeyPressed(int keyCode, bool ctrl, bool shift, bool alt)
+	{
+		if (ImguiRendererGetFocus()) {
+			return false;
+		}
+		
+		return IsSystemKeyPressed(keyCode);
+	}
+
 	bool IsSystemKeyDown(int keyCode, bool ctrl, bool shift, bool alt)
 	{
 		return KeyStates[keyCode].mDown &&
@@ -172,14 +181,20 @@ namespace na
 	}
 
 
-	bool IsSystemKeyPressed(int keyCode)
+	bool IsSystemKeyPressed(int keyCode, bool ctrl, bool shift, bool alt)
 	{
-		return KeyStates[keyCode].mPressed;
+		return KeyStates[keyCode].mPressed &&
+			MODIFIER_KEY(ctrl, KeyStates[VK_CONTROL].mDown) &&
+			MODIFIER_KEY(shift, KeyStates[VK_SHIFT].mDown) &&
+			MODIFIER_KEY(alt, KeyStates[VK_MENU].mDown);
 	}
 
-	bool IsSystemKeyReleased(int keyCode)
+	bool IsSystemKeyReleased(int keyCode, bool ctrl, bool shift, bool alt)
 	{
-		return KeyStates[keyCode].mReleased;
+		return KeyStates[keyCode].mReleased &&
+			MODIFIER_KEY(ctrl, KeyStates[VK_CONTROL].mDown) &&
+			MODIFIER_KEY(shift, KeyStates[VK_SHIFT].mDown) &&
+			MODIFIER_KEY(alt, KeyStates[VK_MENU].mDown);
 	}
 
 	bool IsShiftDown()

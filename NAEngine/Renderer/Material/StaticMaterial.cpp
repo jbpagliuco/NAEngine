@@ -5,11 +5,9 @@
 
 namespace na
 {
-	NA_FACTORY_SETUP(StaticMaterial);
-
-	bool StaticMaterial::Initialize(AssetID shaderID, void *parameterData, size_t parameterByteLength, const std::vector<AssetID> &textures)
+	bool StaticMaterial::Initialize(Shader *shader, void *parameterData, size_t parameterByteLength, const std::vector<const Texture*> &textures)
 	{
-		if (!Material::Initialize(shaderID)) {
+		if (!Material::Initialize(shader)) {
 			return false;
 		}
 
@@ -17,8 +15,11 @@ namespace na
 			return false;
 		}
 
-		for (auto &texID : textures) {
-			mTextures.push_back(Texture::Get(texID));
+		mTextures = textures;
+
+		// Make sure all of these textures are shader resources
+		for (auto& texture : mTextures) {
+			NA_RENDER_ASSERT_RETURN_VALUE(texture->IsShaderResource(), false, "Static material was given a texture that is not a shader resource.");
 		}
 
 		return true;
@@ -29,10 +30,6 @@ namespace na
 		Material::Shutdown();
 
 		mConstantBuffer.Shutdown();
-
-		for (auto &texture : mTextures) {
-			ReleaseAsset(texture->GetID());
-		}
 	}
 
 	void StaticMaterial::Bind()
@@ -47,8 +44,8 @@ namespace na
 
 		// Bind textures
 		for (int i = 0; i < mTextures.size(); ++i) {
-			NA_RStateManager->BindShaderResource(mTextures[i]->GetShaderResourceView(), NGA_SHADER_STAGE_PIXEL, i);
-			NA_RStateManager->BindSamplerState(mTextures[i]->GetSamplerState(), NGA_SHADER_STAGE_PIXEL, i);
+			NA_RStateManager->BindUserShaderResource(*mTextures[i], NGA_SHADER_STAGE_PIXEL, i);
+			NA_RStateManager->BindUserSamplerState(mTextures[i]->GetSamplerState(), NGA_SHADER_STAGE_PIXEL, i);
 		}
 	}
 }

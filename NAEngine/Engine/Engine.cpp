@@ -31,7 +31,9 @@ namespace na
 		std::string mSystemName;
 
 		InitFunc mSystemInit;
+		InitFunc mSystemInitLate;
 		Func mSystemShutdown;
+		Func mSystemShutdownLate;
 
 		Func mDoFrame;
 		Func mDoFrameLate;
@@ -39,7 +41,9 @@ namespace na
 		SystemRegistration() :
 			mSystemName(""),
 			mSystemInit(nullptr),
+			mSystemInitLate(nullptr),
 			mSystemShutdown(nullptr),
+			mSystemShutdownLate(nullptr),
 			mDoFrame(nullptr),
 			mDoFrameLate(nullptr)
 		{
@@ -83,6 +87,7 @@ namespace na
 			SystemRegistration reg;
 			reg.mSystemName = "Rendering System";
 			reg.mSystemInit = RenderingSystemInit;
+			reg.mSystemInitLate = RenderingSystemInitLate;
 			reg.mSystemShutdown = RenderingSystemShutdown;
 			SystemRegistry.push_back(reg);
 		}
@@ -123,7 +128,7 @@ namespace na
 			SystemRegistration reg;
 			reg.mSystemName = "Mesh System";
 			reg.mSystemInit = MeshSystemInit;
-			reg.mSystemShutdown = MeshSystemShutdown;
+			reg.mSystemShutdownLate = MeshSystemShutdown;
 			SystemRegistry.push_back(reg);
 		}
 
@@ -131,7 +136,7 @@ namespace na
 			SystemRegistration reg;
 			reg.mSystemName = "Material System";
 			reg.mSystemInit = MaterialSystemInit;
-			reg.mSystemShutdown = MaterialSystemShutdown;
+			reg.mSystemShutdownLate = MaterialSystemShutdown;
 			SystemRegistry.push_back(reg);
 		}
 
@@ -139,7 +144,7 @@ namespace na
 			SystemRegistration reg;
 			reg.mSystemName = "Texture System";
 			reg.mSystemInit = TextureAssetSystemInit;
-			reg.mSystemShutdown = TextureAssetSystemShutdown;
+			reg.mSystemShutdownLate = TextureAssetSystemShutdown;
 			SystemRegistry.push_back(reg);
 		}
 	}
@@ -154,6 +159,15 @@ namespace na
 			LogInfo(ENGINE_LOG_FILTER, "Initializing %s", sys.mSystemName.c_str());
 			if (sys.mSystemInit != nullptr) {
 				bool ret = sys.mSystemInit();
+				NA_ASSERT_RETURN_VALUE(ret, false, "Failed to initialize system '%s'.", sys.mSystemName.c_str());
+			}
+		}
+
+		for (auto &sys : SystemRegistry)
+		{
+			LogInfo(ENGINE_LOG_FILTER, "Initializing %s", sys.mSystemName.c_str());
+			if (sys.mSystemInitLate != nullptr) {
+				bool ret = sys.mSystemInitLate();
 				NA_ASSERT_RETURN_VALUE(ret, false, "Failed to initialize system '%s'.", sys.mSystemName.c_str());
 			}
 		}

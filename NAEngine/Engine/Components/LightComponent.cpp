@@ -3,6 +3,7 @@
 #include "Base/Math/Transform.h"
 #include "Renderer/Light.h"
 #include "Renderer/Scene/Scene.h"
+#include "Engine/Input/Input.h"
 
 namespace na
 {
@@ -14,6 +15,12 @@ namespace na
 
 	void LightComponent::UpdateLate(float deltaTime)
 	{
+		if (mLight->mType == (int)LightType::POINT) {
+			if (IsKeyPressed('M')) {
+				mLight->mEnabled = !mLight->mEnabled;
+			}
+		}
+
 		// Update some of the light properties from our transform.
 		mLight->mPosition = mTransform->mPosition.AsTuple3();
 

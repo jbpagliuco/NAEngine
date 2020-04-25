@@ -7,26 +7,20 @@
 
 namespace na
 {
-	class Material;
+	class MaterialContainer;
 	class Mesh;
-	class DynamicMaterialInstance;
 
 	class MeshInstance : public RenderableInstance
 	{
 	public:
-		bool Initialize(AssetID meshID, AssetID matID);
+		bool Initialize(Mesh *mesh, MaterialContainer *materialContainer);
 		void Shutdown();
 
-		DynamicMaterialInstance* CreateDynamicMaterialInstance();
-		DynamicMaterialInstance* GetDynamicMaterialInstance();
-
-		virtual void Render() override;
+		virtual void Render(bool bindMaterial = true) override;
 
 	private:
 		Mesh *mMesh;
-		Material *mMaterial;
-
-		DynamicMaterialInstance *mDynMaterialInst;
+		MaterialContainer *mMaterialContainer;
 
 		NGAInputLayout mInputLayout;
 	};

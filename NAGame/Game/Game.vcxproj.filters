@@ -33,5 +33,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="data\render_targets\test_render_target.rtx" />
+    <None Include="data\shaders\render_depth\render_depth.shaderx" />
+    <None Include="data\materials\render_depth.matx" />
+    <None Include="data\materials\ice.matx" />
+    <None Include="data\materials\earth.matx" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="data\shaders\render_depth\render_depth.hlsl" />
   </ItemGroup>
 </Project>

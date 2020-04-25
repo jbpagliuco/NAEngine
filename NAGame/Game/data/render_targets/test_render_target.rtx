@@ -8,6 +8,13 @@
     <width>1600</width>
     <height>900</height>
 
-    <depth>24</depth>
-    <stencil>true</stencil>
+	<colorMap>
+		<shaderResource>true</shaderResource>
+	</colorMap>
+
+	<depthMap>
+		<depth>32</depth>
+		<stencil>false</stencil>
+		<shaderResource>true</shaderResource>
+	</depthMap>
 </root>

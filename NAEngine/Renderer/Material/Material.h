@@ -10,11 +10,11 @@ namespace na
 	class Material
 	{
 	public:
-		bool Initialize(AssetID shaderID);
+		bool Initialize(Shader *shader);
 		virtual void Shutdown();
 
 		virtual void Bind();
-
+		
 		virtual int GetMaterialType()const = 0;
 
 		inline Shader* GetShader()const { return mShader; }
@@ -22,7 +22,4 @@ namespace na
 	private:
 		Shader *mShader;
 	};
-
-	Material* GetMaterialByID(AssetID matID);
-	void ReleaseMaterial(Material *pMaterial);
 }

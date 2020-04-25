@@ -1,15 +1,14 @@
 #include "DynamicMaterial.h"
 
 #include "Renderer/Renderer.h"
+#include "Renderer/Resources/RenderTarget.h"
 #include "Renderer/Resources/Texture.h"
 
 namespace na
 {
-	NA_FACTORY_SETUP(DynamicMaterial);
-
-	bool DynamicMaterial::Initialize(AssetID shaderID, size_t parameterByteLength, const DeserializationParameterMap &map, void *defaultParameterData, const std::vector<AssetID> &defaultTextures)
+	bool DynamicMaterial::Initialize(Shader *shader, size_t parameterByteLength, const DeserializationParameterMap &map, void *defaultParameterData, const std::vector<const Texture*> &defaultTextures)
 	{
-		if (!Material::Initialize(shaderID)) {
+		if (!Material::Initialize(shader)) {
 			return false;
 		}
 
@@ -42,8 +41,11 @@ namespace na
 		mDefaultParameterData = NA_ALLOC(parameterByteLength);
 		memcpy(mDefaultParameterData, defaultParameterData, parameterByteLength);
 
-		for (auto &texID : defaultTextures) {
-			mDefaultTextures.push_back(Texture::Get(texID));
+		mDefaultTextures = defaultTextures;
+
+		// Make sure all of these textures are shader resources
+		for (auto& texture : mDefaultTextures) {
+			NA_RENDER_ASSERT_RETURN_VALUE(texture->IsShaderResource(), false, "Static material was given a texture that is not a shader resource.");
 		}
 
 		return true;
@@ -56,9 +58,6 @@ namespace na
 		mConstantBuffer.Shutdown();
 
 		NA_FREE(mDefaultParameterData);
-		for (auto &texture : mDefaultTextures) {
-			ReleaseAsset(texture->GetID());
-		}
 	}
 
 	void DynamicMaterial::Bind() 
@@ -73,8 +72,8 @@ namespace na
 
 		// Bind textures
 		for (int i = 0; i < mDefaultTextures.size(); ++i) {
-			NA_RStateManager->BindShaderResource(mDefaultTextures[i]->GetShaderResourceView(), NGA_SHADER_STAGE_PIXEL, i);
-			NA_RStateManager->BindSamplerState(mDefaultTextures[i]->GetSamplerState(), NGA_SHADER_STAGE_PIXEL, i);
+			NA_RStateManager->BindUserShaderResource(*mDefaultTextures[i], NGA_SHADER_STAGE_PIXEL, i);
+			NA_RStateManager->BindUserSamplerState(mDefaultTextures[i]->GetSamplerState(), NGA_SHADER_STAGE_PIXEL, i);
 		}
 	}
 
@@ -98,14 +97,9 @@ namespace na
 		return mDefaultParameterData;
 	}
 
-	std::vector<AssetID> DynamicMaterial::GetDefaultTextures()const
+	std::vector<const Texture*> DynamicMaterial::GetDefaultTextures()const
 	{
-		std::vector<AssetID> textures;
-		for (auto &it : mDefaultTextures) {
-			textures.push_back(it->GetID());
-		}
-
-		return textures;
+		return mDefaultTextures;
 	}
 
 
@@ -119,9 +113,8 @@ namespace na
 		mParameterData = NA_ALLOC(mParent->mConstantBuffer.GetSize());
 		memcpy(mParameterData, mParent->GetDefaultParameterData(), mParent->mConstantBuffer.GetSize());
 		
-		for (auto &assetId : mParent->GetDefaultTextures()) {
-			AddAssetRef(assetId);
-			mTextures.push_back(Texture::Get(assetId));
+		for (auto &tex : mParent->GetDefaultTextures()) {
+			mTextures.push_back(tex);
 		}
 	}
 
@@ -129,9 +122,7 @@ namespace na
 	{
 		NA_FREE(mParameterData);
 
-		for (auto &pTex : mTextures) {
-			ReleaseAsset(pTex->GetID());
-		}
+		mTextures.erase(mTextures.begin(), mTextures.end());
 	}
 
 	void DynamicMaterialInstance::BindDynamicData()
@@ -141,8 +132,10 @@ namespace na
 
 		// Bind textures
 		for (int i = 0; i < mTextures.size(); ++i) {
-			NA_RStateManager->BindShaderResource(mTextures[i]->GetShaderResourceView(), NGA_SHADER_STAGE_PIXEL, i);
-			NA_RStateManager->BindSamplerState(mTextures[i]->GetSamplerState(), NGA_SHADER_STAGE_PIXEL, i);
+			if (mTextures[i] != nullptr) {
+				NA_RStateManager->BindUserShaderResource(*mTextures[i], NGA_SHADER_STAGE_PIXEL, i);
+				NA_RStateManager->BindUserSamplerState(mTextures[i]->GetSamplerState(), NGA_SHADER_STAGE_PIXEL, i);
+			}
 		}
 	}
 
@@ -165,18 +158,12 @@ namespace na
 		}
 	}
 
-	void DynamicMaterialInstance::SetTextureParameter(const std::string &name, const std::string &filename)
+	void DynamicMaterialInstance::SetTextureParameter(const std::string &name, const Texture *pTexture)
 	{
-		AssetID textureID = RequestAsset(filename);
-		SetTextureParameter(name, Texture::Get(textureID));
-	}
+		NA_ASSERT_RETURN(pTexture->IsShaderResource(), "Texture is not a shader resource.");
 
-	void DynamicMaterialInstance::SetTextureParameter(const std::string &name, Texture *pTexture)
-	{
 		int index = mParent->GetTextureParameterIndex(name);
 		NA_ASSERT_RETURN(index >= 0 && index < mTextures.size(), "Failed to find valid index for a texture parameter with name '%s'", name);
-
-		ReleaseAsset(mTextures[index]->GetID());
 
 		mTextures[index] = pTexture;
 	}

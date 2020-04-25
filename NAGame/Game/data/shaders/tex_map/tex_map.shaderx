@@ -25,6 +25,5 @@
     </vertexShader>
 
     <pixelShader>
-        <file>tex_map_ps.hlsl</file>
     </pixelShader>
 </root>

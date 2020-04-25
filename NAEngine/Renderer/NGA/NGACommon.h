@@ -31,18 +31,25 @@ namespace na
 {
 	enum class NGAFormat
 	{
+		// Color formats
 		R32_FLOAT = 0,
 		R32G32_FLOAT,
 		R32G32B32_FLOAT,
 		R32G32B32A32_FLOAT,
-		UNKNOWN
-	};
+		
+		// Depth formats
+		D16_UNORM,
+		D24_UNORM_S8_UINT,
+		D32_FLOAT,
 
-	enum class NGADepthBufferFormat
-	{
-		NONE = 0,
-		DEPTH16,
-		DEPTH24_STENCIL
+		// Typeless formats
+		R24G8_TYPELESS,
+		R32_TYPELESS,
+		R32G32_TYPELESS,
+		R32G32B32_TYPELESS,
+		R32G32B32A32_TYPELESS,
+
+		UNKNOWN
 	};
 
 	enum class NGAUsage
@@ -138,4 +145,6 @@ namespace na
 
 	const char* GetSemanticName(NGAVertexSemanticType type);
 	NGAVertexSemanticType GetSemanticType(const char *name);
+
+	bool NGAFormatIsTypeless(NGAFormat format);
 }

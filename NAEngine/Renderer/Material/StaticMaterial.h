@@ -9,10 +9,10 @@ namespace na
 {
 	class Texture;
 
-	class StaticMaterial : public Material, public AssetFactory<StaticMaterial>
+	class StaticMaterial : public Material
 	{
 	public:
-		bool Initialize(AssetID shaderID, void *parameterData, size_t parameterByteLength, const std::vector<AssetID> &textures);
+		bool Initialize(Shader *shader, void *parameterData, size_t parameterByteLength, const std::vector<const Texture*> &textures);
 		virtual void Shutdown() override;
 
 		virtual void Bind() override;
@@ -22,6 +22,6 @@ namespace na
 	private:
 		ConstantBuffer mConstantBuffer;
 
-		std::vector<Texture*> mTextures;
+		std::vector<const Texture*> mTextures;
 	};
 }

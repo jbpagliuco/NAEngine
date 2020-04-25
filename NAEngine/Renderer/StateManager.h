@@ -17,11 +17,27 @@ namespace na
 	class NGASamplerState;
 	class NGAShaderResourceView;
 	class IndexBuffer;
+	class RenderTarget;
 	class ShaderProgram;
 	class Texture;
 	class VertexBuffer;
 
 	struct Rect;
+
+	enum class ShaderConstantBuffers
+	{
+		PERFRAME = 0,
+		OBJECTDATA,
+		LIGHTS,
+		USER
+	};
+
+	enum class TextureRegisters
+	{
+		SHADOWMAP,
+		USER
+	};
+
 
 	struct LightsData
 	{
@@ -34,10 +50,12 @@ namespace na
 	class StateManager
 	{
 	public:
+		StateManager();
+
 		bool Initialize();
 		void Shutdown();
 		
-		void SetViewProjMatrices(const Matrix &view, const Matrix &proj);
+		void SetPerFrameData(const Matrix &cameraViewProj, const Matrix &lightViewProj);
 		void SetObjectTransform(const Matrix &transform);
 
 		void SetLightsData(const LightsData &lights);
@@ -54,25 +72,36 @@ namespace na
 		void BindShader(const ShaderProgram &shader);
 
 		void BindConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot);
+		void BindConstantBufferRealSlot(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot);
+
+		void BindUserShaderResource(const Texture &texture, NGAShaderStage stage, int slot);
+		void BindUserShaderResource(const NGAShaderResourceView &view, NGAShaderStage stage, int slot);
+		void BindShaderResource(const Texture &texture, NGAShaderStage stage, int slot);
 		void BindShaderResource(const NGAShaderResourceView &view, NGAShaderStage stage, int slot);
+
+		void BindUserSamplerState(const NGASamplerState &samplerState, NGAShaderStage stage, int slot);
 		void BindSamplerState(const NGASamplerState &samplerState, NGAShaderStage stage, int slot);
 
+		void ClearRenderTarget(const RenderTarget &renderTarget, const float *clearColor, bool clearDepth);
 		void ClearRenderTarget(const NGARenderTargetView &renderTargetView, const float *clearColor);
 		void ClearDepthStencilView(const NGADepthStencilView &depthStencilView);
 
-		void BindRenderTarget(const Texture &renderTarget);
+		void BindRenderTarget(const RenderTarget &renderTarget);
 		void BindRenderTarget(const NGARenderTargetView &renderTargetView, const NGADepthStencilView &depthStencilView);
 
-		void MapBufferData(const NGABuffer &buffer, void *data);
+		void MapBufferData(const NGABuffer &buffer, const void *data);
 
 		void DrawIndexed(const IndexBuffer &buffer);
 		
 	private:
 		NGACommandContext mCommandContext;
 
-		ConstantBuffer mViewProjBuffer;
+		ConstantBuffer mPerFrameBuffer;
 		ConstantBuffer mObjectDataBuffer;
 
 		ConstantBuffer mLightsBuffer;
+
+		const NGARenderTargetView *mBoundRenderTarget;
+		const NGADepthStencilView *mBoundDepthStencilView;
 	};
 }

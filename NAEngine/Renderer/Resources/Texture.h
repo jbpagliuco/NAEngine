@@ -10,12 +10,18 @@
 
 namespace na
 {
-	class Texture : public AssetFactory<Texture>
+	struct TextureDesc
+	{
+		NGATextureDesc mTextureDesc;
+		NGASamplerStateDesc mSamplerStateDesc;
+	};
+
+	class Texture
 	{
 	public:
-		bool Initialize(const NGATextureDesc &textureDesc, const NGASamplerStateDesc &samplerStateDesc);
-		bool Initialize(const NGATextureDesc &textureDesc, const NGASamplerStateDesc &samplerStateDesc, const std::string &filename);
-		bool Initialize(const NGATextureDesc &textureDesc, const NGASwapChain &swapChain);
+		bool Initialize(const TextureDesc& textureDesc, bool releaseTextureReference);
+		bool Initialize(const TextureDesc& textureDesc, const std::string& filename, bool releaseTextureReference);
+		bool Initialize(const NGASwapChain& swapChain);
 		void Shutdown();
 
 		const NGATexture& GetResource()const;
@@ -25,15 +31,19 @@ namespace na
 		const NGADepthStencilView& GetDepthStencilView()const;
 		const NGAShaderResourceView& GetShaderResourceView()const;
 
+		bool IsShaderResource()const;
+
 	private:
-		bool CreateViews(const NGATextureDesc &textureDesc);
+		bool CreateViews(const TextureDesc& textureDesc);
 
 	private:
 		NGATexture mTexture;
 		NGASamplerState mSampler;
 
+		NGAShaderResourceView mShaderResourceView;
+
+		// A texture can either have a render target view or a depth stencil view, but never both.
 		NGARenderTargetView mRenderTargetView;
 		NGADepthStencilView mDepthStencilView;
-		NGAShaderResourceView mShaderResourceView;
 	};
 }

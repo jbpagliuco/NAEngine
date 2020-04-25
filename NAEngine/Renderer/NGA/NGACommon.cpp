@@ -59,4 +59,9 @@ namespace na
 		NA_ASSERT(false, "Failed to find semantic type with name '%s'", name);
 		return NGAVertexSemanticType::UNKNOWN;
 	}
+
+	bool NGAFormatIsTypeless(NGAFormat format)
+	{
+		return format >= NGAFormat::R24G8_TYPELESS && format <= NGAFormat::R32G32B32A32_TYPELESS;
+	}
 }

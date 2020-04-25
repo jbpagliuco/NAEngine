@@ -6,6 +6,8 @@
 
 namespace na
 {
+	class MaterialAsset;
+
 	class StaticMeshComponent : public GameComponent
 	{
 	public:
@@ -17,6 +19,9 @@ namespace na
 		virtual void UpdateLate(float deltaTime) override;
 
 	private:
+		AssetID mMeshID;
+		MaterialAsset *mMaterialAsset;
+
 		MeshInstance mMeshInstance;
 	};
 }
