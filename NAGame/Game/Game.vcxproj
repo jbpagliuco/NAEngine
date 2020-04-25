@@ -225,9 +225,6 @@
     <FxCompile Include="*.hlsl">
       <ExcludedFromBuild Condition="true">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="data\shaders\render_depth\render_depth.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Tools.h" />

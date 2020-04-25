@@ -298,8 +298,8 @@
     <None Include="Shader\HLSL\shader_common_vs.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shader\EngineShaders\build_shadow_map\build_shadow_map.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    <FxCompile Include="*.hlsl">
+      <ExcludedFromBuild Condition="true">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
