@@ -73,6 +73,11 @@ namespace na
 		return mView != other.mView;
 	}
 
+	void NGAShaderResourceView::GenerateMips()const
+	{
+		NgaDx11State.mContext->GenerateMips(mView);
+	}
+
 
 	bool NGARenderTargetView::Construct(const NGATexture &texture)
 	{

@@ -24,7 +24,7 @@ namespace na
 
 		void DrawIndexed(unsigned int indexCount);
 
-		void MapBufferData(const NGABuffer &buffer, void *data);
+		void MapBufferData(const NGABuffer &buffer, const void *data);
 
 		void SetViewport(const NGARect &rect, float minDepth = 0.0f, float maxDepth = 1.0f);
 

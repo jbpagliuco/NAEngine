@@ -47,12 +47,12 @@ namespace na
 
 	void Renderer::BeginRender()
 	{
-		NGARect r;
+		/*NGARect r;
 		r.x = 0.0f;
 		r.y = 0.0f;
 		r.width = (float)mWindow.width;
 		r.height = (float)mWindow.height;
-		mStateManager.SetViewport(r);
+		mStateManager.SetViewport(r);*/
 	}
 
 	void Renderer::EndRender()

@@ -344,6 +344,19 @@ namespace na
 
 
 
+	void Matrix::ExtractAngles(float& pitch, float& yaw, float& roll)
+	{
+		float elems[4][4];
+		AsFloats(elems);
+
+		pitch = atan2f(elems[1][2], elems[2][2]);
+		yaw = atan2f(-elems[0][2], sqrtf(elems[1][2] * elems[1][2] + elems[2][2] * elems[2][2]));
+		roll = atan2f(elems[0][1], elems[0][0]);
+	}
+
+
+
+
 
 	bool Matrix::DeterminantVector(__m128 & minor0, __m128 & minor1, __m128 & minor2, __m128 & minor3, __m128 & pOutDet)const
 	{

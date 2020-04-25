@@ -111,6 +111,8 @@ namespace na
 		void Transpose();
 		Matrix Transposed()const;
 
+		void ExtractAngles(float& pitch, float& yaw, float& roll);
+
 	private:
 		// Returns true if det != 0.
 		bool DeterminantVector(__m128 &minor0, __m128 &minor1, __m128 &minor2, __m128 &minor3, __m128 &pOutDet)const;

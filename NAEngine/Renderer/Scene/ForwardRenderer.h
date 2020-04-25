@@ -7,6 +7,7 @@
 
 namespace na
 {
+	class Matrix;
 	class Shader;
 
 	class ForwardRenderer : public SceneRenderer
@@ -21,7 +22,7 @@ namespace na
 		virtual void RenderScene(Scene &scene, const Camera &camera) override;
 
 	private:
-		void BuildShadowMap(Scene &scene, const Camera &camera);
+		void BuildShadowMap(Scene &scene, const Camera &camera, const Matrix &lightVP);
 
 	public:
 		static RenderTarget mShadowMap;

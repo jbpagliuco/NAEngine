@@ -10,9 +10,11 @@
 #include "Renderer/Scene/Scene.h"
 #include "Renderer/Shader/Shader.h"
 
+#define HLSL_CPP_INCLUDE
+#include "Renderer/Shader/EngineShaders/shader_common.hlsli"
+
 namespace na
 {
-	constexpr int SHADOW_MAP_SIZE = 1024;
 	constexpr const char* BUILD_SHADOW_MAP_SHADERX = "build_shadow_map.shaderx";
 
 	RenderTarget ForwardRenderer::mShadowMap;
@@ -20,8 +22,8 @@ namespace na
 	bool ForwardRenderer::Initialize()
 	{
 		RenderTargetDesc desc;
-		desc.mWidth = SHADOW_MAP_SIZE;
-		desc.mHeight = SHADOW_MAP_SIZE;
+		desc.mWidth = SHADOWMAP_SIZE;
+		desc.mHeight = SHADOWMAP_SIZE;
 		desc.mUseColorMap = true;
 		desc.mColorMapDesc.mFormat = NGAFormat::R32G32B32A32_FLOAT;
 		desc.mColorMapDesc.mShaderResource = false;
@@ -32,6 +34,10 @@ namespace na
 		desc.mDepthMapDesc.mShaderResource = true;
 		desc.mDepthMapDesc.mType = NGATextureType::TEXTURE2D;
 		desc.mDepthMapDesc.mUsage = NGAUsage::GPU_WRITE;
+		desc.mDepthMapDesc.mSamplerStateDesc.mAddressU = NGATextureAddressMode::CLAMP;
+		desc.mDepthMapDesc.mSamplerStateDesc.mAddressV = NGATextureAddressMode::CLAMP;
+		desc.mDepthMapDesc.mSamplerStateDesc.mAddressW = NGATextureAddressMode::CLAMP;
+		desc.mDepthMapDesc.mSamplerStateDesc.mFilter = NGATextureFilter::MIN_MAG_MIP_POINT;
 
 		bool success = mShadowMap.Initialize(desc);
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to create shadow map.");
@@ -69,17 +75,38 @@ namespace na
 
 	void ForwardRenderer::RenderScene(Scene &scene, const Camera &camera)
 	{
+		// TEMP: Grab the first directional light for shadows
+		Light *directionalLight = nullptr;
+		for (auto& light : scene.GetLights()) {
+			if (light->mType == (int)LightType::DIRECTIONAL && light->mEnabled) {
+				directionalLight = light;
+			}
+		}
+
+		Matrix lightView, lightProj;
+		Vector lightDir(directionalLight->mDirection.x, directionalLight->mDirection.y, directionalLight->mDirection.z, 1.0f);
+		Vector lightPos(directionalLight->mPosition.x, directionalLight->mPosition.y, directionalLight->mPosition.z, 1.0f);
+		lightView = Matrix::LookAtLH(lightPos, lightPos + lightDir.V3Normalize(), Vector(0.0f, 1.0f, 0.0f, 0.0f));
+		lightProj = Matrix::OrthoLH(20.0f, 20.0f, 0.1f, 100.0f);
+		Matrix lightVP = lightProj * lightView;
+
 		//////////////////////////////////////////////////////////////
 		// Build our shadow map
-		BuildShadowMap(scene, camera);
+		BuildShadowMap(scene, camera, lightVP);
 
 		//////////////////////////////////////////////////////////////
 		// Render the real scene
 
-		NA_RStateManager->SetViewProjMatrices(
-			camera.mTransform.GetMatrix().Inverted(),
-			Matrix::PerspectiveFOVLH(camera.mFOV, NA_Renderer->GetWindow().GetAspectRatio(), camera.mNear, camera.mFar)
-		);
+		NGARect r;
+		r.x = 0.0f;
+		r.y = 0.0f;
+		r.width = (float)NA_Renderer->GetWindow().width;
+		r.height = (float)NA_Renderer->GetWindow().height;
+		NA_RStateManager->SetViewport(r);
+
+		Matrix cameraView = camera.mTransform.GetMatrix().Inverted();
+		Matrix cameraProj = Matrix::PerspectiveFOVLH(camera.mFOV, NA_Renderer->GetWindow().GetAspectRatio(), camera.mNear, camera.mFar);
+		NA_RStateManager->SetPerFrameData(cameraProj * cameraView, lightVP);
 
 		// Bind render target
 		RenderTarget* rt = (camera.mRenderTarget == nullptr) ? NA_RMainRenderTarget : camera.mRenderTarget;
@@ -87,6 +114,10 @@ namespace na
 
 		const ColorF clearColor = COLOR_CORNFLOWERBLUE;
 		NA_RStateManager->ClearRenderTarget(*rt, clearColor.vArray, true);
+
+		// Bind shadow map texture
+		NA_RStateManager->BindShaderResource(mShadowMap.GetDepthMap().GetShaderResourceView(), NGA_SHADER_STAGE_PIXEL, (int)TextureRegisters::SHADOWMAP);
+		NA_RStateManager->BindSamplerState(mShadowMap.GetDepthMap().GetSamplerState(), NGA_SHADER_STAGE_PIXEL, (int)TextureRegisters::SHADOWMAP);
 
 		// Set up shader data
 		auto &lights = scene.GetLights();
@@ -107,35 +138,32 @@ namespace na
 			NA_RStateManager->SetObjectTransform(r->GetWorldTransform());
 			r->Render();
 		}
+
+		// Unbind shadow map
+		NA_RStateManager->BindShaderResource(NGAShaderResourceView::INVALID, NGA_SHADER_STAGE_PIXEL, (int)TextureRegisters::SHADOWMAP);
+		NA_RStateManager->BindSamplerState(NGASamplerState::INVALID, NGA_SHADER_STAGE_PIXEL, (int)TextureRegisters::SHADOWMAP);
 	}
 
-	void ForwardRenderer::BuildShadowMap(Scene& scene, const Camera& camera)
+	void ForwardRenderer::BuildShadowMap(Scene& scene, const Camera& camera, const Matrix &lightVP)
 	{
-		Light *directionalLight = nullptr;
-		for (auto& light : scene.GetLights()) {
-			if (light->mType == (int)LightType::DIRECTIONAL && light->mEnabled) {
-				directionalLight = light;
-			}
-		}
-
-		NA_ASSERT_RETURN(directionalLight != nullptr);
-
-		// Set shader
-		NA_RStateManager->BindShader(mBuildShadowMapShader->GetVertexShader());
-		NA_RStateManager->BindShader(mBuildShadowMapShader->GetPixelShader());
+		// Setup viewport
+		NGARect vp;
+		vp.x = 0.0f;
+		vp.y = 0.0f;
+		vp.width = 1024.0f;
+		vp.height = 1024.0f;
+		NA_RStateManager->SetViewport(vp);
 
 		// Setup render target
 		NA_RStateManager->BindRenderTarget(mShadowMap);
 		NA_RStateManager->ClearRenderTarget(mShadowMap, ColorF(COLOR_WHITE).vArray, true);
 
+		// Set shader
+		NA_RStateManager->BindShader(mBuildShadowMapShader->GetVertexShader());
+		NA_RStateManager->BindShader(mBuildShadowMapShader->GetPixelShader());
+
 		// Set light WVP constant buffer
-		Matrix lightView, lightProj;
-		Vector lightDir(directionalLight->mDirection.x, directionalLight->mDirection.y, directionalLight->mDirection.z, 1.0f);
-		Vector lightPos(directionalLight->mPosition.x, directionalLight->mPosition.y, directionalLight->mPosition.z, 1.0f);
-		lightView = Matrix::LookAtLH(lightPos, lightPos + lightDir.V3Normalize(), Vector(0.0f, 1.0f, 0.0f, 0.0f));
-		lightProj = Matrix::OrthoLH(100.0f, 100.0f, 0.1f, 100.0f);
-		Matrix lightWVP = lightProj * lightView;
-		NA_RStateManager->MapBufferData(mShadowMapLightsBuffers[0].GetBuffer(), &lightWVP);
+		NA_RStateManager->MapBufferData(mShadowMapLightsBuffers[0].GetBuffer(), &lightVP);
 		NA_RStateManager->BindConstantBufferRealSlot(mShadowMapLightsBuffers[0].GetBuffer(), NGA_SHADER_STAGE_VERTEX, 0);
 
 		for (auto &r : scene.GetRenderables()) {

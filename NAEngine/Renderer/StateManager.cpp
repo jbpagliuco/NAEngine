@@ -16,12 +16,11 @@ namespace na
 {
 	StateManager RendererStateManager;
 
-	enum class ShaderConstantBuffers
+
+	struct PerFrameData
 	{
-		VIEWPROJ = 0,
-		OBJECTDATA,
-		LIGHTS,
-		USER
+		Matrix cameraViewProj;
+		Matrix lightViewProj;
 	};
 
 	struct PerObjectData
@@ -40,8 +39,8 @@ namespace na
 
 	bool StateManager::Initialize()
 	{
-		bool success = mViewProjBuffer.Initialize(ConstantBufferUsage::CPU_WRITE, nullptr, sizeof(Matrix));
-		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize view proj buffer.");
+		bool success = mPerFrameBuffer.Initialize(ConstantBufferUsage::CPU_WRITE, nullptr, sizeof(PerFrameData));
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize per frame buffer.");
 
 		success = mObjectDataBuffer.Initialize(ConstantBufferUsage::CPU_WRITE, nullptr, sizeof(PerObjectData));
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize object data buffer.");
@@ -54,17 +53,20 @@ namespace na
 
 	void StateManager::Shutdown()
 	{
-		mViewProjBuffer.Shutdown();
+		mPerFrameBuffer.Shutdown();
 		mObjectDataBuffer.Shutdown();
 		mLightsBuffer.Shutdown();
 	}
 	
-	void StateManager::SetViewProjMatrices(const Matrix &view, const Matrix &proj)
+	void StateManager::SetPerFrameData(const Matrix &cameraViewProj, const Matrix &lightViewProj)
 	{
-		Matrix viewProj = proj * view;
-		mViewProjBuffer.Map(&viewProj);
+		PerFrameData data;
+		data.cameraViewProj = cameraViewProj;
+		data.lightViewProj = lightViewProj;
 
-		mCommandContext.BindConstantBuffer(mViewProjBuffer.GetBuffer(), NGA_SHADER_STAGE_VERTEX, (int)ShaderConstantBuffers::VIEWPROJ);
+		mPerFrameBuffer.Map(&data);
+
+		mCommandContext.BindConstantBuffer(mPerFrameBuffer.GetBuffer(), NGA_SHADER_STAGE_VERTEX, (int)ShaderConstantBuffers::PERFRAME);
 	}
 
 	void StateManager::SetObjectTransform(const Matrix &transform)
@@ -115,6 +117,17 @@ namespace na
 		mCommandContext.BindShader(shader.GetShader());
 	}
 
+
+	void StateManager::BindUserShaderResource(const Texture &texture, NGAShaderStage stage, int slot)
+	{
+		BindShaderResource(texture.GetShaderResourceView(), stage, slot + (int)TextureRegisters::USER);
+	}
+
+	void StateManager::BindUserShaderResource(const NGAShaderResourceView &view, NGAShaderStage stage, int slot)
+	{
+		BindShaderResource(view, stage, slot + (int)TextureRegisters::USER);
+	}
+
 	void StateManager::BindShaderResource(const Texture &texture, NGAShaderStage stage, int slot)
 	{
 		// Can't bind a shader resource if it's already been bound as an output
@@ -136,6 +149,7 @@ namespace na
 		mCommandContext.BindShaderResource(view, stage, slot);
 	}
 
+
 	void StateManager::BindConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot)
 	{
 		BindConstantBufferRealSlot(constantBuffer, stage, slot + (int)ShaderConstantBuffers::USER);
@@ -154,10 +168,17 @@ namespace na
 		}
 	}
 
+
+	void StateManager::BindUserSamplerState(const NGASamplerState &samplerState, NGAShaderStage stage, int slot)
+	{
+		BindSamplerState(samplerState, stage, slot + (int)TextureRegisters::USER);
+	}
+
 	void StateManager::BindSamplerState(const NGASamplerState &samplerState, NGAShaderStage stage, int slot)
 	{
 		mCommandContext.BindSamplerState(samplerState, stage, slot);
 	}
+
 
 	void StateManager::ClearRenderTarget(const RenderTarget &renderTarget, const float *clearColor, bool clearDepth)
 	{
@@ -192,7 +213,7 @@ namespace na
 		mCommandContext.BindRenderTarget(renderTargetView, depthStencilView);
 	}
 
-	void StateManager::MapBufferData(const NGABuffer &buffer, void *data)
+	void StateManager::MapBufferData(const NGABuffer &buffer, const void *data)
 	{
 		mCommandContext.MapBufferData(buffer, data);
 	}

@@ -20,6 +20,8 @@ namespace na
 		bool operator==(const NGAShaderResourceView& other)const;
 		bool operator!=(const NGAShaderResourceView& other)const;
 
+		void GenerateMips()const;
+
 #if defined(NGA_D3D11)
 	private:
 		struct ID3D11ShaderResourceView *mView = nullptr;

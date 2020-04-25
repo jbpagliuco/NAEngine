@@ -14,6 +14,8 @@ namespace na
 
 		bool mShaderResource = false;
 
+		NGASamplerStateDesc mSamplerStateDesc;
+
 		operator TextureDesc()const;
 	};
 

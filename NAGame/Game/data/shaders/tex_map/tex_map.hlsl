@@ -2,17 +2,12 @@
 #include <shader_common_ps.hlsli>
 
 // Vertex/Pixel inputs
-struct VertexInput {
-	float3 position : POSITION0;
-	float3 normal   : NORMAL0;
-	float2 texCoord : TEXCOORD0;
+struct VertexInput : CommonVertexInput
+{
 };
 
-struct PixelInput {
-	float4 svpos : SV_POSITION;
-	float3 position : POSITION0;
-	float3 normal : NORMAL0;
-	float2 texCoord : TEXCOORD0;
+struct PixelInput : CommonPixelInput
+{
 };
 
 // Material data
@@ -29,17 +24,8 @@ SamplerState Sampler : register(SAM_REGISTER_USER0);
 // Vertex shader
 PixelInput vsMain(VertexInput input)
 {
-	float4 pos = float4(input.position, 1.0f);
-
-	PixelInput output;
-
-	output.svpos = mul(mul(viewProj, world), pos);
-	output.position = mul(world, pos).xyz;
-
-	float4 normal = float4(normalize(input.normal), 0.0f);
-	output.normal = mul(normal, worldInverseTranspose).xyz;
-
-	output.texCoord = input.texCoord;
+	PixelInput output = (PixelInput)0;
+	SetCommonPixelInputValues((CommonPixelInput)output, (CommonVertexInput)input);
 
 	return output;
 }
@@ -51,7 +37,7 @@ float4 psMain(PixelInput input) : SV_TARGET
 	float3 N = normalize(input.normal);
 	float3 V = normalize(eyePosition - P).xyz;
 
-	LightingResult lit = ComputeFullLighting(matSpecular.w, V, P, N);
+	LightingResult lit = ComputeFullLighting(matSpecular.w, V, P, N, input.projTexCoord);
 
 	float2 texCoord = float2(1.0f, 1.0f) - input.texCoord;
 	float4 texColor = DiffuseTexture.Sample(Sampler, texCoord);

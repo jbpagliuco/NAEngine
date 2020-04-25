@@ -1,17 +1,11 @@
 cbuffer cbPerFrame : register(b0)
 {
-	matrix lightWVP;
+	matrix lightVP;
 };
 
 cbuffer cbPerObject : register(b1)
 {
 	matrix world;
-	matrix world1;
-	matrix world2;
-	matrix world31;
-	matrix world41;
-	matrix world51;
-	matrix world71;
 };
 
 // Vertex/Pixel inputs
@@ -30,7 +24,7 @@ PixelInput vsMain(VertexInput input)
 {
 	PixelInput output;
 
-	output.svpos = mul(mul(lightWVP, world), float4(input.position, 1.0f));
+	output.svpos = mul(mul(lightVP, world), float4(input.position, 1.0f));
 
 	return output;
 }
