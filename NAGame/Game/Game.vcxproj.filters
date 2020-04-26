@@ -40,5 +40,9 @@
     <None Include="data\materials\render_depth.matx" />
     <None Include="data\materials\ice.matx" />
     <None Include="data\materials\earth.matx" />
+    <None Include="data\skyboxes\grass.skyx" />
+    <None Include="data\skyboxes\desert.skyx" />
+    <None Include="data\skyboxes\snow.skyx" />
+    <None Include="data\skyboxes\sunset.skyx" />
   </ItemGroup>
 </Project>

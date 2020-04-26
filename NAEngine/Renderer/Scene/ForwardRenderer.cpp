@@ -3,6 +3,7 @@
 #include "Base/File/File.h"
 #include "Base/Util/Color.h"
 
+#include "Renderer/Pipelines/SkyboxPipeline.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/RenderingSystem.h"
 #include "Renderer/Scene/Camera.h"
@@ -17,9 +18,6 @@ namespace na
 		bool success = mShadowMapBuilder.Initialize(MAX_SHADOWMAPS);
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize shadowmap builder.");
 
-		success = mSkybox.Initialize("desertcube1024.dds");
-		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize skybox.");
-
 		success = mRenderPipelineState.Construct(NGAFixedFunctionStateDesc(), NGAGraphicsPipelineInputAssemblyDesc());
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to render pipeline state.");
 
@@ -31,7 +29,6 @@ namespace na
 
 	void ForwardRenderer::Shutdown()
 	{
-		mSkybox.Shutdown();
 		mShadowMapBuilder.Shutdown();
 
 		mRenderPipelineState.Destruct();
@@ -129,7 +126,9 @@ namespace na
 		}
 
 		// Draw skybox
-		mSkybox.Render(camera);
+		if (camera.mSkybox != nullptr) {
+			RenderSkybox(*camera.mSkybox, camera);
+		}
 
 		// Unbind shadow maps
 		NA_RStateManager->BindShaderResource(NGAShaderResourceView::INVALID, NGA_SHADER_STAGE_PIXEL, (int)TextureRegisters::SHADOWMAP);

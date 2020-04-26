@@ -114,10 +114,13 @@
     <ClCompile Include="Material\MaterialContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Pipelines\Skybox.cpp">
+    <ClCompile Include="Pipelines\ShadowMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Pipelines\ShadowMap.cpp">
+    <ClCompile Include="Resources\Skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Pipelines\SkyboxPipeline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -245,10 +248,13 @@
     <ClInclude Include="Shader\EngineShaders\shader_constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Pipelines\Skybox.h">
+    <ClInclude Include="Pipelines\ShadowMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Pipelines\ShadowMap.h">
+    <ClInclude Include="Resources\Skybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pipelines\SkyboxPipeline.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

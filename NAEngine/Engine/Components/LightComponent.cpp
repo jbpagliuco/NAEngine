@@ -7,37 +7,6 @@
 
 namespace na
 {
-	void LightComponent::Deactivate()
-	{
-		Scene::Get()->RemoveLight(mLight);
-		DestroyLight(mLight);
-	}
-
-	void LightComponent::UpdateLate(float deltaTime)
-	{
-		if (mLight->mType == (int)LightType::POINT) {
-			if (IsKeyPressed('M')) {
-				mLight->mEnabled = !mLight->mEnabled;
-			}
-		}
-
-		// Update some of the light properties from our transform.
-		mLight->mPosition = mTransform->mPosition.AsTuple3();
-
-		const Vector zAxis(0.0f, 0.0f, 1.0f, 0.0f);
-		mLight->mDirection = (mTransform->mRotation * zAxis).AsTuple3();
-	}
-
-	void LightComponent::SetLight(Light *pLight)
-	{
-		mLight = pLight;
-
-		Scene::Get()->AddLight(mLight);
-	}
-
-
-
-
 	void DirectionalLightComponent::Deserialize(DeserializationParameterMap &params)
 	{
 		Light *pLight = CreateLight(LightType::DIRECTIONAL);

@@ -125,8 +125,10 @@ namespace na
 				// Add the component to this game objects
 				obj->AddComponent(component);
 				component->SetOwner(obj);
+			}
 
-				// Activate the component
+			// Activate all the components on the game object
+			for (auto& component : obj->GetComponents()) {
 				component->Activate();
 			}
 

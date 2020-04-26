@@ -6,7 +6,8 @@ namespace na
 {
 	struct Light;
 
-	class LightComponent : public GameComponent
+	template <GameComponentType type>
+	class LightComponent : public GameComponentBase<type>
 	{
 	public:
 		virtual void Deactivate() override;
@@ -19,21 +20,23 @@ namespace na
 		Light *mLight;
 	};
 
-	class DirectionalLightComponent : public LightComponent
+	class DirectionalLightComponent : public LightComponent<GameComponentType::DIRECTIONAL_LIGHT>
 	{
 	public:
 		virtual void Deserialize(DeserializationParameterMap &params) override;
 	};
 
-	class PointLightComponent : public LightComponent
+	class PointLightComponent : public LightComponent<GameComponentType::POINT_LIGHT>
 	{
 	public:
 		virtual void Deserialize(DeserializationParameterMap &params) override;
 	};
 
-	class SpotLightComponent : public LightComponent
+	class SpotLightComponent : public LightComponent<GameComponentType::SPOT_LIGHT>
 	{
 	public:
 		virtual void Deserialize(DeserializationParameterMap &params) override;
 	};
 }
+
+#include "LightComponent.inl"

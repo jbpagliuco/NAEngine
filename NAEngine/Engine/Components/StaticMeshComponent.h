@@ -8,7 +8,7 @@ namespace na
 {
 	class MaterialAsset;
 
-	class StaticMeshComponent : public GameComponent
+	class StaticMeshComponent : public GameComponentBase<GameComponentType::STATIC_MESH>
 	{
 	public:
 		virtual void Deserialize(DeserializationParameterMap &params) override;

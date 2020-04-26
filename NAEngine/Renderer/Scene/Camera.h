@@ -6,6 +6,7 @@
 namespace na
 {
 	class RenderTarget;
+	class Skybox;
 
 	class Camera
 	{
@@ -16,6 +17,7 @@ namespace na
 			mNear(0.0f),
 			mFar(0.0f),
 			mRenderTarget(nullptr),
+			mSkybox(nullptr),
 			mId(NumCameras++) { }
 
 		Matrix GetViewProj()const;
@@ -29,6 +31,7 @@ namespace na
 		float mFar;
 
 		RenderTarget *mRenderTarget;
+		Skybox* mSkybox;
 
 		bool operator==(const Camera& other) { return other.mId == mId; }
 

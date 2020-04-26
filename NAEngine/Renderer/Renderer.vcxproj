@@ -213,7 +213,7 @@
     <ClCompile Include="Material\MaterialContainer.cpp" />
     <ClCompile Include="NGA\DX11\NGAPipelineStateDX11.cpp" />
     <ClCompile Include="NGA\DX11\NGASwapChainDX11.cpp" />
-    <ClCompile Include="Pipelines\Skybox.cpp" />
+    <ClCompile Include="Pipelines\SkyboxPipeline.cpp" />
     <ClCompile Include="Resources\ConstantBuffer.cpp" />
     <ClCompile Include="ImguiRenderer.cpp" />
     <ClCompile Include="Light.cpp" />
@@ -234,6 +234,7 @@
     <ClCompile Include="RenderingSystem.cpp" />
     <ClCompile Include="Resources\IndexBuffer.cpp" />
     <ClCompile Include="Resources\RenderTarget.cpp" />
+    <ClCompile Include="Resources\Skybox.cpp" />
     <ClCompile Include="Scene\Camera.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Pipelines\ShadowMap.cpp" />
@@ -252,7 +253,7 @@
     <ClInclude Include="NGA\NGAPipelineStateDefs.h" />
     <ClInclude Include="NGA\NGAShapes.h" />
     <ClInclude Include="NGA\NGASwapChain.h" />
-    <ClInclude Include="Pipelines\Skybox.h" />
+    <ClInclude Include="Pipelines\SkyboxPipeline.h" />
     <ClInclude Include="Resources\ConstantBuffer.h" />
     <ClInclude Include="ImguiRenderer.h" />
     <ClInclude Include="Light.h" />
@@ -276,6 +277,7 @@
     <ClInclude Include="RenderingSystem.h" />
     <ClInclude Include="Resources\IndexBuffer.h" />
     <ClInclude Include="Resources\RenderTarget.h" />
+    <ClInclude Include="Resources\Skybox.h" />
     <ClInclude Include="Scene\Camera.h" />
     <ClInclude Include="Pipelines\ShadowMap.h" />
     <ClInclude Include="Shader\EngineShaders\shader_constants.h" />

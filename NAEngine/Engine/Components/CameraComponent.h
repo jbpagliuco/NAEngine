@@ -7,7 +7,7 @@
 
 namespace na
 {
-	class CameraComponent : public GameComponent
+	class CameraComponent : public GameComponentBase<GameComponentType::CAMERA>
 	{
 	public:
 		virtual void Deserialize(DeserializationParameterMap &params) override;

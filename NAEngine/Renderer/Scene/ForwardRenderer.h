@@ -2,8 +2,8 @@
 
 #include "SceneRenderer.h"
 
+#include "Renderer/NGA/NGAPipelineState.h"
 #include "Renderer/Pipelines/ShadowMap.h"
-#include "Renderer/Pipelines/Skybox.h"
 #include "Renderer/Shader/EngineShaders/shader_constants.h"
 
 namespace na
@@ -26,6 +26,5 @@ namespace na
 		NGAPipelineState mRenderPipelineState;
 
 		ShadowMapBuilder mShadowMapBuilder;
-		Skybox mSkybox;
 	};
 }

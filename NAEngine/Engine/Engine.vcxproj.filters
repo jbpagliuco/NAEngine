@@ -75,6 +75,9 @@
     <ClCompile Include="Components\BasicMovementComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Components\SkyboxComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Assets\MaterialAsset.h">
@@ -143,5 +146,13 @@
     <ClInclude Include="Components\BasicMovementComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Components\SkyboxComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Components\LightComponent.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

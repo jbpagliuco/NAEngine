@@ -7,7 +7,7 @@
 
 namespace na
 {
-	class BasicMovementComponent : public GameComponent
+	class BasicMovementComponent : public GameComponentBase<GameComponentType::BASIC_MOVEMENT>
 	{
 	public:
 		virtual void Deserialize(DeserializationParameterMap &params) override;

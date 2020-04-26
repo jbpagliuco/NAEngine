@@ -24,6 +24,9 @@
 			</component>
 			<component type="BasicMovementComponent">
 			</component>
+			<component type="SkyboxComponent">
+				<skybox>desert.skyx</skybox>
+			</component>
 		</components>
 	</gameobject>
 

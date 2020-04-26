@@ -12,7 +12,7 @@
 
 #include "Renderer/ImguiRenderer.h"
 #include "Renderer/Pipelines/ShadowMap.h"
-#include "Renderer/Pipelines/Skybox.h"
+#include "Renderer/Pipelines/SkyboxPipeline.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/Scene/Camera.h"
 #include "Renderer/Scene/ForwardRenderer.h"
