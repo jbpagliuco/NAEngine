@@ -22,6 +22,9 @@ namespace na
 
 	bool RenderTarget::Initialize(RenderTargetDesc desc)
 	{
+		mHasColorMap = desc.mUseColorMap;
+		mHasDepthMap = desc.mUseDepthMap;
+
 		if (desc.mUseColorMap) {
 			TextureDesc colorMapDesc;
 			colorMapDesc = desc.mColorMapDesc;
@@ -49,6 +52,9 @@ namespace na
 
 	bool RenderTarget::Initialize(const NGASwapChain& swapChain, const RenderTargetTextureDesc& depthMapDesc, int width, int height)
 	{
+		mHasColorMap = true;
+		mHasDepthMap = true;
+
 		bool success = mColorMap.Initialize(swapChain);
 		NA_RENDER_ASSERT_RETURN_VALUE(success, false, "Failed to create render target color map.");
 
@@ -77,5 +83,15 @@ namespace na
 	const Texture& RenderTarget::GetDepthMap()const
 	{
 		return mDepthMap;
+	}
+
+	bool RenderTarget::HasColorMap()const
+	{
+		return mHasColorMap;
+	}
+
+	bool RenderTarget::HasDepthMap()const
+	{
+		return mHasDepthMap;
 	}
 }

@@ -91,11 +91,19 @@ namespace na
 
 	const NGARenderTargetView& Texture::GetRenderTargetView(int slice)const
 	{
+		if (slice >= mRenderTargetViews.size()) {
+			return NGARenderTargetView::INVALID;
+		}
+
 		return mRenderTargetViews[slice];
 	}
 
 	const NGADepthStencilView& Texture::GetDepthStencilView(int slice)const
 	{
+		if (slice >= mDepthStencilViews.size()) {
+			return NGADepthStencilView::INVALID;
+		}
+
 		return mDepthStencilViews[slice];
 	}
 

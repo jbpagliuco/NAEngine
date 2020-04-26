@@ -42,8 +42,14 @@ namespace na
 		const Texture& GetColorMap()const;
 		const Texture& GetDepthMap()const;
 
+		bool HasColorMap()const;
+		bool HasDepthMap()const;
+
 	private:
 		Texture mColorMap;
 		Texture mDepthMap;
+
+		bool mHasColorMap;
+		bool mHasDepthMap;
 	};
 }

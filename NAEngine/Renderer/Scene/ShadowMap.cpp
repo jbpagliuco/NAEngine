@@ -28,12 +28,7 @@ namespace na
 		desc.mWidth = SHADOWMAP_SIZE;
 		desc.mHeight = SHADOWMAP_SIZE;
 
-		desc.mUseColorMap = true;
-		desc.mColorMapDesc.mFormat = NGAFormat::R32G32B32A32_FLOAT;
-		desc.mColorMapDesc.mShaderResource = false;
-		desc.mColorMapDesc.mType = NGATextureType::TEXTURE2D;
-		desc.mColorMapDesc.mUsage = NGAUsage::GPU_WRITE;
-		desc.mColorMapDesc.mArraySize = mNumShadowMaps;
+		desc.mUseColorMap = false;
 
 		desc.mUseDepthMap = true;
 		desc.mDepthMapDesc.mFormat = NGAFormat::R32_TYPELESS;

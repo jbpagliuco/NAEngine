@@ -184,9 +184,11 @@ namespace na
 
 	void StateManager::ClearRenderTarget(const RenderTarget &renderTarget, const float *clearColor, bool clearDepth, int slice)
 	{
-		mCommandContext.ClearRenderTarget(renderTarget.GetColorMap().GetRenderTargetView(slice), clearColor);
+		if (renderTarget.HasColorMap()) {
+			mCommandContext.ClearRenderTarget(renderTarget.GetColorMap().GetRenderTargetView(slice), clearColor);
+		}
 
-		if (clearDepth) {
+		if (renderTarget.HasDepthMap() && clearDepth) {
 			mCommandContext.ClearDepthStencilView(renderTarget.GetDepthMap().GetDepthStencilView(slice));
 		}
 	}
