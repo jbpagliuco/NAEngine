@@ -15,7 +15,9 @@ void SetCommonPixelInputValues(inout CommonPixelInput output, inout CommonVertex
 
 	output.texCoord = input.texCoord;
 
-	output.projTexCoord = mul(mul(lightViewProj, world), pos);
+	for (int i = 0; i < numShadowCastingLights; ++i) {
+		output.shadowProjTexCoords[i] = mul(mul(lightViewProj[i], world), pos);
+	}
 }
 
 #endif // defined(SHADER_COMMON_VS_HLSLI)

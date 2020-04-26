@@ -33,11 +33,7 @@ PixelInput vsMain(VertexInput input)
 // Pixel Shader
 float4 psMain(PixelInput input) : SV_TARGET
 {
-	float3 P = input.position;
-	float3 N = normalize(input.normal);
-	float3 V = normalize(eyePosition - P).xyz;
-
-	LightingResult lit = ComputeFullLighting(matSpecular.w, V, P, N, input.projTexCoord);
+	LightingResult lit = ComputeFullLighting(input, matSpecular.w);
 
 	float2 texCoord = float2(1.0f, 1.0f) - input.texCoord;
 	float4 texColor = DiffuseTexture.Sample(Sampler, texCoord);

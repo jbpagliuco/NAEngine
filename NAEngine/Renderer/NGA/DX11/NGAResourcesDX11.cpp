@@ -40,7 +40,7 @@ namespace na
 		textureDesc.Width = desc.mWidth;
 		textureDesc.Height =  desc.mHeight;
 		textureDesc.MipLevels = 1;
-		textureDesc.ArraySize = 1;
+		textureDesc.ArraySize = desc.mArraySize;
 		textureDesc.Format = NGAFormatToDXGI(desc.mFormat);
 		textureDesc.SampleDesc.Count = 1;
 		textureDesc.Usage = NGAUsageToD3D11(desc.mUsage);
@@ -108,6 +108,11 @@ namespace na
 	bool NGATexture::IsConstructed()const
 	{
 		return mResource != nullptr;
+	}
+
+	bool NGATexture::IsArray()const
+	{
+		return mDesc.mArraySize > 1;
 	}
 
 	const NGATextureDesc& NGATexture::GetDesc()const

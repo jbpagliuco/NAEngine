@@ -10,7 +10,7 @@ struct Light
 	int type;
 	bool enabled;
 	float intensity;
-	int _padding0;
+	int shadowCastingIndex;
 
 	float3 position;
 	float _padding1;

@@ -4,8 +4,15 @@
 
 namespace na
 {
-	class Texture;
 	class RenderTarget;
+	class Shader;
+	class Texture;
+
+
+	enum class EngineShader
+	{
+		SHADOWMAP
+	};
 
 
 	bool RenderingSystemInit();
@@ -22,4 +29,6 @@ namespace na
 
 	void RegisterEngineRenderTarget(const std::string& name, RenderTarget* renderTarget);
 	RenderTarget* GetEngineRenderTarget(const std::string& name);
+
+	Shader* GetEngineShader(EngineShader shader);
 }

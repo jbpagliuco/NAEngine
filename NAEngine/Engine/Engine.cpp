@@ -282,7 +282,7 @@ namespace na
 #if defined(_NA_DEBUG)
 		if (FrameTimeDebug) {
 			if (ImGui::Begin("Frame Time Debug", &FrameTimeDebug)) {
-				ImGui::Text("Frame Time: %.5f", FrameTime);
+				ImGui::Text("Frame Time: %.5f (%.1f FPS)", FrameTime, 1.0f / FrameTime);
 				ImGui::Text("Total Elapsed Time: %.1f", ElapsedTime);
 			}
 

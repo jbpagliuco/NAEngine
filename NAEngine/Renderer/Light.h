@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 
+#include "Base/Math/Matrix.h"
 #include "Base/Util/Util.h"
 
 namespace na
@@ -18,7 +19,7 @@ namespace na
 		int32_t mType;
 		int32_t mEnabled;
 		float mIntensity;
-		int32_t _padding0;
+		int32_t mShadowCastingIndex = -1;
 
 		Tuple3<float> mPosition;
 		float _padding1;
@@ -32,6 +33,8 @@ namespace na
 		float mConstantAttenuation;
 		float mLinearAttenuation;
 		float mQuadraticAttenuation;
+
+		Matrix GetViewProj()const;
 	};
 
 	Light* CreateLight(LightType type);

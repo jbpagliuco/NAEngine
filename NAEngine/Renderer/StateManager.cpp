@@ -1,16 +1,12 @@
 #include "StateManager.h"
 
-#include <d3d11.h>
-
-#include "Resources/IndexBuffer.h"
-#include "Resources/RenderTarget.h"
-#include "Resources/VertexBuffer.h"
-#include "Shader/ShaderProgram.h"
-
-#include "Rect.h"
-#include "Renderer.h"
-
-#include "Light.h"
+#include "Renderer/Light.h"
+#include "Renderer/Rect.h"
+#include "Renderer/Renderer.h"
+#include "Renderer/Resources/IndexBuffer.h"
+#include "Renderer/Resources/RenderTarget.h"
+#include "Renderer/Resources/VertexBuffer.h"
+#include "Renderer/Shader/ShaderProgram.h"
 
 namespace na
 {
@@ -20,7 +16,8 @@ namespace na
 	struct PerFrameData
 	{
 		Matrix cameraViewProj;
-		Matrix lightViewProj;
+		Matrix lightViewProj[MAX_SHADOWMAPS];
+		int mNumShadowCasters;
 	};
 
 	struct PerObjectData
@@ -58,11 +55,16 @@ namespace na
 		mLightsBuffer.Shutdown();
 	}
 	
-	void StateManager::SetPerFrameData(const Matrix &cameraViewProj, const Matrix &lightViewProj)
+	void StateManager::SetPerFrameData(const Matrix &cameraViewProj, Matrix lightViewProj[MAX_SHADOWMAPS], int numShadowCasters)
 	{
 		PerFrameData data;
 		data.cameraViewProj = cameraViewProj;
-		data.lightViewProj = lightViewProj;
+
+		for (int i = 0; i < STATIC_ARRAY_SIZE(data.lightViewProj); ++i) {
+			data.lightViewProj[i] = lightViewProj[i];
+		}
+
+		data.mNumShadowCasters = numShadowCasters;
 
 		mPerFrameBuffer.Map(&data);
 
@@ -150,12 +152,12 @@ namespace na
 	}
 
 
-	void StateManager::BindConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot)
+	void StateManager::BindUserConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot)
 	{
-		BindConstantBufferRealSlot(constantBuffer, stage, slot + (int)ShaderConstantBuffers::USER);
+		BindConstantBuffer(constantBuffer, stage, slot + (int)ShaderConstantBuffers::USER);
 	}
 
-	void StateManager::BindConstantBufferRealSlot(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot)
+	void StateManager::BindConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot)
 	{
 		NA_ASSERT_RETURN(stage != NGA_SHADER_STAGE_ALL, "Need to implement this.");
 
@@ -171,7 +173,7 @@ namespace na
 
 	void StateManager::BindUserSamplerState(const NGASamplerState &samplerState, NGAShaderStage stage, int slot)
 	{
-		BindSamplerState(samplerState, stage, slot + (int)TextureRegisters::USER);
+		BindSamplerState(samplerState, stage, slot + (int)SamplerStateRegisters::USER);
 	}
 
 	void StateManager::BindSamplerState(const NGASamplerState &samplerState, NGAShaderStage stage, int slot)
@@ -180,12 +182,14 @@ namespace na
 	}
 
 
-	void StateManager::ClearRenderTarget(const RenderTarget &renderTarget, const float *clearColor, bool clearDepth)
+	void StateManager::ClearRenderTarget(const RenderTarget &renderTarget, const float *clearColor, bool clearDepth, int slice)
 	{
-		mCommandContext.ClearRenderTarget(renderTarget.GetColorMap().GetRenderTargetView(), clearColor);
+		if (renderTarget.HasColorMap()) {
+			mCommandContext.ClearRenderTarget(renderTarget.GetColorMap().GetRenderTargetView(slice), clearColor);
+		}
 
-		if (clearDepth) {
-			mCommandContext.ClearDepthStencilView(renderTarget.GetDepthMap().GetDepthStencilView());
+		if (renderTarget.HasDepthMap() && clearDepth) {
+			mCommandContext.ClearDepthStencilView(renderTarget.GetDepthMap().GetDepthStencilView(slice));
 		}
 	}
 
@@ -199,11 +203,12 @@ namespace na
 		mCommandContext.ClearDepthStencilView(depthStencilView);
 	}
 
-	void StateManager::BindRenderTarget(const RenderTarget &renderTarget)
+	void StateManager::BindRenderTarget(const RenderTarget &renderTarget, int slice)
 	{
-		mBoundRenderTarget = &renderTarget.GetColorMap().GetRenderTargetView();
-		mBoundDepthStencilView = &renderTarget.GetDepthMap().GetDepthStencilView();
-		mCommandContext.BindRenderTarget(renderTarget.GetColorMap().GetRenderTargetView(), renderTarget.GetDepthMap().GetDepthStencilView());
+		mBoundRenderTarget = &renderTarget.GetColorMap().GetRenderTargetView(slice);
+		mBoundDepthStencilView = &renderTarget.GetDepthMap().GetDepthStencilView(slice);
+
+		mCommandContext.BindRenderTarget(*mBoundRenderTarget, *mBoundDepthStencilView);
 	}
 
 	void StateManager::BindRenderTarget(const NGARenderTargetView &renderTargetView, const NGADepthStencilView &depthStencilView)

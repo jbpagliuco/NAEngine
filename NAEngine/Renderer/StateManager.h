@@ -4,11 +4,9 @@
 
 #include "NGA/NGACommandContext.h"
 
-#include "Light.h"
-#include "Resources/ConstantBuffer.h"
-
-#define HLSL_CPP_INCLUDE
-#include "Shader/EngineShaders/shader_common.hlsli"
+#include "Renderer/Light.h"
+#include "Renderer/Resources/ConstantBuffer.h"
+#include "Renderer/Shader/EngineShaders/shader_constants.h"
 
 namespace na
 {
@@ -34,7 +32,13 @@ namespace na
 
 	enum class TextureRegisters
 	{
-		SHADOWMAP,
+		SHADOWMAP = 0,
+		USER
+	};
+
+	enum class SamplerStateRegisters
+	{
+		SHADOWMAP = 0,
 		USER
 	};
 
@@ -55,7 +59,7 @@ namespace na
 		bool Initialize();
 		void Shutdown();
 		
-		void SetPerFrameData(const Matrix &cameraViewProj, const Matrix &lightViewProj);
+		void SetPerFrameData(const Matrix &cameraViewProj, Matrix lightViewProj[MAX_SHADOWMAPS], int numShadowCasters);
 		void SetObjectTransform(const Matrix &transform);
 
 		void SetLightsData(const LightsData &lights);
@@ -71,8 +75,8 @@ namespace na
 
 		void BindShader(const ShaderProgram &shader);
 
+		void BindUserConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot);
 		void BindConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot);
-		void BindConstantBufferRealSlot(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot);
 
 		void BindUserShaderResource(const Texture &texture, NGAShaderStage stage, int slot);
 		void BindUserShaderResource(const NGAShaderResourceView &view, NGAShaderStage stage, int slot);
@@ -82,11 +86,11 @@ namespace na
 		void BindUserSamplerState(const NGASamplerState &samplerState, NGAShaderStage stage, int slot);
 		void BindSamplerState(const NGASamplerState &samplerState, NGAShaderStage stage, int slot);
 
-		void ClearRenderTarget(const RenderTarget &renderTarget, const float *clearColor, bool clearDepth);
+		void ClearRenderTarget(const RenderTarget &renderTarget, const float *clearColor, bool clearDepth, int slice = 0);
 		void ClearRenderTarget(const NGARenderTargetView &renderTargetView, const float *clearColor);
 		void ClearDepthStencilView(const NGADepthStencilView &depthStencilView);
 
-		void BindRenderTarget(const RenderTarget &renderTarget);
+		void BindRenderTarget(const RenderTarget &renderTarget, int slice = 0);
 		void BindRenderTarget(const NGARenderTargetView &renderTargetView, const NGADepthStencilView &depthStencilView);
 
 		void MapBufferData(const NGABuffer &buffer, const void *data);

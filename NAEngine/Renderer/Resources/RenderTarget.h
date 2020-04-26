@@ -13,6 +13,7 @@ namespace na
 		NGAUsage mUsage = NGAUsage::GPU_WRITE;
 
 		bool mShaderResource = false;
+		int mArraySize = 1;
 
 		NGASamplerStateDesc mSamplerStateDesc;
 
@@ -41,8 +42,14 @@ namespace na
 		const Texture& GetColorMap()const;
 		const Texture& GetDepthMap()const;
 
+		bool HasColorMap()const;
+		bool HasDepthMap()const;
+
 	private:
 		Texture mColorMap;
 		Texture mDepthMap;
+
+		bool mHasColorMap;
+		bool mHasDepthMap;
 	};
 }

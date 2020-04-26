@@ -114,6 +114,9 @@
     <ClCompile Include="Material\MaterialContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\ShadowMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RenderingSystem.h">
@@ -236,6 +239,12 @@
     <ClInclude Include="Material\MaterialContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Scene\ShadowMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\EngineShaders\shader_constants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -247,8 +256,5 @@
     <None Include="Shader\HLSL\shader_common_vs.hlsli" />
     <None Include="Shader\EngineShaders\material.hlsli" />
     <None Include="Shader\EngineShaders\build_shadow_map\build_shadow_map.shaderx" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Shader\EngineShaders\build_shadow_map\build_shadow_map.hlsl" />
   </ItemGroup>
 </Project>

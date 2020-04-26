@@ -1,7 +1,5 @@
 #include "MeshInstance.h"
 
-#include <d3d11.h>
-
 #include "Renderer/Material/Material.h"
 #include "Renderer/Material/DynamicMaterial.h"
 #include "Renderer/Material/MaterialContainer.h"

@@ -68,7 +68,7 @@ namespace na
 		mConstantBuffer.Map(mDefaultParameterData);
 
 		// Bind constant data
-		NA_RStateManager->BindConstantBuffer(mConstantBuffer.GetBuffer(), NGA_SHADER_STAGE_PIXEL, 0);
+		NA_RStateManager->BindUserConstantBuffer(mConstantBuffer.GetBuffer(), NGA_SHADER_STAGE_PIXEL, 0);
 
 		// Bind textures
 		for (int i = 0; i < mDefaultTextures.size(); ++i) {

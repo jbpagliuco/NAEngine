@@ -36,7 +36,9 @@ namespace na
 		NGA_GPU_CLASS(NGARenderTargetView);
 
 	public:
-		bool Construct(const NGATexture &texture);
+		NGARenderTargetView(NGARenderTargetView&& view) noexcept;
+
+		bool Construct(const NGATexture &texture, int slice = 0);
 		bool Construct(const NGASwapChain &swapChain);
 		void Destruct();
 
@@ -65,7 +67,9 @@ namespace na
 		NGA_GPU_CLASS(NGADepthStencilView);
 
 	public:
-		bool Construct(const NGATexture &texture);
+		NGADepthStencilView(NGADepthStencilView&& view) noexcept;
+
+		bool Construct(const NGATexture &texture, int slice = 0);
 		void Destruct();
 
 		bool IsConstructed()const;

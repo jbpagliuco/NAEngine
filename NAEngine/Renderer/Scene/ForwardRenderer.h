@@ -2,8 +2,8 @@
 
 #include "SceneRenderer.h"
 
-#include "Renderer/Resources/ConstantBuffer.h"
-#include "Renderer/Resources/RenderTarget.h"
+#include "Renderer/Scene/ShadowMap.h"
+#include "Renderer/Shader/EngineShaders/shader_constants.h"
 
 namespace na
 {
@@ -21,12 +21,7 @@ namespace na
 
 		virtual void RenderScene(Scene &scene, const Camera &camera) override;
 
-	private:
-		void BuildShadowMap(Scene &scene, const Camera &camera, const Matrix &lightVP);
-
 	public:
-		static RenderTarget mShadowMap;
-		Shader* mBuildShadowMapShader;
-		ConstantBuffer mShadowMapLightsBuffers[2];
+		ShadowMapBuilder mShadowMapBuilder;
 	};
 }

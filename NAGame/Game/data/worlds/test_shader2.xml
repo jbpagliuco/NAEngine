@@ -185,8 +185,40 @@
 		</transform>
 		<components>
 			<component type="DirectionalLightComponent">
+				<enabled>true</enabled>
 				<color>maroon</color>
 				<intensity>0.5</intensity>
+				<constantAttenuation>1.0</constantAttenuation>
+				<linearAttenuation>0.5</linearAttenuation>
+			</component>
+			<component type="StaticMeshComponent">
+				<mesh>cube.meshx</mesh>
+				<material>gray.matx</material>
+			</component>
+		</components>
+	</gameobject>
+
+	<gameobject>
+		<name>DirectionalLight</name>
+		<transform>
+			<position>
+				<x>-3</x>
+				<y>10</y>
+				<z>-3</z>
+			</position>
+			<rotation type="lookat">
+			</rotation>
+			<scale>
+				<x>0.25</x>
+				<y>0.25</y>
+				<z>0.25</z>
+			</scale>
+		</transform>
+		<components>
+			<component type="DirectionalLightComponent">
+				<enabled>true</enabled>
+				<color>maroon</color>
+				<intensity>0.1</intensity>
 				<constantAttenuation>1.0</constantAttenuation>
 				<linearAttenuation>0.5</linearAttenuation>
 			</component>
