@@ -227,4 +227,9 @@ namespace na
 	{
 		mCommandContext.DrawIndexed((unsigned int)buffer.GetNumIndices());
 	}
+
+	void StateManager::BindPipelineState(const NGAPipelineState& state)
+	{
+		mCommandContext.BindPipelineState(state);
+	}
 }

@@ -4,6 +4,8 @@
 
 #include <map>
 
+#include "Base/Util/Util.h"
+
 namespace na
 {
 	NGAInternalStateDX11 NgaDx11State;
@@ -16,6 +18,9 @@ namespace na
 			DXGI_FORMAT_R32G32_FLOAT,
 			DXGI_FORMAT_R32G32B32_FLOAT,
 			DXGI_FORMAT_R32G32B32A32_FLOAT,
+
+			DXGI_FORMAT_BC1_UNORM,
+			DXGI_FORMAT_B8G8R8A8_UNORM,
 
 			// Depth formats
 			DXGI_FORMAT_D16_UNORM,
@@ -31,6 +36,8 @@ namespace na
 
 			DXGI_FORMAT_UNKNOWN
 		};
+
+		static_assert(STATIC_ARRAY_SIZE(CONV) == (int)NGAFormat::SIZE);
 
 		return CONV[(int)format];
 	}
@@ -68,6 +75,35 @@ namespace na
 		};
 
 		return CONV[(int)usage];
+	}
+
+	NGAFormat DXGIFormatToNGA(DXGI_FORMAT format)
+	{
+		static std::map<DXGI_FORMAT, NGAFormat> CONV = {
+			{ DXGI_FORMAT_R32_FLOAT, NGAFormat::R32_FLOAT },
+			{ DXGI_FORMAT_R32G32_FLOAT, NGAFormat::R32G32_FLOAT },
+			{ DXGI_FORMAT_R32G32B32_FLOAT, NGAFormat::R32G32B32_FLOAT },
+			{ DXGI_FORMAT_R32G32B32A32_FLOAT, NGAFormat::R32G32B32A32_FLOAT },
+
+			{ DXGI_FORMAT_BC1_UNORM, NGAFormat::BC1_UNORM },
+			{ DXGI_FORMAT_B8G8R8A8_UNORM, NGAFormat::B8G8R8A8_UNORM },
+
+			{ DXGI_FORMAT_D16_UNORM, NGAFormat::D16_UNORM },
+			{ DXGI_FORMAT_D24_UNORM_S8_UINT, NGAFormat::D24_UNORM_S8_UINT },
+			{ DXGI_FORMAT_D32_FLOAT, NGAFormat::D32_FLOAT },
+
+			{ DXGI_FORMAT_R24G8_TYPELESS, NGAFormat::R24G8_TYPELESS },
+			{ DXGI_FORMAT_R32_TYPELESS, NGAFormat::R32_TYPELESS },
+			{ DXGI_FORMAT_R32G32_TYPELESS, NGAFormat::R32G32_TYPELESS },
+			{ DXGI_FORMAT_R32G32B32_TYPELESS, NGAFormat::R32G32B32_TYPELESS },
+			{ DXGI_FORMAT_R32G32B32A32_TYPELESS, NGAFormat::R32G32B32A32_TYPELESS },
+
+			{ DXGI_FORMAT_UNKNOWN, NGAFormat::UNKNOWN },
+		};
+
+		NA_ASSERT_RETURN_VALUE(CONV.find(format) != CONV.end(), NGAFormat::UNKNOWN, "Unknown DXGI format.");
+
+		return CONV[format];
 	}
 }
 

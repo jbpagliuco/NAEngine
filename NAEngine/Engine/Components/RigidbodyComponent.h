@@ -8,7 +8,7 @@
 
 namespace na
 {
-	class RigidbodyComponent : public GameComponent
+	class RigidbodyComponent : public GameComponentBase<GameComponentType::RIGIDBODY>
 	{
 	public:
 		virtual void Deserialize(DeserializationParameterMap &params) override;

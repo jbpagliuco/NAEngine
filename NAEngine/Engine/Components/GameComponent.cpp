@@ -11,6 +11,7 @@
 #include "BasicMovementComponent.h"
 #include "CameraComponent.h"
 #include "LightComponent.h"
+#include "SkyboxComponent.h"
 #include "StaticMeshComponent.h"
 #include "RigidbodyComponent.h"
 
@@ -28,13 +29,14 @@ namespace na
 	}
 
 	static std::map<std::string, GameComponent*(*)()> ComponentInstantiators = {
+		GENERATE_INSTANTIATOR(BasicMovementComponent),
 		GENERATE_INSTANTIATOR(CameraComponent),
-		GENERATE_INSTANTIATOR(StaticMeshComponent),
 		GENERATE_INSTANTIATOR(DirectionalLightComponent),
 		GENERATE_INSTANTIATOR(PointLightComponent),
-		GENERATE_INSTANTIATOR(SpotLightComponent),
 		GENERATE_INSTANTIATOR(RigidbodyComponent),
-		GENERATE_INSTANTIATOR(BasicMovementComponent)
+		GENERATE_INSTANTIATOR(SkyboxComponent),
+		GENERATE_INSTANTIATOR(SpotLightComponent),
+		GENERATE_INSTANTIATOR(StaticMeshComponent)
 	};
 
 	typedef std::vector<GameComponent*> ComponentList;

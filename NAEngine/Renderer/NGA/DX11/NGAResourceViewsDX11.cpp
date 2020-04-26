@@ -50,8 +50,8 @@ namespace na
 			};
 
 			hr = NgaDx11State.mDevice->CreateShaderResourceView(texture.mResource, &desc, &mView);
-		}
-		
+		};
+
 		NA_ASSERT_RETURN_VALUE(SUCCEEDED(hr), false, "ID3D11Device::CreateShaderResourceView() failed with HRESULT %X", hr);
 
 		return true;

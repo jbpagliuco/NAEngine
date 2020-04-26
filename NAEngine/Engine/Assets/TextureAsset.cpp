@@ -3,6 +3,7 @@
 #include "Base/Streaming/Stream.h"
 #include "Base/Util/Serialize.h"
 #include "Renderer/Resources/RenderTarget.h"
+#include "Renderer/Resources/Skybox.h"
 #include "Renderer/Resources/Texture.h"
 
 namespace na
@@ -16,6 +17,9 @@ namespace na
 
 	static bool OnRenderTargetLoad(const AssetID &id, const std::string &filename, const AssetFileHeader &header);
 	static void OnRenderTargetUnload(const AssetID &id);
+
+	static bool OnSkyboxLoad(const AssetID &id, const std::string &filename, const AssetFileHeader &header);
+	static void OnSkyboxUnload(const AssetID &id);
 
 
 
@@ -67,6 +71,12 @@ namespace na
 		rtxType.mOnUnload = OnRenderTargetUnload;
 		RegisterAssetType(rtxType);
 
+		AssetType skyxType;
+		skyxType.mExt = "skyx";
+		skyxType.mOnLoad = OnSkyboxLoad;
+		skyxType.mOnUnload = OnSkyboxUnload;
+		RegisterAssetType(skyxType);
+
 		return true;
 	}
 
@@ -74,6 +84,12 @@ namespace na
 	{
 		NA_ASSERT(TextureAsset::ReportEmpty(), "There were still textures allocated during shutdown!");
 		TextureAsset::ReleaseAll();
+
+		NA_ASSERT(RenderTarget::ReportEmpty(), "There were still render targets allocated during shutdown!");
+		RenderTarget::ReleaseAll();
+
+		NA_ASSERT(Skybox::ReportEmpty(), "There were still skyboxes allocated during shutdown!");
+		Skybox::ReleaseAll();
 	}
 
 
@@ -194,5 +210,24 @@ namespace na
 	static void OnRenderTargetUnload(const AssetID &id)
 	{
 		RenderTarget::Release(id);
+	}
+
+
+
+
+
+	static bool OnSkyboxLoad(const AssetID& id, const std::string& filename, const AssetFileHeader& header)
+	{
+		Skybox* skybox = Skybox::Create(id);
+		NA_ASSERT_RETURN_VALUE(skybox != nullptr, false, "Failed to allocate skybox.");
+
+		DeserializationParameterMap params = ParseFile(filename);
+
+		return skybox->Initialize(params["filename"].AsFilepath());
+	}
+
+	static void OnSkyboxUnload(const AssetID &id)
+	{
+		Skybox::Release(id);
 	}
 }

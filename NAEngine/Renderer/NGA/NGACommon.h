@@ -37,6 +37,9 @@ namespace na
 		R32G32B32_FLOAT,
 		R32G32B32A32_FLOAT,
 		
+		BC1_UNORM,
+		B8G8R8A8_UNORM,
+		
 		// Depth formats
 		D16_UNORM,
 		D24_UNORM_S8_UINT,
@@ -49,7 +52,9 @@ namespace na
 		R32G32B32_TYPELESS,
 		R32G32B32A32_TYPELESS,
 
-		UNKNOWN
+		UNKNOWN,
+
+		SIZE
 	};
 
 	enum class NGAUsage

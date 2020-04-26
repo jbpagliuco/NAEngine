@@ -4,10 +4,10 @@
 
 #include "Base/Math/Transform.h"
 
+#include "Engine/Components/GameComponent.h"
+
 namespace na
 {
-	class GameComponent;
-
 	class GameObject
 	{
 	public:
@@ -19,6 +19,9 @@ namespace na
 		void AddComponent(GameComponent *component);
 		std::vector<GameComponent*>& GetComponents();
 
+		template <typename ComponentType>
+		ComponentType* GetComponentOfType();
+
 	public:
 		Transform mTransform;
 
@@ -26,4 +29,23 @@ namespace na
 		std::string mName;
 		std::vector<GameComponent*> mComponents;
 	};
+}
+
+namespace na
+{
+	template <typename ComponentType>
+	ComponentType* GameObject::GetComponentOfType()
+	{
+		// yuck
+		ComponentType temp;
+		GameComponentType searchType = temp.GetType();
+
+		for (auto& comp : mComponents) {
+			if (comp->GetType() == searchType) {
+				return (ComponentType*)comp;
+			}
+		}
+
+		return nullptr;
+	}
 }

@@ -25,6 +25,8 @@ namespace na
 
 	D3D11_USAGE NGAUsageToD3D11(NGAUsage usage);
 
+	NGAFormat DXGIFormatToNGA(DXGI_FORMAT format);
+
 	extern NGAInternalStateDX11 NgaDx11State;
 }
 

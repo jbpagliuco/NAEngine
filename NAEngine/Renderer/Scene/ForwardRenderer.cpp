@@ -3,6 +3,7 @@
 #include "Base/File/File.h"
 #include "Base/Util/Color.h"
 
+#include "Renderer/Pipelines/SkyboxPipeline.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/RenderingSystem.h"
 #include "Renderer/Scene/Camera.h"
@@ -14,7 +15,13 @@ namespace na
 {
 	bool ForwardRenderer::Initialize()
 	{
-		mShadowMapBuilder.Initialize(MAX_SHADOWMAPS);
+		bool success = mShadowMapBuilder.Initialize(MAX_SHADOWMAPS);
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize shadowmap builder.");
+
+		success = mRenderPipelineState.Construct(NGAFixedFunctionStateDesc(), NGAGraphicsPipelineInputAssemblyDesc());
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to render pipeline state.");
+
+		// Register engine assets
 		RegisterEngineRenderTarget("shadowMap", &mShadowMapBuilder.GetRenderTarget());
 
 		return true;
@@ -23,6 +30,8 @@ namespace na
 	void ForwardRenderer::Shutdown()
 	{
 		mShadowMapBuilder.Shutdown();
+
+		mRenderPipelineState.Destruct();
 	}
 
 	void ForwardRenderer::BeginRender()
@@ -74,10 +83,9 @@ namespace na
 		r.height = (float)NA_Renderer->GetWindow().height;
 		NA_RStateManager->SetViewport(r);
 
-		// Set per frame data
-		Matrix cameraView = camera.mTransform.GetMatrix().Inverted();
-		Matrix cameraProj = Matrix::PerspectiveFOVLH(camera.mFOV, NA_Renderer->GetWindow().GetAspectRatio(), camera.mNear, camera.mFar);
-		
+		NA_RStateManager->BindPipelineState(mRenderPipelineState);
+
+		// Set per frame data		
 		Matrix shadowCasterMatrices[MAX_SHADOWMAPS];
 		for (int i = 0; i < MAX_SHADOWMAPS; ++i) {
 			if (shadowCasters[i] != nullptr) {
@@ -85,7 +93,7 @@ namespace na
 			}
 		}
 
-		NA_RStateManager->SetPerFrameData(cameraProj * cameraView, shadowCasterMatrices, numShadowCasters);
+		NA_RStateManager->SetPerFrameData(camera.GetViewProj(), shadowCasterMatrices, numShadowCasters);
 
 		// Bind render target
 		RenderTarget* rt = (camera.mRenderTarget == nullptr) ? NA_RMainRenderTarget : camera.mRenderTarget;
@@ -115,6 +123,11 @@ namespace na
 		for (auto &r : scene.GetRenderables()) {
 			NA_RStateManager->SetObjectTransform(r->GetWorldTransform());
 			r->Render();
+		}
+
+		// Draw skybox
+		if (camera.mSkybox != nullptr) {
+			RenderSkybox(*camera.mSkybox, camera);
 		}
 
 		// Unbind shadow maps

@@ -192,6 +192,7 @@
     <ClCompile Include="Components\GameComponent.cpp" />
     <ClCompile Include="Components\LightComponent.cpp" />
     <ClCompile Include="Components\RigidbodyComponent.cpp" />
+    <ClCompile Include="Components\SkyboxComponent.cpp" />
     <ClCompile Include="Components\StaticMeshComponent.cpp" />
     <ClCompile Include="Components\TestComponent.cpp" />
     <ClCompile Include="Engine.cpp" />
@@ -214,6 +215,7 @@
     <ClInclude Include="Components\GameComponent.h" />
     <ClInclude Include="Components\LightComponent.h" />
     <ClInclude Include="Components\RigidbodyComponent.h" />
+    <ClInclude Include="Components\SkyboxComponent.h" />
     <ClInclude Include="Components\StaticMeshComponent.h" />
     <ClInclude Include="Components\TestComponent.h" />
     <ClInclude Include="Engine.h" />
@@ -228,6 +230,11 @@
     <ClInclude Include="Physics\PhysicsUtil.h" />
     <ClInclude Include="World\GameObject.h" />
     <ClInclude Include="World\World.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Components\LightComponent.inl">
+      <FileType>CppCode</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

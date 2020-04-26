@@ -1,9 +1,11 @@
 #include "CameraComponent.h"
 
-#include "Engine/Input/Input.h"
-#include "Engine/World/GameObject.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/Scene/Scene.h"
+
+#include "Engine/Components/SkyboxComponent.h"
+#include "Engine/World/GameObject.h"
+
 
 namespace na
 {
@@ -22,6 +24,11 @@ namespace na
 
 	void CameraComponent::Activate()
 	{
+		SkyboxComponent* skybox = GetOwner()->GetComponentOfType<SkyboxComponent>();
+		if (skybox != nullptr) {
+			mCamera.mSkybox = skybox->GetSkybox();
+		}
+
 		mCamera.mTransform = *mTransform;
 		Scene::Get()->AddCamera(&mCamera);
 	}

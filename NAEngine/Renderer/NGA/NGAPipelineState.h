@@ -20,6 +20,7 @@ namespace na
 
 	struct NGADepthStencilStateDesc
 	{
+		NGADepthFunc mDepthFunc = NGADepthFunc::LESS;
 	};
 
 	struct NGAFixedFunctionStateDesc

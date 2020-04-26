@@ -96,6 +96,8 @@ namespace na
 		void MapBufferData(const NGABuffer &buffer, const void *data);
 
 		void DrawIndexed(const IndexBuffer &buffer);
+
+		void BindPipelineState(const NGAPipelineState& state);
 		
 	private:
 		NGACommandContext mCommandContext;

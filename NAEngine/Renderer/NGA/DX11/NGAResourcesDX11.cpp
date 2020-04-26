@@ -77,24 +77,62 @@ namespace na
 
 		mDesc = desc;
 
-		D3D11_RESOURCE_DIMENSION texDimension;
-		mResource->GetType(&texDimension);
+		if (mDesc.mType != NGATextureType::TEXTURECUBE) {
+			D3D11_RESOURCE_DIMENSION texDimension;
+			mResource->GetType(&texDimension);
 
-		switch (texDimension) {
-		case D3D11_RESOURCE_DIMENSION_TEXTURE1D:
-			mDesc.mType = NGATextureType::TEXTURE1D;
-			break;
+			switch (texDimension) {
+			case D3D11_RESOURCE_DIMENSION_TEXTURE1D:
+			{
+				mDesc.mType = NGATextureType::TEXTURE1D;
 
-		case D3D11_RESOURCE_DIMENSION_TEXTURE2D:
-			mDesc.mType = NGATextureType::TEXTURE2D;
-			break;
+				ID3D11Texture1D* tex1d;
+				mResource->QueryInterface(IID_ID3D11Texture1D, (void**)&tex1d);
 
-		case D3D11_RESOURCE_DIMENSION_TEXTURE3D:
-			mDesc.mType = NGATextureType::TEXTURE3D;
-			break;
+				D3D11_TEXTURE1D_DESC tex1dDesc;
+				tex1d->GetDesc(&tex1dDesc);
+				mDesc.mFormat = DXGIFormatToNGA(tex1dDesc.Format);
 
-		default:
-			NA_FATAL_ERROR(false, "Unimplemented.");
+				NGA_DX11_SAFE_RELEASE(tex1d);
+
+				break;
+			}
+
+			case D3D11_RESOURCE_DIMENSION_TEXTURE2D:
+			{
+				mDesc.mType = NGATextureType::TEXTURE2D;
+
+				ID3D11Texture2D* tex2d;
+				mResource->QueryInterface(IID_ID3D11Texture2D, (void**)&tex2d);
+
+				D3D11_TEXTURE2D_DESC tex2dDesc;
+				tex2d->GetDesc(&tex2dDesc);
+				mDesc.mFormat = DXGIFormatToNGA(tex2dDesc.Format);
+
+				NGA_DX11_SAFE_RELEASE(tex2d);
+
+				break;
+			}
+
+			case D3D11_RESOURCE_DIMENSION_TEXTURE3D:
+			{
+				mDesc.mType = NGATextureType::TEXTURE3D;
+
+				ID3D11Texture3D* tex3d;
+				mResource->QueryInterface(IID_ID3D11Texture3D, (void**)&tex3d);
+
+				D3D11_TEXTURE3D_DESC tex3dDesc;
+				tex3d->GetDesc(&tex3dDesc);
+				mDesc.mFormat = DXGIFormatToNGA(tex3dDesc.Format);
+
+				NGA_DX11_SAFE_RELEASE(tex3d);
+
+				break;
+			}
+
+			default:
+				NA_FATAL_ERROR(false, "Unimplemented.");
+			}
 		}
 
 		return true;

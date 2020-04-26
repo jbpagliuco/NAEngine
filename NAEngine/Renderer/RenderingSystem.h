@@ -11,7 +11,8 @@ namespace na
 
 	enum class EngineShader
 	{
-		SHADOWMAP
+		SHADOWMAP,
+		SKYBOX
 	};
 
 

@@ -37,7 +37,7 @@ namespace na
 
 		D3D11_DEPTH_STENCIL_DESC ds{};
 		ds.DepthEnable = true;
-		ds.DepthFunc = D3D11_COMPARISON_ALWAYS;
+		ds.DepthFunc = (D3D11_COMPARISON_FUNC)desc.mDepthFunc;
 		ds.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 		ds.StencilEnable = false;
 
