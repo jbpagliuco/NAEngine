@@ -14,19 +14,15 @@ namespace na
 {
 	bool ForwardRenderer::Initialize()
 	{
-		for (int i = 0; i < MAX_SHADOWMAPS; ++i) {
-			mShadowMaps[i].Initialize();
-			RegisterEngineRenderTarget("shadowMap" + std::to_string(i), &mShadowMaps[i].GetRenderTarget());
-		}
+		mShadowMapBuilder.Initialize(MAX_SHADOWMAPS);
+		RegisterEngineRenderTarget("shadowMap", &mShadowMapBuilder.GetRenderTarget());
 
 		return true;
 	}
 
 	void ForwardRenderer::Shutdown()
 	{
-		for (int i = 0; i < MAX_SHADOWMAPS; ++i) {
-			mShadowMaps[i].Shutdown();
-		}
+		mShadowMapBuilder.Shutdown();
 	}
 
 	void ForwardRenderer::BeginRender()
@@ -63,15 +59,11 @@ namespace na
 			}
 		}
 
+		const int numShadowCasters = shadowCasterIndex;
+
 		//////////////////////////////////////////////////////////////
 		// Build our shadow maps
-		for (int i = 0; i < MAX_SHADOWMAPS; ++i) {
-			if (shadowCasters[i] == nullptr) {
-				break;
-			}
-
-			mShadowMaps[i].Build(scene, *shadowCasters[i]);
-		}
+		mShadowMapBuilder.BuildAll(scene, (const Light**)shadowCasters, numShadowCasters);
 
 		//////////////////////////////////////////////////////////////
 		// Render the real scene
@@ -93,21 +85,17 @@ namespace na
 			}
 		}
 
-		NA_RStateManager->SetPerFrameData(cameraProj * cameraView, shadowCasterMatrices, shadowCasterIndex);
+		NA_RStateManager->SetPerFrameData(cameraProj * cameraView, shadowCasterMatrices, numShadowCasters);
 
 		// Bind render target
 		RenderTarget* rt = (camera.mRenderTarget == nullptr) ? NA_RMainRenderTarget : camera.mRenderTarget;
 		NA_RStateManager->BindRenderTarget(*rt);
-
-		const ColorF clearColor = COLOR_CORNFLOWERBLUE;
-		NA_RStateManager->ClearRenderTarget(*rt, clearColor.vArray, true);
+		NA_RStateManager->ClearRenderTarget(*rt, ColorF(COLOR_CORNFLOWERBLUE).vArray, true);
 
 		// Bind shadow map textures
-		for (int i = 0; i < MAX_SHADOWMAPS; ++i) {
-			const Texture& depthMap = mShadowMaps[i].GetRenderTarget().GetDepthMap();
-			NA_RStateManager->BindShaderResource(depthMap.GetShaderResourceView(), NGA_SHADER_STAGE_PIXEL, (int)TextureRegisters::SHADOWMAP0 + i);
-			NA_RStateManager->BindSamplerState(depthMap.GetSamplerState(), NGA_SHADER_STAGE_PIXEL, (int)TextureRegisters::SHADOWMAP0 + i);
-		}
+		const Texture &depthMap = mShadowMapBuilder.GetRenderTarget().GetDepthMap();
+		NA_RStateManager->BindShaderResource(depthMap.GetShaderResourceView(), NGA_SHADER_STAGE_PIXEL, (int)TextureRegisters::SHADOWMAP);
+		NA_RStateManager->BindSamplerState(depthMap.GetSamplerState(), NGA_SHADER_STAGE_PIXEL, (int)SamplerStateRegisters::SHADOWMAP);
 
 		// Set up shader data
 		auto &lights = scene.GetLights();
@@ -130,9 +118,7 @@ namespace na
 		}
 
 		// Unbind shadow maps
-		for (int i = 0; i < MAX_SHADOWMAPS; ++i) {
-			NA_RStateManager->BindShaderResource(NGAShaderResourceView::INVALID, NGA_SHADER_STAGE_PIXEL, (int)TextureRegisters::SHADOWMAP0 + i);
-			NA_RStateManager->BindSamplerState(NGASamplerState::INVALID, NGA_SHADER_STAGE_PIXEL, (int)TextureRegisters::SHADOWMAP0 + i);
-		}
+		NA_RStateManager->BindShaderResource(NGAShaderResourceView::INVALID, NGA_SHADER_STAGE_PIXEL, (int)TextureRegisters::SHADOWMAP);
+		NA_RStateManager->BindSamplerState(NGASamplerState::INVALID, NGA_SHADER_STAGE_PIXEL, (int)SamplerStateRegisters::SHADOWMAP);
 	}
 }

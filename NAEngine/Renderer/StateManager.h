@@ -32,12 +32,15 @@ namespace na
 
 	enum class TextureRegisters
 	{
-		SHADOWMAP0,
-		SHADOWMAP1,
+		SHADOWMAP = 0,
 		USER
 	};
 
-	static_assert((int)TextureRegisters::SHADOWMAP1 - (int)TextureRegisters::SHADOWMAP0 + 1 == MAX_SHADOWMAPS);
+	enum class SamplerStateRegisters
+	{
+		SHADOWMAP = 0,
+		USER
+	};
 
 
 	struct LightsData
@@ -83,11 +86,11 @@ namespace na
 		void BindUserSamplerState(const NGASamplerState &samplerState, NGAShaderStage stage, int slot);
 		void BindSamplerState(const NGASamplerState &samplerState, NGAShaderStage stage, int slot);
 
-		void ClearRenderTarget(const RenderTarget &renderTarget, const float *clearColor, bool clearDepth);
+		void ClearRenderTarget(const RenderTarget &renderTarget, const float *clearColor, bool clearDepth, int slice = 0);
 		void ClearRenderTarget(const NGARenderTargetView &renderTargetView, const float *clearColor);
 		void ClearDepthStencilView(const NGADepthStencilView &depthStencilView);
 
-		void BindRenderTarget(const RenderTarget &renderTarget);
+		void BindRenderTarget(const RenderTarget &renderTarget, int slice = 0);
 		void BindRenderTarget(const NGARenderTargetView &renderTargetView, const NGADepthStencilView &depthStencilView);
 
 		void MapBufferData(const NGABuffer &buffer, const void *data);

@@ -26,11 +26,8 @@ cbuffer cbLights : register(CB_REGISTER_LIGHTS)
 	Light lights[MAX_LIGHTS];
 };
 
-Texture2D shadowMap : register(TEX_REGISTER_SHADOWMAP0);
-SamplerState shadowMapSampler : register(SAM_REGISTER_SHADOWMAP0);
-
-Texture2D shadowMap1 : register(TEX_REGISTER_SHADOWMAP1);
-SamplerState shadowMapSampler1 : register(SAM_REGISTER_SHADOWMAP1);
+Texture2DArray shadowMaps : register(TEX_REGISTER_SHADOWMAP);
+SamplerState shadowMapSampler : register(SAM_REGISTER_SHADOWMAP);
 
 struct CommonVertexInput
 {

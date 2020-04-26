@@ -173,7 +173,7 @@ namespace na
 
 	void StateManager::BindUserSamplerState(const NGASamplerState &samplerState, NGAShaderStage stage, int slot)
 	{
-		BindSamplerState(samplerState, stage, slot + (int)TextureRegisters::USER);
+		BindSamplerState(samplerState, stage, slot + (int)SamplerStateRegisters::USER);
 	}
 
 	void StateManager::BindSamplerState(const NGASamplerState &samplerState, NGAShaderStage stage, int slot)
@@ -182,12 +182,12 @@ namespace na
 	}
 
 
-	void StateManager::ClearRenderTarget(const RenderTarget &renderTarget, const float *clearColor, bool clearDepth)
+	void StateManager::ClearRenderTarget(const RenderTarget &renderTarget, const float *clearColor, bool clearDepth, int slice)
 	{
-		mCommandContext.ClearRenderTarget(renderTarget.GetColorMap().GetRenderTargetView(), clearColor);
+		mCommandContext.ClearRenderTarget(renderTarget.GetColorMap().GetRenderTargetView(slice), clearColor);
 
 		if (clearDepth) {
-			mCommandContext.ClearDepthStencilView(renderTarget.GetDepthMap().GetDepthStencilView());
+			mCommandContext.ClearDepthStencilView(renderTarget.GetDepthMap().GetDepthStencilView(slice));
 		}
 	}
 
@@ -201,11 +201,12 @@ namespace na
 		mCommandContext.ClearDepthStencilView(depthStencilView);
 	}
 
-	void StateManager::BindRenderTarget(const RenderTarget &renderTarget)
+	void StateManager::BindRenderTarget(const RenderTarget &renderTarget, int slice)
 	{
-		mBoundRenderTarget = &renderTarget.GetColorMap().GetRenderTargetView();
-		mBoundDepthStencilView = &renderTarget.GetDepthMap().GetDepthStencilView();
-		mCommandContext.BindRenderTarget(renderTarget.GetColorMap().GetRenderTargetView(), renderTarget.GetDepthMap().GetDepthStencilView());
+		mBoundRenderTarget = &renderTarget.GetColorMap().GetRenderTargetView(slice);
+		mBoundDepthStencilView = &renderTarget.GetDepthMap().GetDepthStencilView(slice);
+
+		mCommandContext.BindRenderTarget(*mBoundRenderTarget, *mBoundDepthStencilView);
 	}
 
 	void StateManager::BindRenderTarget(const NGARenderTargetView &renderTargetView, const NGADepthStencilView &depthStencilView)
