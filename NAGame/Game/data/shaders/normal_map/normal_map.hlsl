@@ -45,7 +45,7 @@ float4 psMain(PixelInput input) : SV_TARGET
 	float3 B = cross(N, T);
 	float3 normal = ComputeNormalFromMap(NormalTexture.Sample(NormalSampler, texCoord), T, B, N);
 
-	LightingResult lit = ComputeFullLighting(input, matSpecular.w);
+	LightingResult lit = ComputeFullLighting(input, matSpecular.w, normal);
 
 	float4 texColor = DiffuseTexture.Sample(DiffuseSampler, texCoord);
 

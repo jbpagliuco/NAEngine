@@ -13,6 +13,7 @@ namespace na
 		NGAUsage mUsage = NGAUsage::GPU_WRITE;
 
 		bool mShaderResource = false;
+		int mArraySize = 1;
 
 		NGASamplerStateDesc mSamplerStateDesc;
 

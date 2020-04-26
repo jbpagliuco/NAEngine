@@ -20,8 +20,10 @@ namespace na
 	static ConstantBuffer ShadowMapPerObjectBuffer;
 
 
-	bool ShadowMap::Initialize()
+	bool ShadowMapBuilder::Initialize(int numShadowMaps)
 	{
+		mNumShadowMaps = numShadowMaps;
+
 		RenderTargetDesc desc;
 		desc.mWidth = SHADOWMAP_SIZE;
 		desc.mHeight = SHADOWMAP_SIZE;
@@ -31,12 +33,14 @@ namespace na
 		desc.mColorMapDesc.mShaderResource = false;
 		desc.mColorMapDesc.mType = NGATextureType::TEXTURE2D;
 		desc.mColorMapDesc.mUsage = NGAUsage::GPU_WRITE;
+		desc.mColorMapDesc.mArraySize = mNumShadowMaps;
 
 		desc.mUseDepthMap = true;
 		desc.mDepthMapDesc.mFormat = NGAFormat::R32_TYPELESS;
 		desc.mDepthMapDesc.mShaderResource = true;
 		desc.mDepthMapDesc.mType = NGATextureType::TEXTURE2D;
 		desc.mDepthMapDesc.mUsage = NGAUsage::GPU_WRITE;
+		desc.mDepthMapDesc.mArraySize = mNumShadowMaps;
 		desc.mDepthMapDesc.mSamplerStateDesc.mAddressU = NGATextureAddressMode::CLAMP;
 		desc.mDepthMapDesc.mSamplerStateDesc.mAddressV = NGATextureAddressMode::CLAMP;
 		desc.mDepthMapDesc.mSamplerStateDesc.mAddressW = NGATextureAddressMode::CLAMP;
@@ -48,31 +52,43 @@ namespace na
 		return true;
 	}
 	
-	void ShadowMap::Shutdown()
+	void ShadowMapBuilder::Shutdown()
 	{
 		mRenderTarget.Shutdown();
 	}
 
-	void ShadowMap::Build(Scene& scene, Light& light)
+	void ShadowMapBuilder::BuildAll(const Scene& scene, const Light** lights, int numLights)
 	{
 		// Set viewport
 		NA_RStateManager->SetViewport(ShadowMapViewport);
-
-		// Setup render target
-		NA_RStateManager->BindRenderTarget(mRenderTarget);
-		NA_RStateManager->ClearRenderTarget(mRenderTarget, ColorF(COLOR_WHITE).vArray, true);
 
 		// Set shaders
 		NA_RStateManager->BindShader(GetEngineShader(EngineShader::SHADOWMAP)->GetVertexShader());
 		NA_RStateManager->BindShader(GetEngineShader(EngineShader::SHADOWMAP)->GetPixelShader());
 
+		for (int i = 0; i < numLights; ++i) {
+			BuildSlice(scene, *lights[i], i);
+		}
+	}
+
+	RenderTarget& ShadowMapBuilder::GetRenderTarget()
+	{
+		return mRenderTarget;
+	}
+
+	void ShadowMapBuilder::BuildSlice(const Scene& scene, const Light& light, int slice)
+	{
 		// Set per frame data
 		Matrix lightVP = light.GetViewProj();
 		NA_RStateManager->MapBufferData(ShadowMapPerFrameBuffer.GetBuffer(), &lightVP);
 		NA_RStateManager->BindConstantBuffer(ShadowMapPerFrameBuffer.GetBuffer(), NGA_SHADER_STAGE_VERTEX, 0);
 
+		// Setup render target
+		NA_RStateManager->BindRenderTarget(mRenderTarget, slice);
+		NA_RStateManager->ClearRenderTarget(mRenderTarget, ColorF(COLOR_WHITE).vArray, true, slice);
+
 		// Render objects from the view point of the light
-		for (auto &r : scene.GetRenderables()) {
+		for (auto& r : scene.GetRenderables()) {
 			Matrix worldTransform = r->GetWorldTransform();
 			NA_RStateManager->MapBufferData(ShadowMapPerObjectBuffer.GetBuffer(), &worldTransform);
 			NA_RStateManager->BindConstantBuffer(ShadowMapPerObjectBuffer.GetBuffer(), NGA_SHADER_STAGE_VERTEX, 1);
@@ -80,11 +96,6 @@ namespace na
 			// Render without binding material
 			r->Render(false);
 		}
-	}
-
-	RenderTarget& ShadowMap::GetRenderTarget()
-	{
-		return mRenderTarget;
 	}
 
 

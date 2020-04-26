@@ -33,8 +33,15 @@ namespace na
 			switch (texDesc.mType) {
 			case NGATextureType::TEXTURE2D:
 			{
-				desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-				desc.Texture2D.MipLevels = -1;
+				if (texture.IsArray()) {
+					desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+					desc.Texture2DArray.ArraySize = texDesc.mArraySize;
+					desc.Texture2DArray.MipLevels = -1;
+				}
+				else {
+					desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+					desc.Texture2D.MipLevels = -1;
+				}
 				break;
 			}
 
@@ -76,22 +83,56 @@ namespace na
 	}
 
 
-	bool NGARenderTargetView::Construct(const NGATexture &texture)
+
+	NGARenderTargetView::NGARenderTargetView(NGARenderTargetView&& view) noexcept :
+		mView(view.mView)
+	{
+		view.mView = nullptr;
+	}
+
+	bool NGARenderTargetView::Construct(const NGATexture &texture, int slice)
 	{
 		NA_ASSERT_RETURN_VALUE(!IsConstructed(), false);
 		NA_ASSERT_RETURN_VALUE(texture.IsConstructed(), false);
 
 		const NGATextureDesc &textureDesc = texture.GetDesc();
 
-		const D3D11_RTV_DIMENSION dimension =
-			(textureDesc.mType == NGATextureType::TEXTURE1D) ? D3D11_RTV_DIMENSION_TEXTURE1D :
-			(textureDesc.mType == NGATextureType::TEXTURE2D) ? D3D11_RTV_DIMENSION_TEXTURE2D :
-			(textureDesc.mType == NGATextureType::TEXTURE3D) ? D3D11_RTV_DIMENSION_TEXTURE3D :
-			D3D11_RTV_DIMENSION_UNKNOWN;
-
 		D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc{};
 		renderTargetViewDesc.Format = NGAFormatToDXGI(textureDesc.mFormat);
-		renderTargetViewDesc.ViewDimension = dimension;
+
+		switch (textureDesc.mType) {
+		case NGATextureType::TEXTURE1D:
+			if (texture.IsArray()) {
+				renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE1DARRAY;
+				renderTargetViewDesc.Texture1DArray.MipSlice = 0;
+				renderTargetViewDesc.Texture1DArray.ArraySize = 1;
+				renderTargetViewDesc.Texture1DArray.FirstArraySlice = D3D11CalcSubresource(0, slice, 1);
+			} 
+			else {
+				renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE1D;
+			}
+			break;
+
+		case NGATextureType::TEXTURE2D:
+			if (texture.IsArray()) {
+				renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
+				renderTargetViewDesc.Texture2DArray.MipSlice = 0;
+				renderTargetViewDesc.Texture2DArray.ArraySize = 1;
+				renderTargetViewDesc.Texture2DArray.FirstArraySlice = D3D11CalcSubresource(0, slice, 1);
+			} 
+			else {
+				renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+			}
+			break;
+
+		case NGATextureType::TEXTURE3D:
+			renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE3D;
+			break;
+
+		default:
+			renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_UNKNOWN;
+			break;
+		}
 
 		// Create the render target view.
 		HRESULT hr = NgaDx11State.mDevice->CreateRenderTargetView(texture.mResource, &renderTargetViewDesc, &mView);
@@ -134,7 +175,14 @@ namespace na
 	}
 
 
-	bool NGADepthStencilView::Construct(const NGATexture& texture)
+
+	NGADepthStencilView::NGADepthStencilView(NGADepthStencilView&& view) noexcept :
+		mView(view.mView)
+	{
+		view.mView = nullptr;
+	}
+
+	bool NGADepthStencilView::Construct(const NGATexture& texture, int slice)
 	{
 		NA_ASSERT_RETURN_VALUE(!IsConstructed(), false);
 		NA_ASSERT_RETURN_VALUE(texture.IsConstructed(), false);
@@ -142,7 +190,6 @@ namespace na
 		const NGATextureDesc &textureDesc = texture.GetDesc();
 	
 		D3D11_DEPTH_STENCIL_VIEW_DESC desc{};
-		desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 
 		// Convert typeless format to strict format
 		if (NGAFormatIsTypeless(textureDesc.mFormat)) {
@@ -150,6 +197,36 @@ namespace na
 		}
 		else {
 			desc.Format = NGAFormatToDXGI(textureDesc.mFormat);
+		}
+
+		switch (textureDesc.mType) {
+		case NGATextureType::TEXTURE1D:
+			if (texture.IsArray()) {
+				desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE1DARRAY;
+				desc.Texture1DArray.MipSlice = 0;
+				desc.Texture1DArray.ArraySize = 1;
+				desc.Texture1DArray.FirstArraySlice = D3D11CalcSubresource(0, slice, 1);
+			} 
+			else {
+				desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE1D;
+			}
+			break;
+
+		case NGATextureType::TEXTURE2D:
+			if (texture.IsArray()) {
+				desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
+				desc.Texture2DArray.MipSlice = 0;
+				desc.Texture2DArray.ArraySize = 1;
+				desc.Texture2DArray.FirstArraySlice = D3D11CalcSubresource(0, slice, 1);
+			} 
+			else {
+				desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+			}
+			break;
+
+		default:
+			desc.ViewDimension = D3D11_DSV_DIMENSION_UNKNOWN;
+			break;
 		}
 
 		HRESULT hr = NgaDx11State.mDevice->CreateDepthStencilView(texture.mResource, &desc, &mView);

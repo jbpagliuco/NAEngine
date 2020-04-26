@@ -14,6 +14,7 @@ namespace na
 		desc.mTextureDesc.mType = mType;
 		desc.mTextureDesc.mUsage = mUsage;
 		desc.mTextureDesc.mBindFlags = (mShaderResource) ? NGA_TEXTURE_BIND_SHADER_RESOURCE : NGA_TEXTURE_BIND_NONE;
+		desc.mTextureDesc.mArraySize = mArraySize;
 		desc.mSamplerStateDesc = mSamplerStateDesc;
 
 		return desc;

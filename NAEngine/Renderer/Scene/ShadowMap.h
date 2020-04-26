@@ -7,18 +7,22 @@ namespace na
 	struct Light;
 	class Scene;
 
-	class ShadowMap
+	class ShadowMapBuilder
 	{
 	public:
-		bool Initialize();
+		bool Initialize(int numShadowMaps);
 		void Shutdown();
 
-		void Build(Scene& scene, Light& light);
+		void BuildAll(const Scene& scene, const Light** lights, int numLights);
 
 		RenderTarget& GetRenderTarget();
 
 	private:
+		void BuildSlice(const Scene& scene, const Light& light, int slice);
+
+	private:
 		RenderTarget mRenderTarget;
+		int mNumShadowMaps;
 	};
 
 

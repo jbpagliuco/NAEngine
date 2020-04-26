@@ -50,7 +50,8 @@ namespace na
 
 	bool Texture::Initialize(const NGASwapChain& swapChain)
 	{
-		bool success = mRenderTargetView.Construct(swapChain);
+		NGARenderTargetView& rtv = mRenderTargetViews.emplace_back();
+		bool success = rtv.Construct(swapChain);
 		NA_RENDER_ASSERT_RETURN_VALUE(success, false, "Failed to create render target view from swap chain.");
 
 		return true;
@@ -59,8 +60,14 @@ namespace na
 	void Texture::Shutdown()
 	{
 		mShaderResourceView.Destruct();
-		mDepthStencilView.Destruct();
-		mRenderTargetView.Destruct();
+
+		for (auto& dsv : mDepthStencilViews) {
+			dsv.Destruct();
+		}
+
+		for (auto& rtv : mRenderTargetViews) {
+			rtv.Destruct();
+		}
 
 		mTexture.Destruct();
 		mSampler.Destruct();
@@ -77,19 +84,19 @@ namespace na
 		return mSampler;
 	}
 
-	const NGARenderTargetView& Texture::GetRenderTargetView()const
-	{
-		return mRenderTargetView;
-	}
-
-	const NGADepthStencilView& Texture::GetDepthStencilView()const
-	{
-		return mDepthStencilView;
-	}
-
 	const NGAShaderResourceView& Texture::GetShaderResourceView()const
 	{
 		return mShaderResourceView;
+	}
+
+	const NGARenderTargetView& Texture::GetRenderTargetView(int slice)const
+	{
+		return mRenderTargetViews[slice];
+	}
+
+	const NGADepthStencilView& Texture::GetDepthStencilView(int slice)const
+	{
+		return mDepthStencilViews[slice];
 	}
 
 	bool Texture::IsShaderResource()const
@@ -109,14 +116,18 @@ namespace na
 			NA_RENDER_ASSERT_RETURN_VALUE(success, false, "Failed to create shader resource view.");
 		}
 
-		if (isRenderTarget) {
-			bool success = mRenderTargetView.Construct(mTexture);
-			NA_RENDER_ASSERT_RETURN_VALUE(success, false, "Failed to create render target view.");
-		}
+		for (int i = 0; i < textureDesc.mTextureDesc.mArraySize; ++i) {
+			if (isRenderTarget) {
+				NGARenderTargetView& rtv = mRenderTargetViews.emplace_back();
+				bool success = rtv.Construct(mTexture, i);
+				NA_RENDER_ASSERT_RETURN_VALUE(success, false, "Failed to create render target view.");
+			}
 
-		if (isDepthStencil) {
-			bool success = mDepthStencilView.Construct(mTexture);
-			NA_RENDER_ASSERT_RETURN_VALUE(success, false, "Failed to create depth stencil view.");
+			if (isDepthStencil) {
+				NGADepthStencilView& dsv = mDepthStencilViews.emplace_back();
+				bool success = dsv.Construct(mTexture, i);
+				NA_RENDER_ASSERT_RETURN_VALUE(success, false, "Failed to create depth stencil view.");
+			}
 		}
 
 		return true;

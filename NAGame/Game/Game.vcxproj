@@ -227,6 +227,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="data\shaders\EngineShaders\shader_constants.h" />
     <ClInclude Include="src\Tools.h" />
   </ItemGroup>
   <ItemGroup>

@@ -43,6 +43,8 @@ namespace na
 
 		bool IsConstructed()const;
 
+		bool IsArray()const;
+
 		const NGATextureDesc& GetDesc()const;
 		
 	private:

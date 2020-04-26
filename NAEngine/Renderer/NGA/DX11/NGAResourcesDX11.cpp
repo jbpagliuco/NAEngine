@@ -110,6 +110,11 @@ namespace na
 		return mResource != nullptr;
 	}
 
+	bool NGATexture::IsArray()const
+	{
+		return mDesc.mArraySize > 1;
+	}
+
 	const NGATextureDesc& NGATexture::GetDesc()const
 	{
 		return mDesc;

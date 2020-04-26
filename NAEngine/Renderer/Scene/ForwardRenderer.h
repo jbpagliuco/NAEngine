@@ -22,6 +22,6 @@ namespace na
 		virtual void RenderScene(Scene &scene, const Camera &camera) override;
 
 	public:
-		ShadowMap mShadowMaps[MAX_SHADOWMAPS];
+		ShadowMapBuilder mShadowMapBuilder;
 	};
 }

@@ -27,9 +27,10 @@ namespace na
 		const NGATexture& GetResource()const;
 		const NGASamplerState& GetSamplerState()const;
 
-		const NGARenderTargetView& GetRenderTargetView()const;
-		const NGADepthStencilView& GetDepthStencilView()const;
 		const NGAShaderResourceView& GetShaderResourceView()const;
+
+		const NGARenderTargetView& GetRenderTargetView(int slice = 0)const;
+		const NGADepthStencilView& GetDepthStencilView(int slice = 0)const;
 
 		bool IsShaderResource()const;
 
@@ -43,7 +44,7 @@ namespace na
 		NGAShaderResourceView mShaderResourceView;
 
 		// A texture can either have a render target view or a depth stencil view, but never both.
-		NGARenderTargetView mRenderTargetView;
-		NGADepthStencilView mDepthStencilView;
+		std::vector<NGARenderTargetView> mRenderTargetViews;
+		std::vector<NGADepthStencilView> mDepthStencilViews;
 	};
 }
