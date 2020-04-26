@@ -2,7 +2,8 @@
 
 #include "SceneRenderer.h"
 
-#include "Renderer/Scene/ShadowMap.h"
+#include "Renderer/Pipelines/ShadowMap.h"
+#include "Renderer/Pipelines/Skybox.h"
 #include "Renderer/Shader/EngineShaders/shader_constants.h"
 
 namespace na
@@ -22,6 +23,9 @@ namespace na
 		virtual void RenderScene(Scene &scene, const Camera &camera) override;
 
 	public:
+		NGAPipelineState mRenderPipelineState;
+
 		ShadowMapBuilder mShadowMapBuilder;
+		Skybox mSkybox;
 	};
 }

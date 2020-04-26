@@ -213,6 +213,7 @@
     <ClCompile Include="Material\MaterialContainer.cpp" />
     <ClCompile Include="NGA\DX11\NGAPipelineStateDX11.cpp" />
     <ClCompile Include="NGA\DX11\NGASwapChainDX11.cpp" />
+    <ClCompile Include="Pipelines\Skybox.cpp" />
     <ClCompile Include="Resources\ConstantBuffer.cpp" />
     <ClCompile Include="ImguiRenderer.cpp" />
     <ClCompile Include="Light.cpp" />
@@ -235,7 +236,7 @@
     <ClCompile Include="Resources\RenderTarget.cpp" />
     <ClCompile Include="Scene\Camera.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
-    <ClCompile Include="Scene\ShadowMap.cpp" />
+    <ClCompile Include="Pipelines\ShadowMap.cpp" />
     <ClCompile Include="Shader\Shader.cpp" />
     <ClCompile Include="Shader\ShaderProgram.cpp" />
     <ClCompile Include="StateManager.cpp" />
@@ -251,6 +252,7 @@
     <ClInclude Include="NGA\NGAPipelineStateDefs.h" />
     <ClInclude Include="NGA\NGAShapes.h" />
     <ClInclude Include="NGA\NGASwapChain.h" />
+    <ClInclude Include="Pipelines\Skybox.h" />
     <ClInclude Include="Resources\ConstantBuffer.h" />
     <ClInclude Include="ImguiRenderer.h" />
     <ClInclude Include="Light.h" />
@@ -275,7 +277,7 @@
     <ClInclude Include="Resources\IndexBuffer.h" />
     <ClInclude Include="Resources\RenderTarget.h" />
     <ClInclude Include="Scene\Camera.h" />
-    <ClInclude Include="Scene\ShadowMap.h" />
+    <ClInclude Include="Pipelines\ShadowMap.h" />
     <ClInclude Include="Shader\EngineShaders\shader_constants.h" />
     <ClInclude Include="Shader\Shader.h" />
     <ClInclude Include="Shader\ShaderProgram.h" />
@@ -295,6 +297,7 @@
   <ItemGroup>
     <None Include="Shader\EngineShaders\build_shadow_map\build_shadow_map.shaderx" />
     <None Include="Shader\EngineShaders\material.hlsli" />
+    <None Include="Shader\EngineShaders\skybox\skybox.shaderx" />
     <None Include="Shader\HLSL\light.hlsli" />
     <None Include="Shader\HLSL\shader_common.hlsli" />
     <None Include="Shader\HLSL\shader_common_ps.hlsli" />
@@ -303,6 +306,10 @@
   <ItemGroup>
     <FxCompile Include="*.hlsl">
       <ExcludedFromBuild Condition="true">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shader\EngineShaders\skybox\skybox.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

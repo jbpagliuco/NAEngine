@@ -14,7 +14,16 @@ namespace na
 {
 	bool ForwardRenderer::Initialize()
 	{
-		mShadowMapBuilder.Initialize(MAX_SHADOWMAPS);
+		bool success = mShadowMapBuilder.Initialize(MAX_SHADOWMAPS);
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize shadowmap builder.");
+
+		success = mSkybox.Initialize("desertcube1024.dds");
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize skybox.");
+
+		success = mRenderPipelineState.Construct(NGAFixedFunctionStateDesc(), NGAGraphicsPipelineInputAssemblyDesc());
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to render pipeline state.");
+
+		// Register engine assets
 		RegisterEngineRenderTarget("shadowMap", &mShadowMapBuilder.GetRenderTarget());
 
 		return true;
@@ -22,7 +31,10 @@ namespace na
 
 	void ForwardRenderer::Shutdown()
 	{
+		mSkybox.Shutdown();
 		mShadowMapBuilder.Shutdown();
+
+		mRenderPipelineState.Destruct();
 	}
 
 	void ForwardRenderer::BeginRender()
@@ -74,10 +86,9 @@ namespace na
 		r.height = (float)NA_Renderer->GetWindow().height;
 		NA_RStateManager->SetViewport(r);
 
-		// Set per frame data
-		Matrix cameraView = camera.mTransform.GetMatrix().Inverted();
-		Matrix cameraProj = Matrix::PerspectiveFOVLH(camera.mFOV, NA_Renderer->GetWindow().GetAspectRatio(), camera.mNear, camera.mFar);
-		
+		NA_RStateManager->BindPipelineState(mRenderPipelineState);
+
+		// Set per frame data		
 		Matrix shadowCasterMatrices[MAX_SHADOWMAPS];
 		for (int i = 0; i < MAX_SHADOWMAPS; ++i) {
 			if (shadowCasters[i] != nullptr) {
@@ -85,7 +96,7 @@ namespace na
 			}
 		}
 
-		NA_RStateManager->SetPerFrameData(cameraProj * cameraView, shadowCasterMatrices, numShadowCasters);
+		NA_RStateManager->SetPerFrameData(camera.GetViewProj(), shadowCasterMatrices, numShadowCasters);
 
 		// Bind render target
 		RenderTarget* rt = (camera.mRenderTarget == nullptr) ? NA_RMainRenderTarget : camera.mRenderTarget;
@@ -116,6 +127,9 @@ namespace na
 			NA_RStateManager->SetObjectTransform(r->GetWorldTransform());
 			r->Render();
 		}
+
+		// Draw skybox
+		mSkybox.Render(camera);
 
 		// Unbind shadow maps
 		NA_RStateManager->BindShaderResource(NGAShaderResourceView::INVALID, NGA_SHADER_STAGE_PIXEL, (int)TextureRegisters::SHADOWMAP);

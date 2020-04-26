@@ -18,6 +18,8 @@ namespace na
 			mRenderTarget(nullptr),
 			mId(NumCameras++) { }
 
+		Matrix GetViewProj()const;
+
 	public:
 		Transform mTransform;
 		bool mEnabled;

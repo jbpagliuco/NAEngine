@@ -114,7 +114,10 @@
     <ClCompile Include="Material\MaterialContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\ShadowMap.cpp">
+    <ClCompile Include="Pipelines\Skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Pipelines\ShadowMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -239,10 +242,13 @@
     <ClInclude Include="Material\MaterialContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\ShadowMap.h">
+    <ClInclude Include="Shader\EngineShaders\shader_constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Shader\EngineShaders\shader_constants.h">
+    <ClInclude Include="Pipelines\Skybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pipelines\ShadowMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -256,5 +262,9 @@
     <None Include="Shader\HLSL\shader_common_vs.hlsli" />
     <None Include="Shader\EngineShaders\material.hlsli" />
     <None Include="Shader\EngineShaders\build_shadow_map\build_shadow_map.shaderx" />
+    <None Include="Shader\EngineShaders\skybox\skybox.shaderx" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shader\EngineShaders\skybox\skybox.hlsl" />
   </ItemGroup>
 </Project>

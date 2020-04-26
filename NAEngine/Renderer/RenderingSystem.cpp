@@ -11,6 +11,8 @@
 #include "NGA/NGACore.h"
 
 #include "Renderer/ImguiRenderer.h"
+#include "Renderer/Pipelines/ShadowMap.h"
+#include "Renderer/Pipelines/Skybox.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/Scene/Camera.h"
 #include "Renderer/Scene/ForwardRenderer.h"
@@ -85,8 +87,10 @@ namespace na
 	{
 		// Create engine shaders
 		RegisterEngineShader(EngineShader::SHADOWMAP, "build_shadow_map.shaderx");
+		RegisterEngineShader(EngineShader::SKYBOX, "skybox.shaderx");
 
 		ShadowMapSystemInitialize();
+		SkyboxSystemInitialize();
 
 		FRenderer.Initialize();
 
@@ -97,6 +101,7 @@ namespace na
 	{
 		FRenderer.Shutdown();
 
+		SkyboxSystemShutdown();
 		ShadowMapSystemShutdown();
 
 		UnregisterAllEngineShaders();
