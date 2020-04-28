@@ -15,7 +15,7 @@ namespace na
 		bool Initialize();
 		void Shutdown();
 
-		void Build(const Scene &scene, const Camera& camera);
+		void Build(const Scene &scene, const Camera& camera, const NGADepthStencilView &dsv);
 
 	private:
 		NGAPipelineState mPipelineState;

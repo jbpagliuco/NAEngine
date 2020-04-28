@@ -105,7 +105,7 @@ namespace na
 	
 	void ForwardRenderer::BuildSSAOMap(Scene &scene, const Camera &camera)
 	{
-		mSSAOBuilder.Build(scene, camera);
+		mSSAOBuilder.Build(scene, camera, NA_RMainRenderTarget->GetDepthMap().GetDepthStencilView());
 	}
 	
 	void ForwardRenderer::RenderSceneToBackBuffer(Scene &scene, const Camera &camera)
