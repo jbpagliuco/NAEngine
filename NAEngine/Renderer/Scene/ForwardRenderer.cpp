@@ -3,6 +3,7 @@
 #include "Base/File/File.h"
 #include "Base/Util/Color.h"
 
+#include "Renderer/Pipelines/DebugTexture.h"
 #include "Renderer/Pipelines/SkyboxPipeline.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/RenderingSystem.h"
@@ -18,6 +19,9 @@ namespace na
 		bool success = mShadowMapBuilder.Initialize(MAX_SHADOWMAPS);
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize shadowmap builder.");
 
+		success = mSSAOBuilder.Initialize();
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize SSAO builder.");
+
 		success = mRenderPipelineState.Construct(NGAFixedFunctionStateDesc(), NGAGraphicsPipelineInputAssemblyDesc());
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to render pipeline state.");
 
@@ -29,6 +33,7 @@ namespace na
 
 	void ForwardRenderer::Shutdown()
 	{
+		mSSAOBuilder.Shutdown();
 		mShadowMapBuilder.Shutdown();
 
 		mRenderPipelineState.Destruct();
@@ -44,11 +49,24 @@ namespace na
 
 	void ForwardRenderer::RenderScene(Scene &scene, const Camera &camera)
 	{
-		//////////////////////////////////////////////////////////////
-		// Gather all the shadow casting lights
-		Light *shadowCasters[MAX_SHADOWMAPS];
+		CollectShadowCastingLights(scene);
+
+		BuildShadowMaps(scene, camera);
+		BuildSSAOMap(scene, camera);
+
+		RenderSceneToBackBuffer(scene, camera);
+
+		// Unbind shadow maps
+		NA_RStateManager->BindShaderResource(NGAShaderResourceView::INVALID, NGA_SHADER_STAGE_PIXEL, (int)TextureRegisters::SHADOWMAP);
+		NA_RStateManager->BindSamplerState(NGASamplerState::INVALID, NGA_SHADER_STAGE_PIXEL, (int)SamplerStateRegisters::SHADOWMAP);
+	}
+
+
+	void ForwardRenderer::CollectShadowCastingLights(Scene& scene)
+	{
+		// Clear out our shadow casting light list
 		for (int i = 0; i < MAX_SHADOWMAPS; ++i) {
-			shadowCasters[i] = nullptr;
+			mShadowCastingLights[i] = nullptr;
 		}
 
 		int shadowCasterIndex = 0;
@@ -60,22 +78,29 @@ namespace na
 			if (shadowCasterIndex < MAX_SHADOWMAPS) {
 				// Is this a shadow casting light?
 				if (light->mType == (int)LightType::DIRECTIONAL && light->mEnabled) {
-					shadowCasters[shadowCasterIndex] = light;
-					shadowCasters[shadowCasterIndex]->mShadowCastingIndex = shadowCasterIndex;
+					mShadowCastingLights[shadowCasterIndex] = light;
+					mShadowCastingLights[shadowCasterIndex]->mShadowCastingIndex = shadowCasterIndex;
 
 					++shadowCasterIndex;
 				}
 			}
 		}
 
-		const int numShadowCasters = shadowCasterIndex;
+		mNumShadowCastingLights = shadowCasterIndex;
+	}
 
-		//////////////////////////////////////////////////////////////
-		// Build our shadow maps
-		mShadowMapBuilder.BuildAll(scene, (const Light**)shadowCasters, numShadowCasters);
-
-		//////////////////////////////////////////////////////////////
-		// Render the real scene
+	void ForwardRenderer::BuildShadowMaps(Scene &scene, const Camera &camera)
+	{
+		mShadowMapBuilder.BuildAll(scene, (const Light**)mShadowCastingLights, mNumShadowCastingLights);
+	}
+	
+	void ForwardRenderer::BuildSSAOMap(Scene &scene, const Camera &camera)
+	{
+		mSSAOBuilder.Build(scene, camera);
+	}
+	
+	void ForwardRenderer::RenderSceneToBackBuffer(Scene &scene, const Camera &camera)
+	{
 		NGARect r;
 		r.x = 0.0f;
 		r.y = 0.0f;
@@ -85,20 +110,20 @@ namespace na
 
 		NA_RStateManager->BindPipelineState(mRenderPipelineState);
 
-		// Set per frame data		
+		// Set per frame data
 		Matrix shadowCasterMatrices[MAX_SHADOWMAPS];
 		for (int i = 0; i < MAX_SHADOWMAPS; ++i) {
-			if (shadowCasters[i] != nullptr) {
-				shadowCasterMatrices[i] = shadowCasters[i]->GetViewProj();
+			if (mShadowCastingLights[i] != nullptr) {
+				shadowCasterMatrices[i] = mShadowCastingLights[i]->GetViewProj();
 			}
 		}
 
-		NA_RStateManager->SetPerFrameData(camera.GetViewProj(), shadowCasterMatrices, numShadowCasters);
+		NA_RStateManager->SetPerFrameData(camera.GetViewProj(), shadowCasterMatrices, mNumShadowCastingLights);
 
 		// Bind render target
 		RenderTarget* rt = (camera.mRenderTarget == nullptr) ? NA_RMainRenderTarget : camera.mRenderTarget;
-		NA_RStateManager->BindRenderTarget(*rt);
-		NA_RStateManager->ClearRenderTarget(*rt, ColorF(COLOR_CORNFLOWERBLUE).vArray, true);
+		rt->Bind();
+		rt->Clear(ColorF(COLOR_CORNFLOWERBLUE).vArray, true);
 
 		// Bind shadow map textures
 		const Texture &depthMap = mShadowMapBuilder.GetRenderTarget().GetDepthMap();
@@ -120,18 +145,19 @@ namespace na
 		}
 		NA_RStateManager->SetLightsData(lightsData);
 
+		// Render all the renderables in the scene
 		for (auto &r : scene.GetRenderables()) {
 			NA_RStateManager->SetObjectTransform(r->GetWorldTransform());
 			r->Render();
 		}
 
-		// Draw skybox
+		// Draw skybox last
 		if (camera.mSkybox != nullptr) {
 			RenderSkybox(*camera.mSkybox, camera);
 		}
 
-		// Unbind shadow maps
-		NA_RStateManager->BindShaderResource(NGAShaderResourceView::INVALID, NGA_SHADER_STAGE_PIXEL, (int)TextureRegisters::SHADOWMAP);
-		NA_RStateManager->BindSamplerState(NGASamplerState::INVALID, NGA_SHADER_STAGE_PIXEL, (int)SamplerStateRegisters::SHADOWMAP);
+		// Draw debug texture, if set
+		NA_RStateManager->BindPipelineState(mRenderPipelineState);
+		RenderDebugTexture();
 	}
 }

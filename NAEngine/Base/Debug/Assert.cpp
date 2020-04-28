@@ -40,7 +40,7 @@ bool NAPrintAssertMessage(const char *assert, const char *file, int line, const 
 	va_list args;
 	va_start(args, format);
 
-	char message[1024];
+	char message[4096];
 	vsprintf_s(message, format, args);
 	va_end(args);
 
@@ -75,7 +75,7 @@ void NAPrintErrorMessage(const char *assert, const char *file, int line, const c
 	va_list args;
 	va_start(args, format);
 
-	char message[1024];
+	char message[4096];
 	vsprintf_s(message, format, args);
 	va_end(args);
 

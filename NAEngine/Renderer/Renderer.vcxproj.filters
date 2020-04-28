@@ -123,6 +123,12 @@
     <ClCompile Include="Pipelines\SkyboxPipeline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Pipelines\SSAO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Pipelines\DebugTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RenderingSystem.h">
@@ -257,6 +263,12 @@
     <ClInclude Include="Pipelines\SkyboxPipeline.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Pipelines\SSAO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pipelines\DebugTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -269,8 +281,12 @@
     <None Include="Shader\EngineShaders\material.hlsli" />
     <None Include="Shader\EngineShaders\build_shadow_map\build_shadow_map.shaderx" />
     <None Include="Shader\EngineShaders\skybox\skybox.shaderx" />
+    <None Include="Shader\EngineShaders\build_ssao_normal_depth\build_ssao_normal_depth.shaderx" />
+    <None Include="Shader\EngineShaders\debug_texture\debug_texture.shaderx" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\EngineShaders\skybox\skybox.hlsl" />
+    <FxCompile Include="Shader\EngineShaders\build_ssao_normal_depth\build_ssao_normal_depth.hlsl" />
+    <FxCompile Include="Shader\EngineShaders\debug_texture\debug_texture.hlsl" />
   </ItemGroup>
 </Project>

@@ -45,6 +45,9 @@ namespace na
 		bool HasColorMap()const;
 		bool HasDepthMap()const;
 
+		void Bind(int slice = 0)const;
+		void Clear(const float *clearColor, bool clearDepth, int slice = 0)const;
+
 	private:
 		Texture mColorMap;
 		Texture mDepthMap;

@@ -182,16 +182,6 @@ namespace na
 	}
 
 
-	void StateManager::ClearRenderTarget(const RenderTarget &renderTarget, const float *clearColor, bool clearDepth, int slice)
-	{
-		if (renderTarget.HasColorMap()) {
-			mCommandContext.ClearRenderTarget(renderTarget.GetColorMap().GetRenderTargetView(slice), clearColor);
-		}
-
-		if (renderTarget.HasDepthMap() && clearDepth) {
-			mCommandContext.ClearDepthStencilView(renderTarget.GetDepthMap().GetDepthStencilView(slice));
-		}
-	}
 
 	void StateManager::ClearRenderTarget(const NGARenderTargetView &renderTargetView, const float *clearColor)
 	{
@@ -201,14 +191,6 @@ namespace na
 	void StateManager::ClearDepthStencilView(const NGADepthStencilView &depthStencilView)
 	{
 		mCommandContext.ClearDepthStencilView(depthStencilView);
-	}
-
-	void StateManager::BindRenderTarget(const RenderTarget &renderTarget, int slice)
-	{
-		mBoundRenderTarget = &renderTarget.GetColorMap().GetRenderTargetView(slice);
-		mBoundDepthStencilView = &renderTarget.GetDepthMap().GetDepthStencilView(slice);
-
-		mCommandContext.BindRenderTarget(*mBoundRenderTarget, *mBoundDepthStencilView);
 	}
 
 	void StateManager::BindRenderTarget(const NGARenderTargetView &renderTargetView, const NGADepthStencilView &depthStencilView)

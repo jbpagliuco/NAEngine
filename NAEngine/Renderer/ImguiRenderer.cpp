@@ -63,7 +63,7 @@ namespace na
 
 	void ImguiRendererEndFrame()
 	{
-		NA_RStateManager->BindRenderTarget(*NA_RMainRenderTarget);
+		NA_RMainRenderTarget->Bind();
 
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

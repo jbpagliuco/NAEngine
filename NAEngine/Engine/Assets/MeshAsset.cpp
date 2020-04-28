@@ -11,12 +11,12 @@
 #include "Renderer/Mesh.h"
 
 
-// MeshX File Format - Version 2
+// MeshX File NGAFormat - Version 2
 // Header:
 //		Version - 4 bytes
 //		Num Vertex Attributes - 4 bytes
 //		List of Vertex Attributes - 6 * Num Vertex Attributes bytes
-//			Format - 1 byte
+//			NGAFormat - 1 byte
 //			Semantic Type - 1 byte
 //			Semantic Index - 1 byte
 //		Num Vertices - 8 bytes
@@ -429,31 +429,31 @@ namespace na
 		WRITE("Num Vertex Attributes", file.Write<uint32_t>(numAttributes));
 
 		// Always write position
-		WRITE("POSITION Format", file.Write<uint8_t>((uint8_t)Format::R32G32B32_FLOAT));
-		WRITE("POSITION Semantic", file.Write<uint8_t>((uint8_t)VertexSemanticType::POSITION));
+		WRITE("POSITION NGAFormat", file.Write<uint8_t>((uint8_t)NGAFormat::R32G32B32_FLOAT));
+		WRITE("POSITION Semantic", file.Write<uint8_t>((uint8_t)NGAVertexSemanticType::POSITION));
 		WRITE("POSITION Semantic Index", file.Write<uint8_t>(0));
 
 		if (vertices.mHasNormal) {
-			WRITE("NORMAL Format", file.Write<uint8_t>((uint8_t)Format::R32G32B32_FLOAT));
-			WRITE("NORMAL Semantic", file.Write<uint8_t>((uint8_t)VertexSemanticType::NORMAL));
+			WRITE("NORMAL NGAFormat", file.Write<uint8_t>((uint8_t)NGAFormat::R32G32B32_FLOAT));
+			WRITE("NORMAL Semantic", file.Write<uint8_t>((uint8_t)NGAVertexSemanticType::NORMAL));
 			WRITE("NORMAL Semantic Index", file.Write<uint8_t>(0));
 		}
 
 		if (vertices.mHasTexCoord) {
-			WRITE("TEXCOORD Format", file.Write<uint8_t>((uint8_t)Format::R32G32_FLOAT));
-			WRITE("TEXCOORD Semantic", file.Write<uint8_t>((uint8_t)VertexSemanticType::TEXCOORD));
+			WRITE("TEXCOORD NGAFormat", file.Write<uint8_t>((uint8_t)NGAFormat::R32G32_FLOAT));
+			WRITE("TEXCOORD Semantic", file.Write<uint8_t>((uint8_t)NGAVertexSemanticType::TEXCOORD));
 			WRITE("TEXCOORD Semantic Index", file.Write<uint8_t>(0));
 		}
 
 		if (vertices.mHasTangent) {
-			WRITE("TANGENT Format", file.Write<uint8_t>((uint8_t)Format::R32G32B32_FLOAT));
-			WRITE("TANGENT Semantic", file.Write<uint8_t>((uint8_t)VertexSemanticType::TANGENT));
+			WRITE("TANGENT NGAFormat", file.Write<uint8_t>((uint8_t)NGAFormat::R32G32B32_FLOAT));
+			WRITE("TANGENT Semantic", file.Write<uint8_t>((uint8_t)NGAVertexSemanticType::TANGENT));
 			WRITE("TANGENT Semantic Index", file.Write<uint8_t>(0));
 		}
 
 		if (vertices.mHasBinormal) {
-			WRITE("BINORMAL Format", file.Write<uint8_t>((uint8_t)Format::R32G32B32_FLOAT));
-			WRITE("BINORMAL Semantic", file.Write<uint8_t>((uint8_t)VertexSemanticType::BINORMAL));
+			WRITE("BINORMAL NGAFormat", file.Write<uint8_t>((uint8_t)NGAFormat::R32G32B32_FLOAT));
+			WRITE("BINORMAL Semantic", file.Write<uint8_t>((uint8_t)NGAVertexSemanticType::BINORMAL));
 			WRITE("BINORMAL Semantic Index", file.Write<uint8_t>(0));
 		}
 
