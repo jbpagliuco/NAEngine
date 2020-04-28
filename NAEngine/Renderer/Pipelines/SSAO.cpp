@@ -26,17 +26,23 @@ namespace na
 
 	bool SSAOBuilder::Initialize()
 	{
+		bool success = mPipelineState.Construct(NGAFixedFunctionStateDesc(), NGAGraphicsPipelineInputAssemblyDesc());
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize SSAO pipeline state.");
+
 		RenderTargetDesc rtDesc;
 		rtDesc.mWidth = NA_Renderer->GetWindow().width;
 		rtDesc.mHeight = NA_Renderer->GetWindow().height;
 		rtDesc.mUseColorMap = true;
-		rtDesc.mUseDepthMap = false;
-		rtDesc.mColorMapDesc.mFormat = NGAFormat::R16G16B16A16_FLOAT;
+		rtDesc.mColorMapDesc.mFormat = NGAFormat::R32G32B32A32_FLOAT;
 		rtDesc.mColorMapDesc.mShaderResource = true;
 		rtDesc.mColorMapDesc.mType = NGATextureType::TEXTURE2D;
 		rtDesc.mColorMapDesc.mUsage = NGAUsage::GPU_WRITE;
+		rtDesc.mUseDepthMap = true;
+		rtDesc.mDepthMapDesc.mFormat = NGAFormat::D16_UNORM;
+		rtDesc.mDepthMapDesc.mType = NGATextureType::TEXTURE2D;
+		rtDesc.mDepthMapDesc.mUsage = NGAUsage::GPU_WRITE;
 
-		bool success = mNormalDepthRenderTarget.Initialize(rtDesc);
+		success = mNormalDepthRenderTarget.Initialize(rtDesc);
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize SSAO render target.");
 
 		mPerFrameBuffer.Initialize(ConstantBufferUsage::CPU_WRITE, nullptr, sizeof(SSAOPerFrame));
@@ -53,15 +59,18 @@ namespace na
 		mPerObjectBuffer.Shutdown();
 		mPerFrameBuffer.Shutdown();
 		mNormalDepthRenderTarget.Shutdown();
+		mPipelineState.Destruct();
 	}
 
 	void SSAOBuilder::Build(const Scene &scene, const Camera& camera)
 	{
+		NA_RStateManager->BindPipelineState(mPipelineState);
+
 		mNormalDepthRenderTarget.Bind();
 
 		// Clear view space normal to (0,0,-1) and clear depth to be very far away.  
 		const float clearColor[] = {0.0f, 0.0f, -1.0f, 1e5f};
-		mNormalDepthRenderTarget.Clear(clearColor, false);
+		mNormalDepthRenderTarget.Clear(clearColor, true);
 
 		// Bind per frame data
 		SSAOPerFrame perFrameData;

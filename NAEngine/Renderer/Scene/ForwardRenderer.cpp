@@ -51,8 +51,17 @@ namespace na
 	{
 		CollectShadowCastingLights(scene);
 
-		BuildShadowMaps(scene, camera);
+		NGARect r;
+		r.x = 0.0f;
+		r.y = 0.0f;
+		r.width = (float)NA_Renderer->GetWindow().width;
+		r.height = (float)NA_Renderer->GetWindow().height;
+		NA_RStateManager->SetViewport(r);
+
+		NA_RStateManager->BindPipelineState(mRenderPipelineState);
+
 		BuildSSAOMap(scene, camera);
+		BuildShadowMaps(scene, camera);
 
 		RenderSceneToBackBuffer(scene, camera);
 

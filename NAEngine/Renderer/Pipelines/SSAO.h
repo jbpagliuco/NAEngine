@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Renderer/NGA/NGAPipelineState.h"
 #include "Renderer/Resources/ConstantBuffer.h"
 #include "Renderer/Resources/RenderTarget.h"
 
@@ -17,6 +18,7 @@ namespace na
 		void Build(const Scene &scene, const Camera& camera);
 
 	private:
+		NGAPipelineState mPipelineState;
 		RenderTarget mNormalDepthRenderTarget;
 
 		ConstantBuffer mPerFrameBuffer;
