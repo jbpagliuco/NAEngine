@@ -4,7 +4,6 @@
 
 #include "Renderer/NGA/NGAPipelineState.h"
 #include "Renderer/Pipelines/ShadowMap.h"
-#include "Renderer/Pipelines/SSAO.h"
 #include "Renderer/Shader/EngineShaders/shader_constants.h"
 
 namespace na
@@ -27,7 +26,6 @@ namespace na
 	private:
 		void CollectShadowCastingLights(Scene &scene);
 		void BuildShadowMaps(Scene &scene, const Camera &camera);
-		void BuildSSAOMap(Scene &scene, const Camera &camera);
 		void RenderSceneToBackBuffer(Scene &scene, const Camera &camera);
 
 	private:
@@ -37,6 +35,5 @@ namespace na
 		int mNumShadowCastingLights;
 
 		ShadowMapBuilder mShadowMapBuilder;
-		SSAOBuilder mSSAOBuilder;
 	};
 }

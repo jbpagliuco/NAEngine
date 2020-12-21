@@ -65,7 +65,7 @@ namespace na
 
 		std::string fullPath;
 		bool success = GetFullFilepath(fullPath, shaderFilename);
-		NA_ASSERT_RETURN(success, "Failed to find %s", shaderFilename);
+		NA_ASSERT_RETURN(success, "Failed to find %s", shaderFilename.c_str());
 
 		AssetID id = RequestAsset(fullPath);
 		EngineShaders[name] = Shader::Get(id);
@@ -118,7 +118,6 @@ namespace na
 		RegisterEngineShader(EngineShader::DEBUG_TEXTURE, "debug_texture.shaderx");
 		RegisterEngineShader(EngineShader::SHADOWMAP, "build_shadow_map.shaderx");
 		RegisterEngineShader(EngineShader::SKYBOX, "skybox.shaderx");
-		RegisterEngineShader(EngineShader::BUILD_SSAO_NORMAL_DEPTH, "build_ssao_normal_depth.shaderx");
 
 		DebugTextureSystemInitialize();
 		ShadowMapSystemInitialize();

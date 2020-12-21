@@ -19,9 +19,6 @@ namespace na
 		bool success = mShadowMapBuilder.Initialize(MAX_SHADOWMAPS);
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize shadowmap builder.");
 
-		success = mSSAOBuilder.Initialize();
-		NA_ASSERT_RETURN_VALUE(success, false, "Failed to initialize SSAO builder.");
-
 		success = mRenderPipelineState.Construct(NGAFixedFunctionStateDesc(), NGAGraphicsPipelineInputAssemblyDesc());
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to render pipeline state.");
 
@@ -33,7 +30,6 @@ namespace na
 
 	void ForwardRenderer::Shutdown()
 	{
-		mSSAOBuilder.Shutdown();
 		mShadowMapBuilder.Shutdown();
 
 		mRenderPipelineState.Destruct();
@@ -60,7 +56,6 @@ namespace na
 
 		NA_RStateManager->BindPipelineState(mRenderPipelineState);
 
-		BuildSSAOMap(scene, camera);
 		BuildShadowMaps(scene, camera);
 
 		RenderSceneToBackBuffer(scene, camera);
@@ -101,11 +96,6 @@ namespace na
 	void ForwardRenderer::BuildShadowMaps(Scene &scene, const Camera &camera)
 	{
 		mShadowMapBuilder.BuildAll(scene, (const Light**)mShadowCastingLights, mNumShadowCastingLights);
-	}
-	
-	void ForwardRenderer::BuildSSAOMap(Scene &scene, const Camera &camera)
-	{
-		mSSAOBuilder.Build(scene, camera, NA_RMainRenderTarget->GetDepthMap().GetDepthStencilView());
 	}
 	
 	void ForwardRenderer::RenderSceneToBackBuffer(Scene &scene, const Camera &camera)
