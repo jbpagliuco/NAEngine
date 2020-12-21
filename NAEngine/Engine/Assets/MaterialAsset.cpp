@@ -268,7 +268,7 @@ namespace na
 				
 				if (type == "texture") {
 					if (isEngineResource) {
-						Texture* texture = GetEngineTexture(parameter.AsString().substr(1));
+						const Texture* texture = GetEngineTexture(parameter.AsString().substr(1));
 						textures.push_back(texture);
 					}
 					else {

@@ -1,7 +1,8 @@
 #include "RenderTarget.h"
 
-#include "Renderer/RenderDefs.h"
 #include "Renderer/NGA/NGASwapChain.h"
+#include "Renderer/RenderDefs.h"
+#include "Renderer/Renderer.h"
 
 namespace na
 {
@@ -93,5 +94,21 @@ namespace na
 	bool RenderTarget::HasDepthMap()const
 	{
 		return mHasDepthMap;
+	}
+
+	void RenderTarget::Bind(int slice)const
+	{
+		NA_RStateManager->BindRenderTarget(mColorMap.GetRenderTargetView(slice), mDepthMap.GetDepthStencilView(slice));
+	}
+	
+	void RenderTarget::Clear(const float* clearColor, bool clearDepth, int slice)const
+	{
+		if (HasColorMap()) {
+			NA_RStateManager->ClearRenderTarget(GetColorMap().GetRenderTargetView(slice), clearColor);
+		}
+
+		if (clearDepth && HasDepthMap()) {
+			NA_RStateManager->ClearDepthStencilView(GetDepthMap().GetDepthStencilView(slice));
+		}
 	}
 }

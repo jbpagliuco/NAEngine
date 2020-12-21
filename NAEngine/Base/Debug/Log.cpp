@@ -16,7 +16,7 @@ namespace na
 		mbstowcs_s(&garbage, wFilter, filter.c_str(), STATIC_ARRAY_SIZE(wFilter));
 		OutputDebugString(wFilter);
 
-		wchar_t wMessage[1024];
+		wchar_t wMessage[4096];
 		mbstowcs_s(&garbage, wMessage, message.c_str(), STATIC_ARRAY_SIZE(wMessage));
 		OutputDebugString(wMessage);
 
@@ -27,7 +27,7 @@ namespace na
 	{
 		const std::string filterFormatted = "[" + filter + "]";
 
-		char message[1024];
+		char message[4096];
 		vsprintf_s(message, format, args);
 
 		printf("%s%s\r\n", filterFormatted.c_str(), message);
@@ -47,7 +47,7 @@ namespace na
 	{
 		const std::string filterFormatted = "[" + filter + "]";
 
-		char message[1024];
+		char message[4096];
 		vsprintf_s(message, format, args);
 
 		// Print with red color

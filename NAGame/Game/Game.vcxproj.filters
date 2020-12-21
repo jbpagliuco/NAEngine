@@ -45,4 +45,7 @@
     <None Include="data\skyboxes\snow.skyx" />
     <None Include="data\skyboxes\sunset.skyx" />
   </ItemGroup>
+  <ItemGroup>
+    <Object Include="data\meshes\quad.obj" />
+  </ItemGroup>
 </Project>

@@ -10,6 +10,7 @@ namespace na
 	{
 	public:
 		Matrix();
+
 		// Creates a 4x4 matrix with the given data.
 		// pData[0..3] = Column 1.
 		// pData[4..7] = Column 2.

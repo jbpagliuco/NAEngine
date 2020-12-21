@@ -117,12 +117,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugTools|x64'">
     <IncludePath>$(SolutionDir)\..\NAEngine\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\..\NAEngine\Vendor\PhysX\bin\win.x86_64.vc141.mt\debug;$(SolutionDir)\..\NAEngine\Vendor\DirectXTK\Lib\$(Platform);$(SolutionDir)\..\NAEngine\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)\..\NAEngine\Vendor\PhysX\bin\win.x86_64.vc141.mt\Debug\;$(SolutionDir)\..\NAEngine\Vendor\DirectXTK\Lib\$(Platform)\Debug\;$(SolutionDir)\..\NAEngine\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)\Output\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(SolutionDir)\..\NAEngine\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\..\NAEngine\Vendor\PhysX\bin\win.x86_64.vc141.mt\$(Configuration);$(SolutionDir)\..\NAEngine\Vendor\DirectXTK\Lib\$(Platform)\$(Configuration);$(SolutionDir)\..\NAEngine\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)\..\NAEngine\Vendor\PhysX\bin\win.x86_64.vc141.mt\$(Configuration)\;$(SolutionDir)\..\NAEngine\Vendor\DirectXTK\Lib\$(Platform)\$(Configuration)\;$(SolutionDir)\..\NAEngine\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)\Output\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -175,6 +175,7 @@
       <PreprocessorDefinitions>_NA_TOOLS;_NA_DEBUG;_NA_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\NAEngine\;$(IncludePath)</AdditionalIncludeDirectories>
       <AdditionalOptions>/analyze %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>NABase.lib;NAEngine.lib;NARenderer.lib;Vendor.lib;directxtk.lib;PhysX_64.lib;PhysXCommon_64.lib;PhysXFoundation_64.lib;PhysXExtensions_static_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -240,6 +241,13 @@
     <None Include="data\skyboxes\grass.skyx" />
     <None Include="data\skyboxes\snow.skyx" />
     <None Include="data\skyboxes\sunset.skyx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="data\meshes\quad.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugTools|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Object>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

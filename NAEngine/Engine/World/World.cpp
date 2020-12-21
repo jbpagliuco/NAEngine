@@ -65,12 +65,12 @@ namespace na
 				const Vector lookAt = Vector(x - position.x, y - position.y, z - position.z, 0.0f).V3Normalize();
 
 				const float dot = forwardAxis.V3Dot(lookAt);
-				if (fabs(dot + 1.0f) < 0.000001f) {
+				if (fabsf(dot + 1.0f) < 0.000001f) {
 					rotation = Quaternion(Vector3f(0.0f, 1.0f, 0.0f), PI);
-				} else if (fabs(dot - 1.0f) < 0.000001f) {
+				} else if (fabsf(dot - 1.0f) < 0.000001f) {
 					rotation = Quaternion::Identity();
 				} else {
-					const float rotAngle = acos(dot);
+					const float rotAngle = acosf(dot);
 					const Vector rotAxis = forwardAxis.V3Cross(lookAt).V3Normalize();
 					rotation = Quaternion(rotAxis.AsVector3(), rotAngle);
 				}

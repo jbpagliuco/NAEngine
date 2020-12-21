@@ -20,6 +20,8 @@ namespace na
 			mSkybox(nullptr),
 			mId(NumCameras++) { }
 
+		Matrix GetView()const;
+		Matrix GetProj()const;
 		Matrix GetViewProj()const;
 
 	public:

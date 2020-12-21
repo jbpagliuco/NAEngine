@@ -125,7 +125,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugTools|x64'">
     <ReferencePath>$(ReferencePath)</ReferencePath>
-    <IncludePath>$(ProjectDir)\..\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)\..\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)\..\Output\$(Platform)\$(Configuration)\</OutDir>
     <TargetName>NA$(ProjectName)</TargetName>
@@ -176,6 +176,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_NA_TOOLS;_NA_DEBUG;_NA_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)\..\</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -213,6 +214,7 @@
     <ClCompile Include="Material\MaterialContainer.cpp" />
     <ClCompile Include="NGA\DX11\NGAPipelineStateDX11.cpp" />
     <ClCompile Include="NGA\DX11\NGASwapChainDX11.cpp" />
+    <ClCompile Include="Pipelines\DebugTexture.cpp" />
     <ClCompile Include="Pipelines\SkyboxPipeline.cpp" />
     <ClCompile Include="Resources\ConstantBuffer.cpp" />
     <ClCompile Include="ImguiRenderer.cpp" />
@@ -253,6 +255,7 @@
     <ClInclude Include="NGA\NGAPipelineStateDefs.h" />
     <ClInclude Include="NGA\NGAShapes.h" />
     <ClInclude Include="NGA\NGASwapChain.h" />
+    <ClInclude Include="Pipelines\DebugTexture.h" />
     <ClInclude Include="Pipelines\SkyboxPipeline.h" />
     <ClInclude Include="Resources\ConstantBuffer.h" />
     <ClInclude Include="ImguiRenderer.h" />
@@ -298,6 +301,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\EngineShaders\build_shadow_map\build_shadow_map.shaderx" />
+    <None Include="Shader\EngineShaders\debug_texture\debug_texture.shaderx" />
     <None Include="Shader\EngineShaders\material.hlsli" />
     <None Include="Shader\EngineShaders\skybox\skybox.shaderx" />
     <None Include="Shader\HLSL\light.hlsli" />
@@ -309,9 +313,15 @@
     <FxCompile Include="*.hlsl">
       <ExcludedFromBuild Condition="true">true</ExcludedFromBuild>
     </FxCompile>
+    <FxCompile Include="Shader\EngineShaders\debug_texture\debug_texture.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugTools|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="Shader\EngineShaders\skybox\skybox.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugTools|x64'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

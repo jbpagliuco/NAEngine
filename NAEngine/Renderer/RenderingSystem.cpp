@@ -11,6 +11,8 @@
 #include "NGA/NGACore.h"
 
 #include "Renderer/ImguiRenderer.h"
+#include "Renderer/Mesh.h"
+#include "Renderer/Pipelines/DebugTexture.h"
 #include "Renderer/Pipelines/ShadowMap.h"
 #include "Renderer/Pipelines/SkyboxPipeline.h"
 #include "Renderer/Renderer.h"
@@ -27,10 +29,34 @@ namespace na
 	Scene MainScene;
 	ForwardRenderer FRenderer;
 
-	static std::map<std::string, Texture*> EngineTextures;
+	static std::map<std::string, const Texture*> EngineTextures;
 	static std::map<std::string, RenderTarget*> EngineRenderTargets;
 
+	static std::map<EngineMesh, Mesh*> EngineMeshes;
 	static std::map<EngineShader, Shader*> EngineShaders;
+
+
+
+	static void RegisterEngineMesh(EngineMesh name, const std::string& meshFilename)
+	{
+		NA_ASSERT_RETURN(EngineMeshes.find(name) == EngineMeshes.end(), "Registering engine mesh (%d) multiple times.", name);
+
+		std::string fullPath;
+		bool success = GetFullFilepath(fullPath, meshFilename);
+		NA_ASSERT_RETURN(success, "Failed to find %s", meshFilename);
+
+		AssetID id = RequestAsset(fullPath);
+		EngineMeshes[name] = Mesh::Get(id);
+	}
+
+	static void UnregisterAllEngineMeshes()
+	{
+		for (auto& it : EngineMeshes) {
+			ReleaseAsset(it.second->GetID());
+		}
+
+		EngineMeshes.erase(EngineMeshes.begin(), EngineMeshes.end());
+	}
 
 
 	static void RegisterEngineShader(EngineShader name, const std::string& shaderFilename)
@@ -39,7 +65,7 @@ namespace na
 
 		std::string fullPath;
 		bool success = GetFullFilepath(fullPath, shaderFilename);
-		NA_ASSERT_RETURN(success, "Failed to find %s", shaderFilename);
+		NA_ASSERT_RETURN(success, "Failed to find %s", shaderFilename.c_str());
 
 		AssetID id = RequestAsset(fullPath);
 		EngineShaders[name] = Shader::Get(id);
@@ -85,10 +111,15 @@ namespace na
 
 	bool RenderingSystemInitLate()
 	{
+		// Create engine meshes
+		RegisterEngineMesh(EngineMesh::QUAD, "quad.meshx");
+
 		// Create engine shaders
+		RegisterEngineShader(EngineShader::DEBUG_TEXTURE, "debug_texture.shaderx");
 		RegisterEngineShader(EngineShader::SHADOWMAP, "build_shadow_map.shaderx");
 		RegisterEngineShader(EngineShader::SKYBOX, "skybox.shaderx");
 
+		DebugTextureSystemInitialize();
 		ShadowMapSystemInitialize();
 		SkyboxSystemInitialize();
 
@@ -103,8 +134,10 @@ namespace na
 
 		SkyboxSystemShutdown();
 		ShadowMapSystemShutdown();
+		DebugTextureSystemShutdown();
 
 		UnregisterAllEngineShaders();
+		UnregisterAllEngineMeshes();
 
 		ImguiRendererSystemShutdown();
 
@@ -153,16 +186,23 @@ namespace na
 
 
 
-	void RegisterEngineTexture(const std::string& name, Texture* texture)
+	void RegisterEngineTexture(const std::string& name, const Texture* texture)
 	{
-		NA_ASSERT(EngineTextures.find(name) == EngineTextures.end(), "Registering engine texture (%s) multiple times.", name.c_str());
-
 		EngineTextures[name] = texture;
 	}
 
-	Texture* GetEngineTexture(const std::string& name)
+	const Texture* GetEngineTexture(const std::string& name)
 	{
 		NA_ASSERT_RETURN_VALUE(EngineTextures.find(name) != EngineTextures.end(), nullptr, "Failed to find engine texture %s", name.c_str());
+
+		return EngineTextures[name];
+	}
+
+	const Texture* TryGetEngineTexture(const std::string& name)
+	{
+		if (EngineTextures.find(name) == EngineTextures.end()) {
+			return nullptr;
+		}
 
 		return EngineTextures[name];
 	}
@@ -181,6 +221,14 @@ namespace na
 		return EngineRenderTargets[name];
 	}
 
+
+
+	Mesh* GetEngineMesh(EngineMesh mesh)
+	{
+		NA_ASSERT_RETURN_VALUE(EngineMeshes.find(mesh) != EngineMeshes.end(), nullptr, "Failed to find engine mesh (%d)", mesh);
+
+		return EngineMeshes[mesh];
+	}
 
 	Shader* GetEngineShader(EngineShader shader)
 	{

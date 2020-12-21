@@ -79,8 +79,8 @@ namespace na
 		NA_RStateManager->BindConstantBuffer(ShadowMapPerFrameBuffer.GetBuffer(), NGA_SHADER_STAGE_VERTEX, 0);
 
 		// Setup render target
-		NA_RStateManager->BindRenderTarget(mRenderTarget, slice);
-		NA_RStateManager->ClearRenderTarget(mRenderTarget, ColorF(COLOR_WHITE).vArray, true, slice);
+		mRenderTarget.Bind(slice);
+		mRenderTarget.Clear(ColorF(COLOR_WHITE).vArray, true, slice);
 
 		// Render objects from the view point of the light
 		for (auto& r : scene.GetRenderables()) {
