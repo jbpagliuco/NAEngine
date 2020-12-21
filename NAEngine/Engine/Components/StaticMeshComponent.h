@@ -20,7 +20,7 @@ namespace na
 
 	private:
 		AssetID mMeshID;
-		MaterialAsset *mMaterialAsset;
+		std::vector<MaterialAsset*> mMaterialAssets;
 
 		MeshInstance mMeshInstance;
 	};
