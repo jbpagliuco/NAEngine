@@ -14,19 +14,23 @@
 // MeshX File NGAFormat - Version 2
 // Header:
 //		Version - 4 bytes
+//		Primitive Topology - 1 byte
 //		Num Vertex Attributes - 4 bytes
 //		List of Vertex Attributes - 6 * Num Vertex Attributes bytes
 //			NGAFormat - 1 byte
 //			Semantic Type - 1 byte
 //			Semantic Index - 1 byte
 //		Num Vertices - 8 bytes
-//		Num Indices - 8 bytes
+//		Num Index Groups - 1 byte
+//		Num Indices - 8 * Num Index Groups bytes
 // Data:
 //		Vertices - Vertex Stride * Num Vertices bytes
-//		Indices - sizeof(IndexType) * Num Indices bytes
+//		Indices - sizeof(IndexType) * Num Indices * Num Index Groups bytes
 
 // Changelog:
 // 2 - Add vertex format description to header.
+// 3 - Add support for multiple index buffers.
+// 4 - Add primitive topology
 
 #include "Base/Math/Vector.h"
 
@@ -160,8 +164,12 @@ namespace na
 			false, 
 			"Trying to load mesh with invalid version number (%d). File: %s", version, filename.c_str());
 		
+		uint8_t primitiveTopology;
+		bool success = file.Read<uint8_t>(primitiveTopology);
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to read primitiveTopology from mesh file: %s", filename.c_str());
+
 		uint32_t numVertexAttributes;
-		bool success = file.Read<uint32_t>(numVertexAttributes);
+		success = file.Read<uint32_t>(numVertexAttributes);
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to read numVertexAttributes from mesh file: %s", filename.c_str());
 
 		NGAVertexFormatDesc vDesc;
@@ -229,6 +237,7 @@ namespace na
 		meshData.numVertices = numVertices;
 		meshData.vertexStride = vertexStride;
 		meshData.mVertexFormat = vDesc;
+		meshData.mPrimitiveTopology = (NGAPrimitiveTopology)primitiveTopology;
 		
 		const bool initialized = mesh->Initialize(meshData);
 
@@ -383,6 +392,34 @@ namespace na
 			}
 		}
 
+		// Create straight up vertex buffer (no indices)
+		if (groups.size() == 0) {
+			vertices.mHasNormal = normals.size() > 0;
+			vertices.mHasTexCoord = texCoords.size() > 0;
+
+			if (vertices.mHasNormal) {
+				NA_ASSERT_RETURN_VALUE(positions.size() == normals.size(), false, "Mismatched vertex data (%zu positions, %zu normals)", positions.size(), normals.size());
+			}
+			if (vertices.mHasTexCoord) {
+				NA_ASSERT_RETURN_VALUE(positions.size() == texCoords.size(), false, "Mismatched vertex data (%zu positions, %zu tex coords)", positions.size(), texCoords.size());
+			}
+
+			for (int i = 0; i < positions.size(); ++i) {
+				VertexType vertex;
+				vertex.mPosition = positions[i];
+				
+				if (vertices.mHasNormal) {
+					vertex.mNormal = normals[i];
+				}
+
+				if (vertices.mHasTexCoord) {
+					vertex.mTexCoord = texCoords[i];
+				}
+
+				vertices.mVertices.push_back(vertex);
+			}
+		}
+
 		return true;
 	}
 
@@ -466,6 +503,9 @@ namespace na
 
 #define WRITE(cat, x) if (!(x)) { NA_ASSERT_RETURN_VALUE(false, false, "Failed to write %s", cat); }
 		WRITE("Version", file.Write<uint32_t>(MESH_ASSET_VERSION));
+
+		// TODO: Need better way to figure this out
+		WRITE("Primitive Topology", file.Write<uint8_t>((indexGroups.size() > 0) ? (uint8_t)NGAPrimitiveTopology::TRIANGLE_LIST : (uint8_t)NGAPrimitiveTopology::POINT_LIST));
 
 		const int numAttributes = vertices.GetAttrCount();
 		WRITE("Num Vertex Attributes", file.Write<uint32_t>(numAttributes));

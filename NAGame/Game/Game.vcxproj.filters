@@ -50,5 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <Object Include="data\meshes\quad.obj" />
+    <Object Include="data\meshes\point.obj" />
   </ItemGroup>
 </Project>

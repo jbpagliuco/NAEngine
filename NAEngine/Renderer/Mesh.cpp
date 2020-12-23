@@ -37,6 +37,7 @@ namespace na
 		mNumIndexBuffers = (int)meshData.indexBuffers.size();
 
 		mVertexFormat = meshData.mVertexFormat;
+		mPrimitiveTopology = meshData.mPrimitiveTopology;
 
 		return true;
 	}
@@ -52,14 +53,21 @@ namespace na
 
 	int Mesh::GetNumGroups()const
 	{
-		return mNumIndexBuffers;
+		// returns the number of index buffers or 1 which means this is just vertex data
+		return max(mNumIndexBuffers, 1);
 	}
 
 	void Mesh::Render(int group)
 	{
-		NA_RStateManager->SetPrimitiveTopology(NGAPrimitiveTopology::TRIANGLE_LIST);
+		NA_RStateManager->SetPrimitiveTopology(mPrimitiveTopology);
 		NA_RStateManager->BindIndexBuffer(mIndexBuffers[group]);
 		NA_RStateManager->BindVertexBuffer(mVertexBuffer);
-		NA_RStateManager->DrawIndexed(mIndexBuffers[group]);
+
+		if (mNumIndexBuffers > 0) {
+			NA_RStateManager->DrawIndexed(mIndexBuffers[group]);
+		}
+		else {
+			NA_RStateManager->Draw(mVertexBuffer);
+		}
 	}
 }

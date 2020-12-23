@@ -28,6 +28,7 @@ namespace na
 		std::vector<MeshIndexBufferData> indexBuffers;
 
 		NGAVertexFormatDesc mVertexFormat;
+		NGAPrimitiveTopology mPrimitiveTopology;
 	};
 
 	class Mesh : public AssetFactory<Mesh>
@@ -52,5 +53,6 @@ namespace na
 		int mNumIndexBuffers;
 
 		NGAVertexFormatDesc mVertexFormat;
+		NGAPrimitiveTopology mPrimitiveTopology;
 	};
 }

@@ -246,6 +246,11 @@
     <None Include="data\skyboxes\sunset.skyx" />
   </ItemGroup>
   <ItemGroup>
+    <Object Include="data\meshes\point.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugTools|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Object>
     <Object Include="data\meshes\quad.obj">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugTools|x64'">true</ExcludedFromBuild>

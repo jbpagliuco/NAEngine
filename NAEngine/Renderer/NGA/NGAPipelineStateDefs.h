@@ -11,6 +11,7 @@ namespace na
 	enum class NGAPrimitiveTopology
 	{
 #if defined(NGA_D3D11)
+		POINT_LIST = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST,
 		TRIANGLE_LIST = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST
 #endif
 	};

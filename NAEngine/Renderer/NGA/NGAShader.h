@@ -6,7 +6,9 @@ namespace na
 {
 	enum class NGAShaderType
 	{
+		NONE = -1,
 		VERTEX = 0,
+		GEOMETRY,
 		PIXEL
 	};
 
@@ -26,12 +28,13 @@ namespace na
 		NGAShaderType GetType()const;
 
 	private:
-		NGAShaderType mType;
+		NGAShaderType mType = NGAShaderType::NONE;
 
 #if defined(NGA_D3D11)
 	private:
 		union {
 			struct ID3D11VertexShader *mVertexShader;
+			struct ID3D11GeometryShader *mGeometryShader;
 			struct ID3D11PixelShader *mPixelShader;
 		};
 

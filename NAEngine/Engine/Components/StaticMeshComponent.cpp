@@ -63,6 +63,9 @@ namespace na
 				}
 			}
 		}
+
+		// Visibility
+		mMeshInstance.mVisible = params["visible"].AsBool(true);
 	}
 
 	void StaticMeshComponent::Activate()
@@ -86,5 +89,16 @@ namespace na
 	void StaticMeshComponent::UpdateLate(float deltaTime)
 	{
 		mMeshInstance.SetWorldTransform(GetOwner()->mTransform.GetMatrix());
+	}
+
+
+	bool StaticMeshComponent::GetVisible()const
+	{
+		return mMeshInstance.mVisible;
+	}
+
+	void StaticMeshComponent::SetVisible(bool visible)
+	{
+		mMeshInstance.mVisible = visible;
 	}
 }

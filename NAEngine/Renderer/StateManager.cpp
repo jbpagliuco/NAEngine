@@ -6,7 +6,7 @@
 #include "Renderer/Resources/IndexBuffer.h"
 #include "Renderer/Resources/RenderTarget.h"
 #include "Renderer/Resources/VertexBuffer.h"
-#include "Renderer/Shader/ShaderProgram.h"
+#include "Renderer/Shader/Shader.h"
 
 namespace na
 {
@@ -25,7 +25,7 @@ namespace na
 		Matrix world;
 		Matrix worldInverseTranspose;
 	};
-	
+
 
 
 	StateManager::StateManager() :
@@ -54,8 +54,8 @@ namespace na
 		mObjectDataBuffer.Shutdown();
 		mLightsBuffer.Shutdown();
 	}
-	
-	void StateManager::SetPerFrameData(const Matrix &cameraViewProj, Matrix lightViewProj[MAX_SHADOWMAPS], int numShadowCasters)
+
+	void StateManager::SetPerFrameData(const Matrix& cameraViewProj, Matrix lightViewProj[MAX_SHADOWMAPS], int numShadowCasters)
 	{
 		PerFrameData data;
 		data.cameraViewProj = cameraViewProj;
@@ -68,10 +68,10 @@ namespace na
 
 		mPerFrameBuffer.Map(&data);
 
-		mCommandContext.BindConstantBuffer(mPerFrameBuffer.GetBuffer(), NGA_SHADER_STAGE_VERTEX, (int)ShaderConstantBuffers::PERFRAME);
+		mCommandContext.BindConstantBuffer(mPerFrameBuffer.GetBuffer(), NGA_SHADER_STAGE_ALL, (int)ShaderConstantBuffers::PERFRAME);
 	}
 
-	void StateManager::SetObjectTransform(const Matrix &transform)
+	void StateManager::SetObjectTransform(const Matrix& transform)
 	{
 		PerObjectData data;
 		data.world = transform;
@@ -79,17 +79,17 @@ namespace na
 
 		mObjectDataBuffer.Map(&data);
 
-		mCommandContext.BindConstantBuffer(mObjectDataBuffer.GetBuffer(), NGA_SHADER_STAGE_VERTEX, (int)ShaderConstantBuffers::OBJECTDATA);
+		mCommandContext.BindConstantBuffer(mObjectDataBuffer.GetBuffer(), NGA_SHADER_STAGE_ALL, (int)ShaderConstantBuffers::OBJECTDATA);
 	}
 
-	void StateManager::SetLightsData(const LightsData &lights)
+	void StateManager::SetLightsData(const LightsData& lights)
 	{
 		mLightsBuffer.Map((void*)&lights);
 
-		mCommandContext.BindConstantBuffer(mLightsBuffer.GetBuffer(), NGA_SHADER_STAGE_PIXEL, (int)ShaderConstantBuffers::LIGHTS);
+		mCommandContext.BindConstantBuffer(mLightsBuffer.GetBuffer(), NGA_SHADER_STAGE_ALL, (int)ShaderConstantBuffers::LIGHTS);
 	}
 
-	void StateManager::SetViewport(const NGARect &rect)
+	void StateManager::SetViewport(const NGARect& rect)
 	{
 		mCommandContext.SetViewport(rect);
 	}
@@ -99,24 +99,46 @@ namespace na
 		mCommandContext.SetPrimitiveTopology(primTopology);
 	}
 
-	void StateManager::BindIndexBuffer(const IndexBuffer &ib)
+	void StateManager::BindIndexBuffer(const IndexBuffer& ib)
 	{
 		mCommandContext.BindIndexBuffer(ib.GetBuffer(), NGAIndexBufferType::IBT_32BIT);
 	}
 
-	void StateManager::BindVertexBuffer(const VertexBuffer &vb)
+	void StateManager::BindVertexBuffer(const VertexBuffer& vb)
 	{
 		mCommandContext.BindVertexBuffer(vb.GetBuffer(), vb.GetVertexStride());
 	}
 
-	void StateManager::BindInputLayout(const NGAInputLayout &inputLayout)
+	void StateManager::BindInputLayout(const NGAInputLayout& inputLayout)
 	{
 		mCommandContext.BindInputLayout(inputLayout);
 	}
 
-	void StateManager::BindShader(const ShaderProgram &shader)
+	void StateManager::BindShader(const Shader& shader)
+	{
+		BindOrClearShader(shader.GetVertexShader());
+		BindOrClearShader(shader.GetGeometryShader());
+		BindOrClearShader(shader.GetPixelShader());
+	}
+
+	void StateManager::BindShader(const ShaderProgram& shader)
 	{
 		mCommandContext.BindShader(shader.GetShader());
+	}
+
+	void StateManager::ClearShader(const NGAShaderStage stage)
+	{
+		mCommandContext.ClearShader(stage);
+	}
+
+	void StateManager::BindOrClearShader(const ShaderProgram& shader)
+	{
+		if (shader.GetShader().IsConstructed()) {
+			BindShader(shader);
+		}
+		else {
+			ClearShader(shader.GetStage());
+		}
 	}
 
 
@@ -165,6 +187,10 @@ namespace na
 			mCommandContext.BindConstantBuffer(constantBuffer, NGA_SHADER_STAGE_VERTEX, slot);
 		}
 
+		if (stage & NGA_SHADER_STAGE_GEOMETRY) {
+			mCommandContext.BindConstantBuffer(constantBuffer, NGA_SHADER_STAGE_GEOMETRY, slot);
+		}
+
 		if (stage & NGA_SHADER_STAGE_PIXEL) {
 			mCommandContext.BindConstantBuffer(constantBuffer, NGA_SHADER_STAGE_PIXEL, slot);
 		}
@@ -203,6 +229,11 @@ namespace na
 	void StateManager::MapBufferData(const NGABuffer &buffer, const void *data)
 	{
 		mCommandContext.MapBufferData(buffer, data);
+	}
+
+	void StateManager::Draw(const VertexBuffer &buffer)
+	{
+		mCommandContext.Draw((unsigned int)buffer.GetNumVertices());
 	}
 
 	void StateManager::DrawIndexed(const IndexBuffer &buffer)

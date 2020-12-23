@@ -366,7 +366,11 @@ namespace na
 			vertexFormatDesc.mAttributes.push_back(attr);
 		}
 
-		return pShader->Initialize(params["file"].AsFilepath(), vertexFormatDesc);
+		// Optional stages
+		NGAShaderStage stages = NGA_SHADER_STAGE_NONE;
+		stages |= (params.HasChild("geometryShader")) ? NGA_SHADER_STAGE_GEOMETRY : NGA_SHADER_STAGE_NONE;
+		
+		return pShader->Initialize(params["file"].AsFilepath(), vertexFormatDesc, stages);
 	}
 
 	static void OnShaderUnload(const AssetID &id)

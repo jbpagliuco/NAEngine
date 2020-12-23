@@ -78,7 +78,7 @@ static int CreateMeshX()
 	std::cout << "Calculate tangent vector (Y/N)?: ";
 	std::cin >> calculateTangent;
 	
-	const bool success = na::ConvertMeshObjToMeshx(inFile, calculateTangent == "y");
+	const bool success = na::ConvertMeshObjToMeshx(inFile, calculateTangent == "y" || calculateTangent == "Y");
 
 	return success ? 0 : 1;
 }

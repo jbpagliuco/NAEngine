@@ -52,6 +52,7 @@
 			<component type="StaticMeshComponent">
 				<mesh>cube.meshx</mesh>
 				<material>red.matx</material>
+				<visible>false</visible>
 			</component>
 			<component type="RigidbodyComponent">
 				<motionType>static</motionType>
@@ -66,29 +67,6 @@
 					<y>0.1</y>
 					<z>5</z>
 				</max>
-			</component>
-		</components>
-	</gameobject>
-
-	<gameobject>
-		<name>Cube</name>
-		<transform>
-			<position>
-				<z>-5</z>
-			</position>
-			<scale>
-				<x>0.1</x>
-				<y>0.1</y>
-				<z>0.1</z>
-			</scale>
-		</transform>
-		<components>
-			<component type="StaticMeshComponent">
-				<mesh>sycamore.meshx</mesh>
-				<materials>
-					<material>sycamore_bark.matx</material>
-					<material>sycamore_leaves.matx</material>
-				</materials>
 			</component>
 		</components>
 	</gameobject>
@@ -111,6 +89,33 @@
 			<component type="StaticMeshComponent">
 				<mesh>cube.meshx</mesh>
 				<material>brick.matx</material>
+			</component>
+		</components>
+	</gameobject>
+
+	<gameobject>
+		<name>Tree</name>
+		<transform>
+			<position>
+				<z>-5</z>
+			</position>
+			<scale>
+				<x>0.1</x>
+				<y>0.1</y>
+				<z>0.1</z>
+			</scale>
+		</transform>
+		<components>
+			<component type="StaticMeshComponent">
+				<mesh>sycamore.meshx</mesh>
+				<materials>
+					<material>sycamore_bark.matx</material>
+					<material>sycamore_leaves.matx</material>
+				</materials>
+				<visible>false</visible>
+			</component>
+			<component type="BillboardComponent">
+				<texture>billboard_n.dds</texture>
 			</component>
 		</components>
 	</gameobject>
@@ -149,8 +154,8 @@
 		<transform>
 			<position>
 				<x>0</x>
-				<y>25</y>
-				<z>-25</z>
+				<y>20</y>
+				<z>-20</z>
 			</position>
 			<rotation type="lookat">
 				<z>3</z>

@@ -1,10 +1,8 @@
 #pragma once
 
-#define MESH_ASSET_VERSION 3
-#define MESH_ASSET_MIN_VERSION 2
+#define MESH_ASSET_VERSION 4
+#define MESH_ASSET_MIN_VERSION 4
 #define MESH_ASSET_MAX_VERSION MESH_ASSET_VERSION
-
-// 3 - Add support for multiple index buffers.
 
 #include "Renderer/Mesh.h"
 
