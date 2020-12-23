@@ -43,7 +43,7 @@ SamplerState Sampler : register(SAM_REGISTER_USER0);
 GeometryInput vsMain(VertexInput input)
 {
 	GeometryInput output;
-	output.position = mul(world, float4(0.0f, 0.0f, 0.0f, 1.0f)).xyz;
+	output.position = mul(world, float4(input.position, 1.0f)).xyz;
 
 	return output;
 }

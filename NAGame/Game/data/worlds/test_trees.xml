@@ -52,7 +52,6 @@
 			<component type="StaticMeshComponent">
 				<mesh>cube.meshx</mesh>
 				<material>red.matx</material>
-				<visible>false</visible>
 			</component>
 			<component type="RigidbodyComponent">
 				<motionType>static</motionType>
