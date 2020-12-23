@@ -21,7 +21,8 @@ namespace na
 
 	private:
 		AssetID mTextureID;
-
 		BillboardInstance mBillboardInstance;
+
+		float mTriggerDistance;
 	};
 }

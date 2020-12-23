@@ -53,4 +53,15 @@ namespace na
 	{
 		return mCameras;
 	}
+
+	Camera* Scene::GetRenderCamera()const
+	{
+		for (const auto& camera : mCameras) {
+			if (camera->mRenderTarget == nullptr) {
+				return camera;
+			}
+		}
+
+		return nullptr;
+	}
 }

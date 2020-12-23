@@ -4,8 +4,10 @@
 
 #include "Renderer/Scene/Scene.h"
 
-#include "Engine/World/GameObject.h"
 #include "Engine/Assets/TextureAsset.h"
+#include "Engine/Components/CameraComponent.h"
+#include "Engine/Components/StaticMeshComponent.h"
+#include "Engine/World/GameObject.h"
 
 namespace na
 {
@@ -16,6 +18,8 @@ namespace na
 		TextureAsset* textureAsset = TextureAsset::Get(mTextureID);
 		mBillboardInstance.Initialize(&(textureAsset->GetTexture()));
 		mBillboardInstance.mVisible = true;
+
+		mTriggerDistance = params["distance"].AsFloat(30.0f);
 	}
 
 	void BillboardComponent::Activate()
@@ -34,6 +38,12 @@ namespace na
 	void BillboardComponent::UpdateLate(float deltaTime)
 	{
 		mBillboardInstance.SetWorldTransform(GetOwner()->mTransform.GetMatrix());
+
+		Camera* camera = Scene::Get()->GetRenderCamera();
+		const float distance = (camera->mTransform.mPosition - GetOwner()->mTransform.mPosition).V3Length();
+
+		SetVisible(distance > mTriggerDistance);
+		GetOwner()->GetComponentOfType<StaticMeshComponent>()->SetVisible(!GetVisible());
 	}
 
 

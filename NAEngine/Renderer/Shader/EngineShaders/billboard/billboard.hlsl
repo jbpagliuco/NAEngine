@@ -52,7 +52,7 @@ GeometryInput vsMain(VertexInput input)
 [maxvertexcount(4)]
 void gsMain(point GeometryInput input[1], inout TriangleStream<PixelInput> outputStream)
 {
-	float2 size = float2(6, 6);
+	float2 size = float2(8, 8);
 
 	float2 quadTexCoords[4] = 
 	{
@@ -65,7 +65,6 @@ void gsMain(point GeometryInput input[1], inout TriangleStream<PixelInput> outpu
 
 
 	float halfWidth  = 0.5f * size.x;
-	float halfHeight = 0.5f * size.y;
 
 	// Create coordinate system facing the camera
 	float3 up = float3(0.0f, 1.0f, 0.0f);
@@ -75,13 +74,13 @@ void gsMain(point GeometryInput input[1], inout TriangleStream<PixelInput> outpu
 	float3 right = cross(forward, up);
 
 	right *= halfWidth;
-	up *= halfHeight;
+	up *= size.y;
 
 	// Build vertices
 	float4 v[4];
-	v[0] = float4(input[0].position - right - up, 1.0f);
+	v[0] = float4(input[0].position - right, 1.0f);
 	v[1] = float4(input[0].position - right + up, 1.0f);
-	v[2] = float4(input[0].position + right - up, 1.0f);
+	v[2] = float4(input[0].position + right, 1.0f);
 	v[3] = float4(input[0].position + right + up, 1.0f);
 
 	// Append vertices
