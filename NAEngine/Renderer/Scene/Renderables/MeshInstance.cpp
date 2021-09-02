@@ -10,42 +10,44 @@
 
 namespace na
 {
-	bool MeshInstance::Initialize(Mesh *mesh, MaterialContainer *materialContainer)
+	bool MeshInstance::Initialize(Mesh *mesh, std::vector<MaterialContainer*> materialContainers)
 	{
 		mMesh = mesh;
-		mMaterialContainer = materialContainer;
+		mMaterialContainers = materialContainers;
 
-		Material* material = mMaterialContainer->GetMaterial();
+		for (int i = 0; i < mMaterialContainers.size(); ++i) {
+			Material* material = mMaterialContainers[i]->GetMaterial();
 
-		const VertexShader &vs = material->GetShader()->GetVertexShader();
+			const VertexShader& vs = material->GetShader()->GetVertexShader();
 
-		// Build the input layout
-		NGAVertexFormatDesc vDesc;
-		for (auto &shaderInput : vs.GetVertexFormatDesc().mAttributes) {
-			NGAVertexAttribute attr;
-			
-			// Find the matching input from the mesh.
-			bool found = false;
-			for (auto &meshAttr : mMesh->GetVertexFormatDesc().mAttributes) {
-				if (shaderInput.mSemanticType == meshAttr.mSemanticType && shaderInput.mSemanticIndex == meshAttr.mSemanticIndex) {
-					attr = shaderInput;
-					attr.mOffset = meshAttr.mOffset;
-					found = true;
-					break;
+			// Build the input layout
+			NGAVertexFormatDesc vDesc;
+			for (auto& shaderInput : vs.GetVertexFormatDesc().mAttributes) {
+				NGAVertexAttribute attr;
+
+				// Find the matching input from the mesh.
+				bool found = false;
+				for (auto& meshAttr : mMesh->GetVertexFormatDesc().mAttributes) {
+					if (shaderInput.mSemanticType == meshAttr.mSemanticType && shaderInput.mSemanticIndex == meshAttr.mSemanticIndex) {
+						attr = shaderInput;
+						attr.mOffset = meshAttr.mOffset;
+						found = true;
+						break;
+					}
 				}
+
+				NA_ASSERT_RETURN_VALUE(found, false,
+					"Shader '%s' requires %s%d, but mesh '%s' does not supply it.",
+					GetAssetFilename(material->GetShader()->GetID()),
+					GetSemanticName(shaderInput.mSemanticType),
+					shaderInput.mSemanticIndex,
+					GetAssetFilename(mMesh->GetID()));
+
+				vDesc.mAttributes.push_back(attr);
 			}
 
-			NA_ASSERT_RETURN_VALUE(found, false,
-				"Shader '%s' requires %s%d, but mesh '%s' does not supply it.",
-				GetAssetFilename(material->GetShader()->GetID()),
-				GetSemanticName(shaderInput.mSemanticType),
-				shaderInput.mSemanticIndex,
-				GetAssetFilename(mMesh->GetID()));
-
-			vDesc.mAttributes.push_back(attr);
+			mInputLayouts[i].Construct(vDesc, vs.GetShader());
 		}
-
-		mInputLayout.Construct(vDesc, vs.GetShader());
 
 		return true;
 	}
@@ -53,18 +55,25 @@ namespace na
 	void MeshInstance::Shutdown()
 	{
 		mMesh = nullptr;
-		mMaterialContainer = nullptr;
 
-		mInputLayout.Destruct();
+		for (int i = 0; i < mMaterialContainers.size(); ++i) {
+			mInputLayouts[i].Destruct();
+		}
+		mMaterialContainers.clear();
 	}
 
 	void MeshInstance::Render(bool bindMaterial)
 	{
-		if (bindMaterial) {
-			mMaterialContainer->Bind();
-		}
+		NA_ASSERT_RETURN(mMaterialContainers.size() == mMesh->GetNumGroups());
 
-		NA_RStateManager->BindInputLayout(mInputLayout);
-		mMesh->Render();
+		for (int group = 0; group < mMesh->GetNumGroups(); ++group) {
+			if (bindMaterial) {
+				mMaterialContainers[group]->Bind();
+			}
+
+			NA_RStateManager->BindInputLayout(mInputLayouts[group]);
+
+			mMesh->Render(group);
+		}
 	}
 }

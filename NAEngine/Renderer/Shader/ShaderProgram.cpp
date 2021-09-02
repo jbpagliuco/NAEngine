@@ -25,6 +25,12 @@ namespace na
 	}
 
 
+	bool GeometryShader::Initialize(const std::string &filename)
+	{
+		return mShader.Construct(filename.c_str(), NGAShaderType::GEOMETRY);
+	}
+
+
 	bool PixelShader::Initialize(const std::string &filename)
 	{
 		return mShader.Construct(filename.c_str(), NGAShaderType::PIXEL);

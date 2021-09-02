@@ -48,8 +48,7 @@ namespace na
 	{
 		NA_RStateManager->BindPipelineState(SkyboxPipelineState);
 
-		NA_RStateManager->BindShader(GetEngineShader(EngineShader::SKYBOX)->GetVertexShader());
-		NA_RStateManager->BindShader(GetEngineShader(EngineShader::SKYBOX)->GetPixelShader());
+		GetEngineShader(EngineShader::SKYBOX)->Bind();
 
 		Matrix vp = camera.GetViewProj() * Matrix::Translation(camera.mTransform.mPosition);
 		SkyboxPerFrameBuffer.Map(&vp);

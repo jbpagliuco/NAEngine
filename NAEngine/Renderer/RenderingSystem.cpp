@@ -12,6 +12,7 @@
 
 #include "Renderer/ImguiRenderer.h"
 #include "Renderer/Mesh.h"
+#include "Renderer/NGA/NGAInputLayout.h"
 #include "Renderer/Pipelines/DebugTexture.h"
 #include "Renderer/Pipelines/ShadowMap.h"
 #include "Renderer/Pipelines/SkyboxPipeline.h"
@@ -34,6 +35,7 @@ namespace na
 
 	static std::map<EngineMesh, Mesh*> EngineMeshes;
 	static std::map<EngineShader, Shader*> EngineShaders;
+	static std::map<EngineInputLayout, NGAInputLayout> EngineInputLayouts;
 
 
 
@@ -43,7 +45,7 @@ namespace na
 
 		std::string fullPath;
 		bool success = GetFullFilepath(fullPath, meshFilename);
-		NA_ASSERT_RETURN(success, "Failed to find %s", meshFilename);
+		NA_ASSERT_RETURN(success, "Failed to find %s", meshFilename.c_str());
 
 		AssetID id = RequestAsset(fullPath);
 		EngineMeshes[name] = Mesh::Get(id);
@@ -81,6 +83,24 @@ namespace na
 	}
 
 
+	static void RegisterEngineInputLayout(EngineInputLayout inputLayout, EngineShader shaderName)
+	{
+		NA_ASSERT_RETURN(EngineInputLayouts.find(inputLayout) == EngineInputLayouts.end(), "Registering engine input layout (%d) multiple times.", inputLayout);
+
+		Shader* shader = GetEngineShader(shaderName);
+		EngineInputLayouts[inputLayout].Construct(shader->GetVertexShader().GetVertexFormatDesc(), shader->GetVertexShader().GetShader());
+	}
+
+	static void UnregisterAllEngineInputLayouts()
+	{
+		for (auto& it : EngineInputLayouts) {
+			it.second.Destruct();
+		}
+
+		EngineInputLayouts.erase(EngineInputLayouts.begin(), EngineInputLayouts.end());
+	}
+
+
 	bool RenderingSystemInit()
 	{
 		RenderFrameTimer.Start((int)((1.0f / MAX_FRAMERATE) * 1000.0f));
@@ -112,13 +132,19 @@ namespace na
 	bool RenderingSystemInitLate()
 	{
 		// Create engine meshes
+		RegisterEngineMesh(EngineMesh::POINT, "point.meshx");
 		RegisterEngineMesh(EngineMesh::QUAD, "quad.meshx");
 
 		// Create engine shaders
 		RegisterEngineShader(EngineShader::DEBUG_TEXTURE, "debug_texture.shaderx");
 		RegisterEngineShader(EngineShader::SHADOWMAP, "build_shadow_map.shaderx");
 		RegisterEngineShader(EngineShader::SKYBOX, "skybox.shaderx");
+		RegisterEngineShader(EngineShader::BILLBOARD, "billboard.shaderx");
 
+		// Create engine input layouts
+		RegisterEngineInputLayout(EngineInputLayout::BILLBOARD, EngineShader::BILLBOARD);
+
+		// Initialize systems
 		DebugTextureSystemInitialize();
 		ShadowMapSystemInitialize();
 		SkyboxSystemInitialize();
@@ -136,6 +162,7 @@ namespace na
 		ShadowMapSystemShutdown();
 		DebugTextureSystemShutdown();
 
+		UnregisterAllEngineInputLayouts();
 		UnregisterAllEngineShaders();
 		UnregisterAllEngineMeshes();
 
@@ -235,5 +262,12 @@ namespace na
 		NA_ASSERT_RETURN_VALUE(EngineShaders.find(shader) != EngineShaders.end(), nullptr, "Failed to find engine shader (%d)", shader);
 
 		return EngineShaders[shader];
+	}
+
+	NGAInputLayout* GetEngineInputLayout(EngineInputLayout inputLayout)
+	{
+		NA_ASSERT_RETURN_VALUE(EngineInputLayouts.find(inputLayout) != EngineInputLayouts.end(), nullptr, "Failed to find engine input layout (%d)", inputLayout);
+
+		return &EngineInputLayouts[inputLayout];
 	}
 }

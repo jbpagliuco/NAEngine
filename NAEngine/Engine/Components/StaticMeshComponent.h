@@ -18,9 +18,12 @@ namespace na
 
 		virtual void UpdateLate(float deltaTime) override;
 
+		bool GetVisible()const;
+		void SetVisible(bool visible);
+
 	private:
 		AssetID mMeshID;
-		MaterialAsset *mMaterialAsset;
+		std::vector<MaterialAsset*> mMaterialAssets;
 
 		MeshInstance mMeshInstance;
 	};

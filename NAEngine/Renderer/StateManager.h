@@ -16,6 +16,7 @@ namespace na
 	class NGAShaderResourceView;
 	class IndexBuffer;
 	class RenderTarget;
+	class Shader;
 	class ShaderProgram;
 	class Texture;
 	class VertexBuffer;
@@ -73,7 +74,10 @@ namespace na
 
 		void BindInputLayout(const NGAInputLayout &inputLayout);
 
+		void BindShader(const Shader& shader);
 		void BindShader(const ShaderProgram &shader);
+		void ClearShader(const NGAShaderStage stage);
+		void BindOrClearShader(const ShaderProgram &shader);
 
 		void BindUserConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot);
 		void BindConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot);
@@ -93,6 +97,7 @@ namespace na
 
 		void MapBufferData(const NGABuffer &buffer, const void *data);
 
+		void Draw(const VertexBuffer &buffer);
 		void DrawIndexed(const IndexBuffer &buffer);
 
 		void BindPipelineState(const NGAPipelineState& state);

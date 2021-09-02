@@ -6,18 +6,38 @@ namespace na
 {
 	NA_FACTORY_SETUP(Mesh);
 
+	MeshIndexBufferData::MeshIndexBufferData(IndexType* indices, size_t numIndices) :
+		indices(indices),
+		numIndices(numIndices)
+	{
+	}
+
 	bool Mesh::Initialize(const MeshData &meshData)
 	{
+		NA_ASSERT_RETURN_VALUE(meshData.indexBuffers.size() <= MAX_INDEX_BUFFERS, false);
+
 		if (!mVertexBuffer.Initialize(meshData.vertices, meshData.numVertices, meshData.vertexStride)) {
 			return false;
 		}
 
-		if (!mIndexBuffer.Initialize(meshData.indices, meshData.numIndices)) {
-			mVertexBuffer.Shutdown();
+		bool failed = false;
+		int i = 0;
+		for (const auto& indexBufferData : meshData.indexBuffers) {
+			if (!mIndexBuffers[i++].Initialize(indexBufferData.indices, indexBufferData.numIndices)) {
+				failed = true;
+				break;
+			}
+		}
+
+		if (failed) {
+			Shutdown();
 			return false;
 		}
 
+		mNumIndexBuffers = (int)meshData.indexBuffers.size();
+
 		mVertexFormat = meshData.mVertexFormat;
+		mPrimitiveTopology = meshData.mPrimitiveTopology;
 
 		return true;
 	}
@@ -25,14 +45,29 @@ namespace na
 	void Mesh::Shutdown()
 	{
 		mVertexBuffer.Shutdown();
-		mIndexBuffer.Shutdown();
+
+		for (int i = 0; i < mNumIndexBuffers; ++i) {
+			mIndexBuffers[i].Shutdown();
+		}
 	}
 
-	void Mesh::Render()
+	int Mesh::GetNumGroups()const
 	{
-		NA_RStateManager->SetPrimitiveTopology(NGAPrimitiveTopology::TRIANGLE_LIST);
-		NA_RStateManager->BindIndexBuffer(mIndexBuffer);
+		// returns the number of index buffers or 1 which means this is just vertex data
+		return max(mNumIndexBuffers, 1);
+	}
+
+	void Mesh::Render(int group)
+	{
+		NA_RStateManager->SetPrimitiveTopology(mPrimitiveTopology);
+		NA_RStateManager->BindIndexBuffer(mIndexBuffers[group]);
 		NA_RStateManager->BindVertexBuffer(mVertexBuffer);
-		NA_RStateManager->DrawIndexed(mIndexBuffer);
+
+		if (mNumIndexBuffers > 0) {
+			NA_RStateManager->DrawIndexed(mIndexBuffers[group]);
+		}
+		else {
+			NA_RStateManager->Draw(mVertexBuffer);
+		}
 	}
 }

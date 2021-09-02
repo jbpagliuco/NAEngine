@@ -5,6 +5,7 @@
 namespace na
 {
 	class Mesh;
+	class NGAInputLayout;
 	class RenderTarget;
 	class Shader;
 	class Texture;
@@ -12,6 +13,7 @@ namespace na
 
 	enum class EngineMesh
 	{
+		POINT,
 		QUAD
 	};
 
@@ -20,7 +22,12 @@ namespace na
 		DEBUG_TEXTURE,
 		SHADOWMAP,
 		SKYBOX,
-		BUILD_SSAO_NORMAL_DEPTH
+		BILLBOARD
+	};
+
+	enum class EngineInputLayout
+	{
+		BILLBOARD
 	};
 
 
@@ -42,4 +49,5 @@ namespace na
 
 	Mesh* GetEngineMesh(EngineMesh mesh);
 	Shader* GetEngineShader(EngineShader shader);
+	NGAInputLayout* GetEngineInputLayout(EngineInputLayout inputLayout);
 }

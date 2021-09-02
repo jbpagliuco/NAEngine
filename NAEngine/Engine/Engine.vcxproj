@@ -189,6 +189,7 @@
     <ClCompile Include="Assets\MeshAsset.cpp" />
     <ClCompile Include="Assets\TextureAsset.cpp" />
     <ClCompile Include="Components\BasicMovementComponent.cpp" />
+    <ClCompile Include="Components\BillboardComponent.cpp" />
     <ClCompile Include="Components\CameraComponent.cpp" />
     <ClCompile Include="Components\GameComponent.cpp" />
     <ClCompile Include="Components\LightComponent.cpp" />
@@ -212,6 +213,7 @@
     <ClInclude Include="Assets\MeshAsset.h" />
     <ClInclude Include="Assets\TextureAsset.h" />
     <ClInclude Include="Components\BasicMovementComponent.h" />
+    <ClInclude Include="Components\BillboardComponent.h" />
     <ClInclude Include="Components\CameraComponent.h" />
     <ClInclude Include="Components\GameComponent.h" />
     <ClInclude Include="Components\LightComponent.h" />

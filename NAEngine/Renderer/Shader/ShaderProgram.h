@@ -13,12 +13,21 @@ namespace na
 		virtual void Shutdown();
 
 		const NGAShader& GetShader()const;
+
+		virtual NGAShaderStage GetStage()const = 0;
 		
 	protected:
 		NGAShader mShader;
 	};
 
-	class VertexShader : public ShaderProgram
+	template <NGAShaderStage STAGE>
+	class ShaderProgramTemplate : public ShaderProgram
+	{
+	public:
+		virtual NGAShaderStage GetStage()const override { return STAGE; }
+	};
+
+	class VertexShader : public ShaderProgramTemplate<NGA_SHADER_STAGE_VERTEX>
 	{
 	public:
 		virtual bool Initialize(const std::string &filename, NGAVertexFormatDesc vertexFormatDesc);
@@ -29,7 +38,13 @@ namespace na
 		NGAVertexFormatDesc mVertexFormatDesc;
 	};
 
-	class PixelShader : public ShaderProgram
+	class GeometryShader : public ShaderProgramTemplate<NGA_SHADER_STAGE_GEOMETRY>
+	{
+	public:
+		virtual bool Initialize(const std::string &filename);
+	};
+
+	class PixelShader : public ShaderProgramTemplate<NGA_SHADER_STAGE_PIXEL>
 	{
 	public:
 		virtual bool Initialize(const std::string &filename);

@@ -100,12 +100,12 @@ namespace na
 	
 	void ForwardRenderer::RenderSceneToBackBuffer(Scene &scene, const Camera &camera)
 	{
-		NGARect r;
-		r.x = 0.0f;
-		r.y = 0.0f;
-		r.width = (float)NA_Renderer->GetWindow().width;
-		r.height = (float)NA_Renderer->GetWindow().height;
-		NA_RStateManager->SetViewport(r);
+		NGARect rect;
+		rect.x = 0.0f;
+		rect.y = 0.0f;
+		rect.width = (float)NA_Renderer->GetWindow().width;
+		rect.height = (float)NA_Renderer->GetWindow().height;
+		NA_RStateManager->SetViewport(rect);
 
 		NA_RStateManager->BindPipelineState(mRenderPipelineState);
 
@@ -146,8 +146,10 @@ namespace na
 
 		// Render all the renderables in the scene
 		for (auto &r : scene.GetRenderables()) {
-			NA_RStateManager->SetObjectTransform(r->GetWorldTransform());
-			r->Render();
+			if (r->mVisible) {
+				NA_RStateManager->SetObjectTransform(r->GetWorldTransform());
+				r->Render();
+			}
 		}
 
 		// Draw skybox last
