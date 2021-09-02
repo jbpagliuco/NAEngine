@@ -22,7 +22,6 @@ namespace na
 	public:
 		void BindPipelineState(const NGAPipelineState &pipelineState);
 
-		void Draw(unsigned int vertexCount);
 		void DrawIndexed(unsigned int indexCount);
 
 		void MapBufferData(const NGABuffer &buffer, const void *data);
@@ -39,7 +38,6 @@ namespace na
 		void BindInputLayout(const NGAInputLayout &inputLayout);
 
 		void BindShader(const NGAShader &shader);
-		void ClearShader(NGAShaderStage stage);
 
 		void BindConstantBuffer(const NGABuffer &constantBuffer, NGAShaderStage stage, int slot);
 		void BindShaderResource(const NGAShaderResourceView &view, NGAShaderStage stage, int slot);

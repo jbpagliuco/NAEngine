@@ -126,12 +126,6 @@
     <ClCompile Include="Pipelines\DebugTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\Renderables\RenderableInstance.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Renderables\Billboardinstance.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RenderingSystem.h">
@@ -269,9 +263,6 @@
     <ClInclude Include="Pipelines\DebugTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\Renderables\BillboardInstance.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -285,11 +276,9 @@
     <None Include="Shader\EngineShaders\build_shadow_map\build_shadow_map.shaderx" />
     <None Include="Shader\EngineShaders\skybox\skybox.shaderx" />
     <None Include="Shader\EngineShaders\debug_texture\debug_texture.shaderx" />
-    <None Include="Shader\EngineShaders\billboard\billboard.shaderx" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\EngineShaders\skybox\skybox.hlsl" />
     <FxCompile Include="Shader\EngineShaders\debug_texture\debug_texture.hlsl" />
-    <FxCompile Include="Shader\EngineShaders\billboard\billboard.hlsl" />
   </ItemGroup>
 </Project>

@@ -25,7 +25,6 @@
   <ItemGroup>
     <Xml Include="config.xml" />
     <Xml Include="data\worlds\test_shader2.xml" />
-    <Xml Include="data\worlds\test_trees.xml" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Tools.h">
@@ -45,11 +44,8 @@
     <None Include="data\skyboxes\desert.skyx" />
     <None Include="data\skyboxes\snow.skyx" />
     <None Include="data\skyboxes\sunset.skyx" />
-    <None Include="data\materials\sycamore_leaves.matx" />
-    <None Include="data\materials\sycamore_bark.matx" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="data\meshes\quad.obj" />
-    <Object Include="data\meshes\point.obj" />
   </ItemGroup>
 </Project>

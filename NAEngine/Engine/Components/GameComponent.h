@@ -19,8 +19,7 @@ namespace na
 		RIGIDBODY,
 		SKYBOX,
 		STATIC_MESH,
-		BASIC_MOVEMENT,
-		BILLBOARD
+		BASIC_MOVEMENT
 	};
 
 	class GameComponent

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <array>
-
 #include "Base/Streaming/AssetFactory.h"
 
 #include "Renderer/NGA/NGACommon.h"
@@ -10,25 +8,16 @@
 
 namespace na
 {
-	struct MeshIndexBufferData
-	{
-		MeshIndexBufferData() = default;
-		MeshIndexBufferData(IndexType* indices, size_t numIndices);
-
-		IndexType *indices;
-		size_t numIndices;
-	};
-
 	struct MeshData
 	{
 		void *vertices;
 		size_t numVertices;
 		size_t vertexStride;
 
-		std::vector<MeshIndexBufferData> indexBuffers;
+		IndexType *indices;
+		size_t numIndices;
 
 		NGAVertexFormatDesc mVertexFormat;
-		NGAPrimitiveTopology mPrimitiveTopology;
 	};
 
 	class Mesh : public AssetFactory<Mesh>
@@ -37,22 +26,14 @@ namespace na
 		bool Initialize(const MeshData &meshData);
 		void Shutdown();
 
-		int GetNumGroups()const;
-
-		void Render(int group = 0);
+		void Render();
 
 		inline const NGAVertexFormatDesc& GetVertexFormatDesc()const { return mVertexFormat; }
 
-	public:
-		static constexpr size_t MAX_INDEX_BUFFERS = 2;
-
 	private:
 		VertexBuffer mVertexBuffer;
-
-		IndexBuffer mIndexBuffers[MAX_INDEX_BUFFERS];
-		int mNumIndexBuffers;
+		IndexBuffer mIndexBuffer;
 
 		NGAVertexFormatDesc mVertexFormat;
-		NGAPrimitiveTopology mPrimitiveTopology;
 	};
 }

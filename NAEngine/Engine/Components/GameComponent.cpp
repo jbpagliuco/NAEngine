@@ -9,7 +9,6 @@
 #include "Engine/World/GameObject.h"
 
 #include "BasicMovementComponent.h"
-#include "BillboardComponent.h"
 #include "CameraComponent.h"
 #include "LightComponent.h"
 #include "SkyboxComponent.h"
@@ -37,8 +36,7 @@ namespace na
 		GENERATE_INSTANTIATOR(RigidbodyComponent),
 		GENERATE_INSTANTIATOR(SkyboxComponent),
 		GENERATE_INSTANTIATOR(SpotLightComponent),
-		GENERATE_INSTANTIATOR(StaticMeshComponent),
-		GENERATE_INSTANTIATOR(BillboardComponent)
+		GENERATE_INSTANTIATOR(StaticMeshComponent)
 	};
 
 	typedef std::vector<GameComponent*> ComponentList;

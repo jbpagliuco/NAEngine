@@ -73,11 +73,9 @@ namespace na
 
 	enum NGAShaderStage
 	{
-		NGA_SHADER_STAGE_NONE		= 0,
 		NGA_SHADER_STAGE_VERTEX		= 1 << 0,
-		NGA_SHADER_STAGE_GEOMETRY	= 1 << 1,
-		NGA_SHADER_STAGE_PIXEL		= 1 << 2,
-		NGA_SHADER_STAGE_ALL		= 0x7 // Keep up to date with above
+		NGA_SHADER_STAGE_PIXEL		= 1 << 1,
+		NGA_SHADER_STAGE_ALL		= 0x3 // Keep up to date with above
 	};
 	NA_DEFINE_ENUM_FLAG_OPERATORS(NGAShaderStage);
 

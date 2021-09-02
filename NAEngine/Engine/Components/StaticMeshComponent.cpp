@@ -16,56 +16,34 @@ namespace na
 	{
 		mMeshID = RequestAsset(params["mesh"].AsFilepath());
 
-		// material or materials?
-		std::vector<DeserializationParameterMap> materialParams;
-		if (params.HasChild("material")) {
-			materialParams.push_back(params["material"]);
-		}
-		else if (params.HasChild("materials")) {
-			DeserializationParameterMap &materialArray = params["materials"];
-			for (auto& material : materialArray.childrenArray) {
-				materialParams.push_back(material);
-			}
-		}
-		else {
-			NA_ASSERT(false);
-		}
-
-		std::vector<MaterialContainer*> materialContainers;
-		for (auto& material : materialParams) {
-			const AssetID materialID = RequestAsset(material.AsFilepath());
-			mMaterialAssets.push_back(GetMaterialByAssetID(materialID));
-
-			materialContainers.push_back(&mMaterialAssets.back()->GetMaterialContainer());
-		}
-
+		AssetID materialID = RequestAsset(params["material"].AsFilepath());
+		mMaterialAsset = GetMaterialByAssetID(materialID);
+		
 		Mesh* mesh = Mesh::Get(mMeshID);
-		mMeshInstance.Initialize(mesh, materialContainers);
+		MaterialContainer& materialContainer = mMaterialAsset->GetMaterialContainer();
+
+		mMeshInstance.Initialize(mesh, &materialContainer);
 
 		// Set overrides
-		for (int i = 0; i < materialParams.size(); ++i) {
-			if (materialParams[i].HasChild("overrides")) {
-				// Create the dynamic instance
-				materialContainers[i]->CreateDynamicMaterialInstance();
+		auto &materialParams = params["material"];
+		if (materialParams.HasChild("overrides")) {
+			// Create the dynamic instance
+			materialContainer.CreateDynamicMaterialInstance();
 
-				for (auto& overrideParam : materialParams[i]["overrides"].childrenArray) {
-					const std::string type = overrideParam.meta["type"];
+			for (auto &overrideParam : materialParams["overrides"].childrenArray) {
+				const std::string type = overrideParam.meta["type"];
 
-					if (type == "texture") {
-						mMaterialAssets[i]->SetTextureParameter(overrideParam.meta["name"], overrideParam.AsFilepath());
-					}
-					else if (type == "renderTarget") {
-						mMaterialAssets[i]->SetRenderTargetParameter(overrideParam.meta["name"], overrideParam.AsFilepath(), overrideParam.meta["map"] == "color");
-					}
-					else {
-						NA_ASSERT(false, "Type %s not implemented.", type.c_str());
-					}
+				if (type == "texture") {
+					mMaterialAsset->SetTextureParameter(overrideParam.meta["name"], overrideParam.AsFilepath());
+				}
+				else if (type == "renderTarget") {
+					mMaterialAsset->SetRenderTargetParameter(overrideParam.meta["name"], overrideParam.AsFilepath(), overrideParam.meta["map"] == "color");
+				}
+				else {
+					NA_ASSERT(false, "Type %s not implemented.", type.c_str());
 				}
 			}
 		}
-
-		// Visibility
-		mMeshInstance.mVisible = params["visible"].AsBool(true);
 	}
 
 	void StaticMeshComponent::Activate()
@@ -79,26 +57,12 @@ namespace na
 
 		mMeshInstance.Shutdown();
 
-		for (auto& asset : mMaterialAssets) {
-			asset->GetMaterialContainer().Shutdown();
-			ReleaseAsset(asset->GetMaterialAssetID());
-		}
+		ReleaseAsset(mMaterialAsset->GetMaterialAssetID());
 		ReleaseAsset(mMeshID);
 	}
 
 	void StaticMeshComponent::UpdateLate(float deltaTime)
 	{
 		mMeshInstance.SetWorldTransform(GetOwner()->mTransform.GetMatrix());
-	}
-
-
-	bool StaticMeshComponent::GetVisible()const
-	{
-		return mMeshInstance.mVisible;
-	}
-
-	void StaticMeshComponent::SetVisible(bool visible)
-	{
-		mMeshInstance.mVisible = visible;
 	}
 }

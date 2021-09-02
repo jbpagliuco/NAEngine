@@ -27,8 +27,6 @@ namespace na
 		const std::vector<Light*>& GetLights()const;
 		const std::vector<Camera*>& GetCameras()const;
 
-		Camera* GetRenderCamera()const;
-
 	private:
 		std::vector<RenderableInstance*> mRenderables;
 		std::vector<Light*> mLights;

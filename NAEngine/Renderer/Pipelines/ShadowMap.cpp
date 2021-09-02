@@ -58,8 +58,9 @@ namespace na
 		NA_RStateManager->SetViewport(ShadowMapViewport);
 
 		// Set shaders
-		GetEngineShader(EngineShader::SHADOWMAP)->Bind();
-		
+		NA_RStateManager->BindShader(GetEngineShader(EngineShader::SHADOWMAP)->GetVertexShader());
+		NA_RStateManager->BindShader(GetEngineShader(EngineShader::SHADOWMAP)->GetPixelShader());
+
 		for (int i = 0; i < numLights; ++i) {
 			BuildSlice(scene, *lights[i], i);
 		}
@@ -83,14 +84,12 @@ namespace na
 
 		// Render objects from the view point of the light
 		for (auto& r : scene.GetRenderables()) {
-			if (r->mVisible) {
-				Matrix worldTransform = r->GetWorldTransform();
-				NA_RStateManager->MapBufferData(ShadowMapPerObjectBuffer.GetBuffer(), &worldTransform);
-				NA_RStateManager->BindConstantBuffer(ShadowMapPerObjectBuffer.GetBuffer(), NGA_SHADER_STAGE_VERTEX, 1);
+			Matrix worldTransform = r->GetWorldTransform();
+			NA_RStateManager->MapBufferData(ShadowMapPerObjectBuffer.GetBuffer(), &worldTransform);
+			NA_RStateManager->BindConstantBuffer(ShadowMapPerObjectBuffer.GetBuffer(), NGA_SHADER_STAGE_VERTEX, 1);
 
-				// Render without binding material
-				r->Render(false);
-			}
+			// Render without binding material
+			r->Render(false);
 		}
 	}
 

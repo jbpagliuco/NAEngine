@@ -14,23 +14,19 @@
 // MeshX File NGAFormat - Version 2
 // Header:
 //		Version - 4 bytes
-//		Primitive Topology - 1 byte
 //		Num Vertex Attributes - 4 bytes
 //		List of Vertex Attributes - 6 * Num Vertex Attributes bytes
 //			NGAFormat - 1 byte
 //			Semantic Type - 1 byte
 //			Semantic Index - 1 byte
 //		Num Vertices - 8 bytes
-//		Num Index Groups - 1 byte
-//		Num Indices - 8 * Num Index Groups bytes
+//		Num Indices - 8 bytes
 // Data:
 //		Vertices - Vertex Stride * Num Vertices bytes
-//		Indices - sizeof(IndexType) * Num Indices * Num Index Groups bytes
+//		Indices - sizeof(IndexType) * Num Indices bytes
 
 // Changelog:
 // 2 - Add vertex format description to header.
-// 3 - Add support for multiple index buffers.
-// 4 - Add primitive topology
 
 #include "Base/Math/Vector.h"
 
@@ -113,7 +109,7 @@ namespace na
 		}
 	};
 
-	static bool LoadMeshFromOBJ(VertexArray &vertices, std::vector<std::vector<IndexType>> &indexGroups, const std::string &filename);
+	static bool LoadMeshFromOBJ(VertexArray &vertices, std::vector<IndexType> &indices, const std::string &filename);
 #endif
 
 	static bool OnMeshxLoad(const AssetID &id, const std::string &filename, const AssetFileHeader &header);
@@ -154,8 +150,6 @@ namespace na
 
 	static bool CreateMeshFromMeshx(Mesh *mesh, const std::string &filename)
 	{
-		MeshData meshData;
-
 		File file(filename, std::ios::in | std::ios::binary);
 
 		uint32_t version;
@@ -164,12 +158,8 @@ namespace na
 			false, 
 			"Trying to load mesh with invalid version number (%d). File: %s", version, filename.c_str());
 		
-		uint8_t primitiveTopology;
-		bool success = file.Read<uint8_t>(primitiveTopology);
-		NA_ASSERT_RETURN_VALUE(success, false, "Failed to read primitiveTopology from mesh file: %s", filename.c_str());
-
 		uint32_t numVertexAttributes;
-		success = file.Read<uint32_t>(numVertexAttributes);
+		bool success = file.Read<uint32_t>(numVertexAttributes);
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to read numVertexAttributes from mesh file: %s", filename.c_str());
 
 		NGAVertexFormatDesc vDesc;
@@ -197,62 +187,41 @@ namespace na
 			vertexStride += (int)GetFormatByteSize(attr.mFormat);
 		}
 
-		// Read number of vertices.
 		uint64_t numVertices;
 		success = file.Read<uint64_t>(numVertices);
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to read numVertices from mesh file: %s", filename.c_str());
 
-		// Version 2: 1 group.
-		// Version 3: Variable # of groups that must be read from file.
-		uint8_t numIndexGroups = 1;
-		if (version > 2) {
-			success = file.Read<uint8_t>(numIndexGroups);
-			NA_ASSERT_RETURN_VALUE(success, false, "Failed to read numIndexGroups from mesh file: %s", filename.c_str());
-		}
+		uint64_t numIndices;
+		success = file.Read<uint64_t>(numIndices);
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to read numIndices from mesh file: %s", filename.c_str());
 
-		// Read number of indices.
-		std::vector<uint64_t> numIndices;
-		for (int i = 0; i < numIndexGroups; ++i) {
-			numIndices.push_back(0);
-			success = file.Read<uint64_t>(numIndices[i]);
-			NA_ASSERT_RETURN_VALUE(success, false, "Failed to read numIndices for group %d from mesh file: %s", i, filename.c_str());
-		}
-
-		// Read vertex data.
 		void *vertexData = NA_ALLOC(vertexStride * numVertices);
 		success = file.ReadBytes((char*)vertexData, vertexStride * numVertices);
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to read vertexData from mesh file: %s", filename.c_str());
 
-		// Read index data.
-		std::vector<void*> indexData;
-		for (int i = 0; i < numIndexGroups; ++i) {
-			indexData.push_back(NA_ALLOC(sizeof(IndexType) * numIndices[i]));
-			success = file.ReadBytes((char*)indexData[i], sizeof(IndexType) * numIndices[i]);
-			NA_ASSERT_RETURN_VALUE(success, false, "Failed to read indexData for group %d from mesh file: %s", i, filename.c_str());
+		void *indexData = NA_ALLOC(sizeof(IndexType) * numIndices);
+		success = file.ReadBytes((char*)indexData, sizeof(IndexType) * numIndices);
+		NA_ASSERT_RETURN_VALUE(success, false, "Failed to read indexData from mesh file: %s", filename.c_str());
 
-			meshData.indexBuffers.emplace_back((IndexType*)indexData[i], numIndices[i]);
-		}
-
+		MeshData meshData;
 		meshData.vertices = vertexData;
 		meshData.numVertices = numVertices;
 		meshData.vertexStride = vertexStride;
+		meshData.indices = (IndexType*)indexData;
+		meshData.numIndices = numIndices;
 		meshData.mVertexFormat = vDesc;
-		meshData.mPrimitiveTopology = (NGAPrimitiveTopology)primitiveTopology;
 		
 		const bool initialized = mesh->Initialize(meshData);
 
 		NA_FREE(vertexData);
-
-		for (int i = 0; i < numIndexGroups; ++i) {
-			NA_FREE(indexData[i]);
-		}
+		NA_FREE(indexData);
 
 		return initialized;
 	}
 
 
 #if defined(_NA_TOOLS)
-	static bool LoadMeshFromOBJ(VertexArray& vertices, std::vector<std::vector<IndexType>>& indexGroups, const std::string& filename)
+	static bool LoadMeshFromOBJ(VertexArray &vertices, std::vector<IndexType> &indices, const std::string &filename)
 	{
 		struct FaceIndexData
 		{
@@ -270,7 +239,7 @@ namespace na
 		std::vector<Position> positions;
 		std::vector<Normal> normals;
 		std::vector<TexCoord> texCoords;
-		std::vector<std::vector<FaceIndexData>> groups;
+		std::vector<FaceIndexData> faces;
 
 		/////////////////////////////////////////////////
 		std::string line;
@@ -314,22 +283,10 @@ namespace na
 
 				break;
 
-			case 'g':
-			{
-				// Group data
-				groups.push_back(std::vector<FaceIndexData>());
-				break;
-			}
-
 			case 'f':
 			{
 				// TODO
 				NA_ASSERT_RETURN_VALUE(normals.size() > 0 && texCoords.size() > 0, false, "Meshes must have both normal and tex coord data.");
-
-				// Handles data without explicit groups
-				if (groups.size() == 0) {
-					groups.push_back(std::vector<FaceIndexData>());
-				}
 
 				const int numVerticesInFace = 3;
 				FaceIndexData indices[numVerticesInFace];
@@ -349,7 +306,7 @@ namespace na
 					std::getline(faceSS, indexString, '/');
 					indices[i].norm = std::stoul(indexString) - 1;
 
-					groups.back().push_back(indices[i]);
+					faces.push_back(indices[i]);
 				}
 				break;
 			}
@@ -357,66 +314,32 @@ namespace na
 		}
 
 		NA_ASSERT_RETURN_VALUE(positions.size() > 0, false);
-		for (int i = 0; i < groups.size(); ++i) {
-			NA_ASSERT_RETURN_VALUE(groups[i].size() > 0, false, "Group %d is empty", i);
-		}
+		NA_ASSERT_RETURN_VALUE(faces.size() > 0, false);
 
 		// Remove duplicates and create mesh
 		std::map<std::string, uint32_t> vertexIds;
 
-		for (const auto& group : groups) {
-			indexGroups.push_back(std::vector<IndexType>());
-			for (auto& face : group) {
-				std::string faceString = std::to_string(face.pos) + "/" + std::to_string(face.norm) + "/" + std::to_string(face.tex);
+		for (auto &face : faces) {
+			std::string faceString = std::to_string(face.pos) + "/" + std::to_string(face.norm) + "/" + std::to_string(face.tex);
 
-				vertices.mHasNormal = true;
-				vertices.mHasTexCoord = true;
+			vertices.mHasNormal = true;
+			vertices.mHasTexCoord = true;
 
-				if (vertexIds.find(faceString) == vertexIds.end()) {
-					VertexType vertex;
-
-					vertex.mPosition = positions[face.pos];
-					vertex.mNormal = normals[face.norm];
-					vertex.mTexCoord = texCoords[face.tex];
-
-					vertices.mVertices.push_back(vertex);
-
-					IndexType index = (IndexType)(vertices.mVertices.size() - 1);
-					vertexIds[faceString] = index;
-					indexGroups.back().push_back(index);
-				}
-				else {
-					IndexType index = vertexIds[faceString];
-					indexGroups.back().push_back(index);
-				}
-			}
-		}
-
-		// Create straight up vertex buffer (no indices)
-		if (groups.size() == 0) {
-			vertices.mHasNormal = normals.size() > 0;
-			vertices.mHasTexCoord = texCoords.size() > 0;
-
-			if (vertices.mHasNormal) {
-				NA_ASSERT_RETURN_VALUE(positions.size() == normals.size(), false, "Mismatched vertex data (%zu positions, %zu normals)", positions.size(), normals.size());
-			}
-			if (vertices.mHasTexCoord) {
-				NA_ASSERT_RETURN_VALUE(positions.size() == texCoords.size(), false, "Mismatched vertex data (%zu positions, %zu tex coords)", positions.size(), texCoords.size());
-			}
-
-			for (int i = 0; i < positions.size(); ++i) {
+			if (vertexIds.find(faceString) == vertexIds.end()) {
 				VertexType vertex;
-				vertex.mPosition = positions[i];
-				
-				if (vertices.mHasNormal) {
-					vertex.mNormal = normals[i];
-				}
 
-				if (vertices.mHasTexCoord) {
-					vertex.mTexCoord = texCoords[i];
-				}
+				vertex.mPosition = positions[face.pos];
+				vertex.mNormal = normals[face.norm];
+				vertex.mTexCoord = texCoords[face.tex];
 
 				vertices.mVertices.push_back(vertex);
+
+				IndexType index = (IndexType)(vertices.mVertices.size() - 1);
+				vertexIds[faceString] = index;
+				indices.push_back(index);
+			} else {
+				IndexType index = vertexIds[faceString];
+				indices.push_back(index);
 			}
 		}
 
@@ -424,7 +347,7 @@ namespace na
 	}
 
 	
-	static void CalculateTangentSpaceTVector(VertexArray &vertices, std::vector<std::vector<IndexType>> &indexGroups)
+	static void CalculateTangentSpaceTVector(VertexArray &vertices, const std::vector<IndexType> &indices)
 	{
 		vertices.mHasTangent = true;
 
@@ -432,48 +355,46 @@ namespace na
 			it.mTangent = Vector3f(0.0f, 0.0f, 0.0f);
 		}
 
-		for (auto& indices : indexGroups) {
-			for (int i = 0; i < indices.size(); i += 3) {
-				IndexType i1 = indices[i];
-				IndexType i2 = indices[i + 1];
-				IndexType i3 = indices[i + 2];
+		for (int i = 0; i < indices.size(); i += 3) {
+			IndexType i1 = indices[i];
+			IndexType i2 = indices[i + 1];
+			IndexType i3 = indices[i + 2];
 
-				VertexType& vertex1 = vertices.mVertices[i1];
-				VertexType& vertex2 = vertices.mVertices[i2];
-				VertexType& vertex3 = vertices.mVertices[i3];
+			VertexType &vertex1 = vertices.mVertices[i1];
+			VertexType &vertex2 = vertices.mVertices[i2];
+			VertexType &vertex3 = vertices.mVertices[i3];
 
-				Vector3f v1 = vertex1.mPosition;
-				Vector3f v2 = vertex2.mPosition;
-				Vector3f v3 = vertex3.mPosition;
+			Vector3f v1 = vertex1.mPosition;
+			Vector3f v2 = vertex2.mPosition;
+			Vector3f v3 = vertex3.mPosition;
 
-				Vector2f w1 = vertex1.mTexCoord;
-				Vector2f w2 = vertex2.mTexCoord;
-				Vector2f w3 = vertex3.mTexCoord;
+			Vector2f w1 = vertex1.mTexCoord;
+			Vector2f w2 = vertex2.mTexCoord;
+			Vector2f w3 = vertex3.mTexCoord;
 
-				float x1 = v2.x - v1.x;
-				float x2 = v3.x - v1.x;
-				float y1 = v2.y - v1.y;
-				float y2 = v3.y - v1.y;
-				float z1 = v2.z - v1.z;
-				float z2 = v3.z - v1.z;
+			float x1 = v2.x - v1.x;
+			float x2 = v3.x - v1.x;
+			float y1 = v2.y - v1.y;
+			float y2 = v3.y - v1.y;
+			float z1 = v2.z - v1.z;
+			float z2 = v3.z - v1.z;
 
-				float s1 = w2.x - w1.x;
-				float s2 = w3.x - w1.x;
-				float t1 = w2.y - w1.y;
-				float t2 = w3.y - w1.y;
+			float s1 = w2.x - w1.x;
+			float s2 = w3.x - w1.x;
+			float t1 = w2.y - w1.y;
+			float t2 = w3.y - w1.y;
 
-				float r = 1.0F / (s1 * t2 - s2 * t1);
-				Vector3f sdir((t2 * x1 - t1 * x2) * r, (t2 * y1 - t1 * y2) * r,
-					(t2 * z1 - t1 * z2) * r);
-				Vector3f tdir((s1 * x2 - s2 * x1) * r, (s1 * y2 - s2 * y1) * r,
-					(s1 * z2 - s2 * z1) * r);
+			float r = 1.0F / (s1 * t2 - s2 * t1);
+			Vector3f sdir((t2 * x1 - t1 * x2) * r, (t2 * y1 - t1 * y2) * r,
+				(t2 * z1 - t1 * z2) * r);
+			Vector3f tdir((s1 * x2 - s2 * x1) * r, (s1 * y2 - s2 * y1) * r,
+				(s1 * z2 - s2 * z1) * r);
 
 #define FLOAT3_ADD(f1, f2) f1.x += f2.x; f1.y += f2.y; f1.z += f2.z
-				FLOAT3_ADD(vertex1.mTangent, sdir);
-				FLOAT3_ADD(vertex2.mTangent, sdir);
-				FLOAT3_ADD(vertex3.mTangent, sdir);
+			FLOAT3_ADD(vertex1.mTangent, sdir);
+			FLOAT3_ADD(vertex2.mTangent, sdir);
+			FLOAT3_ADD(vertex3.mTangent, sdir);
 #undef FLOAT3_ADD
-			}
 		}
 
 		for (auto &vertex : vertices.mVertices) {
@@ -490,12 +411,12 @@ namespace na
 	bool ConvertMeshObjToMeshx(const std::string &filename, bool calculateTangentSpaceBasicVectors)
 	{
 		VertexArray vertices;
-		std::vector<std::vector<IndexType>> indexGroups;
-		const bool success = LoadMeshFromOBJ(vertices, indexGroups, filename);
+		std::vector<IndexType> indices;
+		const bool success = LoadMeshFromOBJ(vertices, indices, filename);
 		NA_ASSERT_RETURN_VALUE(success, false, "Failed to create mesh from %s", filename.c_str());
 
 		if (calculateTangentSpaceBasicVectors) {
-			CalculateTangentSpaceTVector(vertices, indexGroups);
+			CalculateTangentSpaceTVector(vertices, indices);
 		}
 
 		const std::string outFilename = DropFileExt(filename) + ".meshx";
@@ -503,9 +424,6 @@ namespace na
 
 #define WRITE(cat, x) if (!(x)) { NA_ASSERT_RETURN_VALUE(false, false, "Failed to write %s", cat); }
 		WRITE("Version", file.Write<uint32_t>(MESH_ASSET_VERSION));
-
-		// TODO: Need better way to figure this out
-		WRITE("Primitive Topology", file.Write<uint8_t>((indexGroups.size() > 0) ? (uint8_t)NGAPrimitiveTopology::TRIANGLE_LIST : (uint8_t)NGAPrimitiveTopology::POINT_LIST));
 
 		const int numAttributes = vertices.GetAttrCount();
 		WRITE("Num Vertex Attributes", file.Write<uint32_t>(numAttributes));
@@ -540,16 +458,11 @@ namespace na
 		}
 
 		WRITE("Num Vertices", file.Write<uint64_t>(vertices.mVertices.size()));
-		WRITE("Num Index Groups", file.Write<uint8_t>((uint8_t)indexGroups.size()));
-		for (const auto& indices : indexGroups) {
-			WRITE("Num Indices", file.Write<uint64_t>(indices.size()));
-		}
+		WRITE("Num Indices", file.Write<uint64_t>(indices.size()));
 
 		void *vertexData = vertices.CreateVertexData();
 		WRITE("Vertices", file.WriteBytes((char*)vertexData, vertices.mVertices.size() * vertices.CalculateStride()));
-		for (const auto& indices : indexGroups) {
-			WRITE("Indices", file.WriteBytes((char*)indices.data(), indices.size() * sizeof(IndexType)));
-		}
+		WRITE("Indices", file.WriteBytes((char*)indices.data(), indices.size() * sizeof(IndexType)));
 #undef WRITE
 
 		NA_FREE(vertexData);

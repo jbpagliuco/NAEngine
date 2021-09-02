@@ -20,7 +20,7 @@ namespace na
 
 #if defined(NGA_D3D11)
 	private:
-		struct ID3D11InputLayout *mInputLayout = nullptr;
+		struct ID3D11InputLayout *mInputLayout;
 #endif
 
 		friend class NGACommandContext;

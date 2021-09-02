@@ -19,11 +19,6 @@ namespace na
 		NgaDx11State.mContext->OMSetDepthStencilState(pipelineState.mDepthStencilState, 0);
 	}
 
-	void NGACommandContext::Draw(unsigned int vertexCount)
-	{
-		NgaDx11State.mContext->Draw(vertexCount, 0);
-	}
-
 	void NGACommandContext::DrawIndexed(unsigned int indexCount)
 	{
 		NgaDx11State.mContext->DrawIndexed(indexCount, 0, 0);
@@ -88,32 +83,9 @@ namespace na
 			NgaDx11State.mContext->VSSetShader(shader.mVertexShader, nullptr, 0);
 			break;
 
-		case NGAShaderType::GEOMETRY:
-			NgaDx11State.mContext->GSSetShader(shader.mGeometryShader, nullptr, 0);
-			break;
-
 		case NGAShaderType::PIXEL:
 			NgaDx11State.mContext->PSSetShader(shader.mPixelShader, nullptr, 0);
 			break;
-
-		default:
-			NA_ASSERT(false, "Unknown shader type (%d)", shader.GetType());
-			break;
-		}
-	}
-
-	void NGACommandContext::ClearShader(NGAShaderStage stage)
-	{
-		if (stage & NGA_SHADER_STAGE_VERTEX) {
-			NgaDx11State.mContext->VSSetShader(nullptr, nullptr, 0);
-		}
-
-		if (stage & NGA_SHADER_STAGE_GEOMETRY) {
-			NgaDx11State.mContext->GSSetShader(nullptr, nullptr, 0);
-		}
-
-		if (stage & NGA_SHADER_STAGE_PIXEL) {
-			NgaDx11State.mContext->PSSetShader(nullptr, nullptr, 0);
 		}
 	}
 
@@ -121,10 +93,6 @@ namespace na
 	{
 		if (stage & NGA_SHADER_STAGE_VERTEX) {
 			NgaDx11State.mContext->VSSetConstantBuffers(slot, 1, &constantBuffer.mBuffer);
-		}
-
-		if (stage & NGA_SHADER_STAGE_GEOMETRY) {
-			NgaDx11State.mContext->GSSetConstantBuffers(slot, 1, &constantBuffer.mBuffer);
 		}
 
 		if (stage & NGA_SHADER_STAGE_PIXEL) {
@@ -138,10 +106,6 @@ namespace na
 			NgaDx11State.mContext->VSSetShaderResources(slot, 1, &view.mView);
 		}
 
-		if (stage & NGA_SHADER_STAGE_GEOMETRY) {
-			NgaDx11State.mContext->GSSetShaderResources(slot, 1, &view.mView);
-		}
-
 		if (stage & NGA_SHADER_STAGE_PIXEL) {
 			NgaDx11State.mContext->PSSetShaderResources(slot, 1, &view.mView);
 		}
@@ -151,10 +115,6 @@ namespace na
 	{
 		if (stage & NGA_SHADER_STAGE_VERTEX) {
 			NgaDx11State.mContext->VSSetSamplers(slot, 1, &samplerState.mSamplerState);
-		}
-
-		if (stage & NGA_SHADER_STAGE_GEOMETRY) {
-			NgaDx11State.mContext->GSSetSamplers(slot, 1, &samplerState.mSamplerState);
 		}
 
 		if (stage & NGA_SHADER_STAGE_PIXEL) {

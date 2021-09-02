@@ -8,18 +8,16 @@ namespace na
 	class Shader : public AssetFactory<Shader>
 	{
 	public:
-		bool Initialize(const std::string &file, NGAVertexFormatDesc vsFormat, NGAShaderStage stages);
+		bool Initialize(const std::string &file, NGAVertexFormatDesc vsFormat);
 		void Shutdown();
 
 		void Bind();
 
 		inline const VertexShader& GetVertexShader()const { return mVertexShader; }
-		inline const GeometryShader& GetGeometryShader()const { return mGeometryShader; }
 		inline const PixelShader& GetPixelShader()const { return mPixelShader; }
 
 	private:
 		VertexShader mVertexShader;
-		GeometryShader mGeometryShader;
 		PixelShader mPixelShader;
 	};
 }
