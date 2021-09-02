@@ -78,9 +78,6 @@
     <ClCompile Include="Components\SkyboxComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Components\BillboardComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Assets\MaterialAsset.h">
@@ -150,9 +147,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Components\SkyboxComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Components\BillboardComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

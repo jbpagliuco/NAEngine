@@ -1,8 +1,8 @@
 #pragma once
 
-#define MESH_ASSET_VERSION 4
-#define MESH_ASSET_MIN_VERSION 4
-#define MESH_ASSET_MAX_VERSION MESH_ASSET_VERSION
+#define MESH_ASSET_VERSION 2
+#define MESH_ASSET_MIN_VERSION 2
+#define MESH_ASSET_MAX_VERSION 2
 
 #include "Renderer/Mesh.h"
 

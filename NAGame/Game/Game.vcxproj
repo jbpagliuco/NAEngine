@@ -221,7 +221,6 @@
   <ItemGroup>
     <Xml Include="config.xml" />
     <Xml Include="data\worlds\test_shader2.xml" />
-    <Xml Include="data\worlds\test_trees.xml" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="*.hlsl">
@@ -236,8 +235,6 @@
     <None Include="data\materials\earth.matx" />
     <None Include="data\materials\ice.matx" />
     <None Include="data\materials\render_depth.matx" />
-    <None Include="data\materials\sycamore_bark.matx" />
-    <None Include="data\materials\sycamore_leaves.matx" />
     <None Include="data\render_targets\test_render_target.rtx" />
     <None Include="data\shaders\render_depth\render_depth.shaderx" />
     <None Include="data\skyboxes\desert.skyx" />
@@ -246,11 +243,6 @@
     <None Include="data\skyboxes\sunset.skyx" />
   </ItemGroup>
   <ItemGroup>
-    <Object Include="data\meshes\point.obj">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugTools|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </Object>
     <Object Include="data\meshes\quad.obj">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugTools|x64'">true</ExcludedFromBuild>

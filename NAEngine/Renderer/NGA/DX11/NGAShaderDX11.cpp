@@ -17,13 +17,11 @@ namespace na
 
 	static constexpr const char *SHADER_ENTRYPOINTS[] = {
 		"vsMain",
-		"gsMain",
 		"psMain"
 	};
 
 	static constexpr const char *COMPILE_TARGETS[] = {
 		"vs_5_0",
-		"gs_5_0",
 		"ps_5_0"
 	};
 
@@ -124,10 +122,6 @@ namespace na
 			hr = NgaDx11State.mDevice->CreateVertexShader(mBytecode->GetBufferPointer(), mBytecode->GetBufferSize(), nullptr, &mVertexShader);
 			break;
 
-		case NGAShaderType::GEOMETRY:
-			hr = NgaDx11State.mDevice->CreateGeometryShader(mBytecode->GetBufferPointer(), mBytecode->GetBufferSize(), nullptr, &mGeometryShader);
-			break;
-
 		case NGAShaderType::PIXEL:
 			hr = NgaDx11State.mDevice->CreatePixelShader(mBytecode->GetBufferPointer(), mBytecode->GetBufferSize(), nullptr, &mPixelShader);
 			break;
@@ -147,10 +141,6 @@ namespace na
 		{
 		case NGAShaderType::VERTEX:
 			NGA_DX11_SAFE_RELEASE(mVertexShader);
-			break;
-
-		case NGAShaderType::GEOMETRY:
-			NGA_DX11_SAFE_RELEASE(mGeometryShader);
 			break;
 
 		case NGAShaderType::PIXEL:

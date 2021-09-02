@@ -238,8 +238,6 @@
     <ClCompile Include="Resources\RenderTarget.cpp" />
     <ClCompile Include="Resources\Skybox.cpp" />
     <ClCompile Include="Scene\Camera.cpp" />
-    <ClCompile Include="Scene\Renderables\Billboardinstance.cpp" />
-    <ClCompile Include="Scene\Renderables\RenderableInstance.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Pipelines\ShadowMap.cpp" />
     <ClCompile Include="Shader\Shader.cpp" />
@@ -285,7 +283,6 @@
     <ClInclude Include="Resources\Skybox.h" />
     <ClInclude Include="Scene\Camera.h" />
     <ClInclude Include="Pipelines\ShadowMap.h" />
-    <ClInclude Include="Scene\Renderables\BillboardInstance.h" />
     <ClInclude Include="Shader\EngineShaders\shader_constants.h" />
     <ClInclude Include="Shader\Shader.h" />
     <ClInclude Include="Shader\ShaderProgram.h" />
@@ -303,7 +300,6 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader\EngineShaders\billboard\billboard.shaderx" />
     <None Include="Shader\EngineShaders\build_shadow_map\build_shadow_map.shaderx" />
     <None Include="Shader\EngineShaders\debug_texture\debug_texture.shaderx" />
     <None Include="Shader\EngineShaders\material.hlsli" />
@@ -316,11 +312,6 @@
   <ItemGroup>
     <FxCompile Include="*.hlsl">
       <ExcludedFromBuild Condition="true">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Shader\EngineShaders\billboard\billboard.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugTools|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Shader\EngineShaders\debug_texture\debug_texture.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
